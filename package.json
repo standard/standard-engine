@@ -1,19 +1,13 @@
 {
-  "name": "standard",
-  "description": "JavaScript Standard Style",
-  "version": "3.3.0",
-  "author": {
-    "name": "Feross Aboukhadijeh",
-    "email": "feross@feross.org",
-    "url": "http://feross.org/"
-  },
-  "bin": {
-    "standard": "./bin/cmd.js"
-  },
+  "name": "standard-engine",
+  "description": "Wrap your standards in a tortilla and cover it in special sauce.",
+  "version": "1.0.0",
+  "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
   "bugs": {
-    "url": "https://github.com/feross/standard/issues"
+    "url": "https://github.com/flet/standard-engine/issues"
   },
   "dependencies": {
+    "defaults": "^1.0.2",
     "dezalgo": "^1.0.1",
     "eslint": "git://github.com/eslint/eslint.git#06927eeacba776c29a40bc0a191f9d9fc9575ba6",
     "eslint-plugin-react": "^1.5.0",
@@ -29,9 +23,10 @@
     "mkdirp": "^0.5.0",
     "rimraf": "^2.2.8",
     "run-series": "^1.0.2",
-    "xtend": "^4.0.0"
+    "xtend": "^4.0.0",
+    "standard": "*"
   },
-  "homepage": "https://github.com/feross/standard",
+  "homepage": "https://github.com/flet/standard-engine",
   "keywords": [
     "standard",
     "style checker",
@@ -62,12 +57,12 @@
   "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/feross/standard.git"
+    "url": "git://github.com/flet/standard-engine.git"
   },
   "scripts": {
-    "test": "node ./bin/cmd.js && node ./test.js"
+    "test": "standard && node ./test/test.js"
   },
   "standard": {
-    "ignore": "tmp/**"
+    "ignore": "test/tmp/**"
   }
 }
