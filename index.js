@@ -1,2 +1,2 @@
-module.exports.linter = require('./lib/linter.js')
-module.exports.cli = require('./lib/cli.js')
+module.exports.linter = require('./lib/linter')
+module.exports.cli = require('./lib/cli')

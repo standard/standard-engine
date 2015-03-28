@@ -9,4 +9,4 @@ var opts = {
   }
 }
 
-require('../lib/cli.js')(opts)
+require('../lib/cli')(opts)
