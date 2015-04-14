@@ -23,8 +23,9 @@
     "mkdirp": "^0.5.0",
     "rimraf": "^2.2.8",
     "run-series": "^1.0.2",
-    "xtend": "^4.0.0",
-    "standard": "*"
+    "standard": "*",
+    "tape": "^4.0.0",
+    "xtend": "^4.0.0"
   },
   "homepage": "https://github.com/flet/standard-engine",
   "keywords": [
@@ -60,7 +61,7 @@
     "url": "git://github.com/flet/standard-engine.git"
   },
   "scripts": {
-    "test": "standard && node ./test/test.js"
+    "test": "standard && tape test/clone.js"
   },
   "standard": {
     "ignore": "test/tmp/**"
