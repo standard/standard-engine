@@ -9,7 +9,7 @@
   "dependencies": {
     "defaults": "^1.0.2",
     "dezalgo": "^1.0.1",
-    "eslint": "^0.17.1",
+    "eslint": "^0.18.0",
     "eslint-plugin-react": "^2.1.0",
     "find-root": "^0.1.1",
     "get-stdin": "^4.0.1",
@@ -61,9 +61,6 @@
     "url": "git://github.com/flet/standard-engine.git"
   },
   "scripts": {
-    "test": "standard && tape test/clone.js"
-  },
-  "standard": {
-    "ignore": "test/tmp/**"
+    "test": "standard && tape test/clone.js && tape test/api.js"
   }
 }

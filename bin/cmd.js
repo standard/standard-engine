@@ -76,18 +76,18 @@ function Cli (opts) {
   }
 
   function onResult (err, result) {
-    if (err) return error(err)
+    if (err) return onError(err)
     if (result.errorCount === 0) process.exit(0)
 
     console.error(
-      'Error: Use %s (%s) ',
+      opts.cmd + ': Use %s (%s) ',
       opts.tagline,
       opts.homepage
     )
 
     result.results.forEach(function (result) {
       result.messages.forEach(function (message) {
-        console.error(
+        log(
           '  %s:%d:%d: %s%s',
           result.filePath, message.line || 0, message.column || 0, message.message,
           argv.verbose ? ' (' + message.ruleId + ')' : ''
@@ -98,13 +98,27 @@ function Cli (opts) {
     process.exit(1)
   }
 
-  function error (err) {
-    console.error('Unexpected Linter Output:\n')
+  function onError (err) {
+    console.error(opts.cmd + ': Unexpected linter output:\n')
     console.error(err.stack || err.message || err)
     console.error(
       '\nIf you think this is a bug in `%s`, open an issue: %s',
       opts.cmd, opts.bugs
     )
     process.exit(1)
+  }
+
+  /**
+   * Print lint errors to stdout since this is expected output from `standard-engine`.
+   * Note: When formatting code from stdin (`standard --stdin --format`), the transformed
+   * code is printed to stdout, so print lint errors to stderr in this case.
+   */
+  function log () {
+    if (argv.stdin && argv.format) {
+      arguments[0] = opts.cmd + ': ' + arguments[0]
+      console.error.apply(console, arguments)
+    } else {
+      console.log.apply(console, arguments)
+    }
   }
 }

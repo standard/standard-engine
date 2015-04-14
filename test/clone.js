@@ -16,8 +16,8 @@ var rimraf = require('rimraf')
 var series = require('run-series')
 var test = require('tape')
 
-var TMP = path.join(__dirname, 'tmp')
-var STANDARD = path.join(__dirname, 'standard-cmd.js')
+var TMP = path.join(__dirname, '..', 'tmp')
+var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 
 var URLS = [
   'https://github.com/feross/standard.git',
