@@ -7,4 +7,4 @@ var opts = {
   }
 }
 
-require('../lib/cli.js')(opts)
+require('../bin/cmd.js')(opts)

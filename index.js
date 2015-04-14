@@ -1,4 +1,4 @@
-module.exports.cli = require('./lib/cli')
+module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
 
