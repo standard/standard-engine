@@ -62,5 +62,8 @@
   },
   "scripts": {
     "test": "standard && tape test/clone.js && tape test/api.js"
+  },
+  "standard": {
+    "ignore": "tmp/"
   }
 }
