@@ -5,6 +5,7 @@ module.exports.linter = Linter
 var defaults = require('defaults')
 var dezalgo = require('dezalgo')
 var eslint = require('eslint')
+var extend = require('xtend')
 var findRoot = require('find-root')
 // var fs = require('fs')
 var glob = require('glob')
@@ -125,6 +126,7 @@ Linter.prototype.parseOpts = function (opts) {
   var self = this
 
   if (!opts) opts = {}
+  opts = extend(opts)
 
   if (!opts.cwd) opts.cwd = process.cwd()
 
