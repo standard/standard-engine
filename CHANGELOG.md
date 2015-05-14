@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.1 - 2015-04-21
+### Merged from `standard`
+ * Fix bug in `parseOpts` to ensure original options are not modified
+ * Upgrade to eslint 0.21.0
+
 ## 1.4.0 - 2015-04-21
 ### Merged from `standard`
  * Disable `.gitignore` support for now.
