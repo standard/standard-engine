@@ -17,6 +17,7 @@ function Cli (opts) {
   var typeFormatter = typeof opts.formatter
 
   if (typeFormatter !== 'object' || typeof opts.formatter.transform !== 'function') {
+    console.error('Invalid formatter API')
     process.exit(0)
   }
 
