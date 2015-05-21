@@ -3,6 +3,7 @@ module.exports = Cli
 var defaults = require('defaults')
 var minimist = require('minimist')
 var stdin = require('get-stdin')
+var fs = require('fs')
 
 function Cli (opts) {
   var standard = require('../').linter(opts)
@@ -24,13 +25,15 @@ function Cli (opts) {
   var argv = minimist(process.argv.slice(2), {
     alias: {
       help: 'h',
-      verbose: 'v'
+      verbose: 'v',
+      format: 'F'
     },
     boolean: [
       'help',
       'stdin',
       'verbose',
-      'version'
+      'version',
+      'format'
     ]
   })
 
@@ -59,6 +62,7 @@ function Cli (opts) {
             --stdin     Read file text from stdin.
             --version   Show current version.
         -h, --help      Show usage information.
+        -F  --format    Automatically format code. (default standard-format)
 
     */
     }.toString().split(/\n/).slice(2, -2).join('\n'), opts.cmd)
@@ -76,10 +80,22 @@ function Cli (opts) {
 
   if (argv.stdin) {
     stdin(function (text) {
+      if (argv.format) {
+        text = opts.formatter.transform(text)
+        process.stdout.write(text)
+      }
       standard.lintText(text, onResult)
     })
   } else {
     var lintOpts = {}
+    if (argv.format) {
+      lintOpts._onFiles = function (files) {
+        files.forEach(function (file) {
+          var data = fs.readFileSync(file).toString()
+          fs.writeFileSync(file, opts.formatter.transform(data))
+        })
+      }
+    }
     standard.lintFiles(argv._, lintOpts, onResult)
   }
 
