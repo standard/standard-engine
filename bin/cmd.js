@@ -10,8 +10,15 @@ function Cli (opts) {
   opts = defaults(opts, {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
-    version: require('../package.json').version
+    version: require('../package.json').version,
+    formatter: require('standard-format')
   })
+
+  var typeFormatter = typeof opts.formatter
+
+  if (typeFormatter !== 'object' || typeof opts.formatter.transform !== 'function') {
+    process.exit(0)
+  }
 
   var argv = minimist(process.argv.slice(2), {
     alias: {
