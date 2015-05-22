@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.2 - 2015-05-22
+ * Fix bug where absolute paths to files was not working.
+
 ## 1.4.1 - 2015-04-21
 ### Merged from `standard`
  * Fix bug in `parseOpts` to ensure original options are not modified
