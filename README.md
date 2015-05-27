@@ -13,3 +13,5 @@
 ### Yo I heard you like standards
 
 Wrap your own eslint rules in a easy-to-use command line tool and/or a JS module.
+
+Check out [semistandard](https://github.com/Flet/semistandard) for an example!
