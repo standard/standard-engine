@@ -11,16 +11,8 @@ function Cli (opts) {
   opts = defaults(opts, {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
-    version: require('../package.json').version,
-    formatter: require('standard-format')
+    version: require('../package.json').version
   })
-
-  var typeFormatter = typeof opts.formatter
-
-  if (typeFormatter !== 'object' || typeof opts.formatter.transform !== 'function') {
-    console.error('Invalid formatter API')
-    process.exit(0)
-  }
 
   var argv = minimist(process.argv.slice(2), {
     alias: {
@@ -36,6 +28,15 @@ function Cli (opts) {
       'format'
     ]
   })
+
+  if (argv.format) {
+    var typeFormatter = typeof opts.formatter
+
+    if (typeFormatter !== 'object' || typeof opts.formatter.transform !== 'function') {
+      console.error('Invalid formatter API')
+      process.exit(0)
+    }
+  }
 
   // flag `-` is equivalent to `--stdin`
   if (argv._[0] === '-') {
