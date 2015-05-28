@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.5.0 - 2015-05-25
+### Merged from `standard`
+  * NEW FEATURE: pass in a formatter to get `--format` as an option for the command line! Thanks @ricardofbarros!
+
 ## 1.4.3 - 2015-05-25
 ### Merged from `standard`
   * Speed increased significantly by reverting a default ignore pattern change.
