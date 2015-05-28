@@ -63,11 +63,11 @@ function Cli (opts) {
             --stdin     Read file text from stdin.
             --version   Show current version.
         -h, --help      Show usage information.
-        -F  --format    Automatically format code. (default standard-format)
-
     */
     }.toString().split(/\n/).slice(2, -2).join('\n'), opts.cmd)
 
+    if (opts.formatter) console.log('        -F  --format    Automatically format code.')
+    console.log('\n')
     if (opts.homepage) console.log('Readme: %s', opts.homepage)
     if (opts.bugs) console.log('Report bugs: %s\n', opts.homepage)
 
