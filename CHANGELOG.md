@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.6.0 - 2015-05-29
+### Merged from `standard`
+  * NEW FEATURE: Custom Parsers can now be specified in `package.json`
+
+  To use a custom parser, install it from npm (example: `npm install
+  babel-eslint`) and add this to your package.json:
+  ```
+  {
+    "yourcmdname": {
+      "parser": "babel-eslint"
+    }
+  }
+  ```
+  (Thanks @feross)
+
+
 ## 1.5.0 - 2015-05-25
 ### Merged from `standard`
   * NEW FEATURE: pass in a formatter to get `--format` as an option for the command line! Thanks @ricardofbarros!
