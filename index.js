@@ -7,8 +7,9 @@ var dezalgo = require('dezalgo')
 var eslint = require('eslint')
 var extend = require('xtend')
 var findRoot = require('find-root')
-// var fs = require('fs')
+var fs = require('fs')
 var glob = require('glob')
+var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
 var uniq = require('uniq')
@@ -42,9 +43,8 @@ function Linter (opts) {
  * Lint text to enforce JavaScript Style.
  *
  * @param {string} text                 file text to lint
- * @param {Object} opts                 options object
- * @param {Array.<String>} opts.ignore  file globs to ignore (has sane defaults)
- * @param {string} opts.cwd             current working directory (default: process.cwd())
+ * @param {Object=} opts                options object
+ * @param {string=} opts.parser         custom js parser (e.g. babel-eslint, esprima-fb)
  * @param {function(Error, Object)} cb  callback
  */
 Linter.prototype.lintText = function (text, opts, cb) {
@@ -68,11 +68,12 @@ Linter.prototype.lintText = function (text, opts, cb) {
 /**
  * Lint files to enforce JavaScript Style.
  *
- * @param {Array.<string>} files        file globs to lint
- * @param {Object} opts                 options object
- * @param {Array.<String>} opts.ignore  file globs to ignore (has sane defaults)
- * @param {string} opts.cwd             current working directory (default: process.cwd())
- * @param {function(Error, Object)} cb  callback
+ * @param {Array.<string>} files         file globs to lint
+ * @param {Object=} opts                 options object
+ * @param {Array.<String>=} opts.ignore  file globs to ignore (has sane defaults)
+ * @param {string=} opts.cwd             current working directory (default: process.cwd())
+ * @param {string=} opts.parser          custom js parser (e.g. babel-eslint, esprima-fb)
+ * @param {function(Error, Object)} cb   callback
  */
 Linter.prototype.lintFiles = function (files, opts, cb) {
   var self = this
@@ -133,16 +134,28 @@ Linter.prototype.parseOpts = function (opts) {
   // Add user ignore patterns to default ignore patterns
   var ignore = (opts.ignore || []).concat(DEFAULT_IGNORE_PATTERNS)
 
+  // Find closest package.json
   var root
   try {
     root = findRoot(opts.cwd)
   } catch (e) {}
 
   if (root) {
-    // Add ignore patterns from the closest `package.json`
     try {
       var packageOpts = require(path.join(root, 'package.json'))[self.cmd]
-      if (packageOpts) ignore = ignore.concat(packageOpts.ignore)
+      if (packageOpts) {
+        // Use ignore patterns from package.json
+        ignore = ignore.concat(packageOpts.ignore)
+
+        // Use custom js parser from package.json
+        if (packageOpts.parser) {
+          var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
+          configFile.parser = packageOpts.parser
+          var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + packageOpts.parser)
+          fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
+          self.eslintConfig.configFile = tmpFilename
+        }
+      }
     } catch (e) {}
 
     // Temporarily disabled until this is made more reliable
