@@ -1,22 +1,8 @@
 {
-<<<<<<< HEAD
   "name": "standard-engine",
   "description": "Wrap your standards in a tortilla and cover it in special sauce.",
   "version": "1.5.0",
   "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
-=======
-  "name": "standard",
-  "description": "JavaScript Standard Style",
-  "version": "3.13.1",
-  "author": {
-    "name": "Feross Aboukhadijeh",
-    "email": "feross@feross.org",
-    "url": "http://feross.org/"
-  },
-  "bin": {
-    "standard": "./bin/cmd.js"
-  },
->>>>>>> standard/master
   "bugs": {
     "url": "https://github.com/flet/standard-engine/issues"
   },
