@@ -13,6 +13,7 @@
     "find-root": "^0.1.1",
     "get-stdin": "^4.0.1",
     "glob": "^5.0.9",
+    "ignore": "^2.2.15",
     "minimist": "^1.1.0",
     "run-parallel": "^1.0.0",
     "uniq": "^1.0.1",
@@ -61,8 +62,5 @@
   },
   "scripts": {
     "test": "standard && tape test/clone.js && tape test/api.js"
-  },
-  "standard": {
-    "ignore": "tmp/"
   }
 }
