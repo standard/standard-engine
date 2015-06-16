@@ -13,6 +13,7 @@ var ignorePkg = require('ignore')
 var os = require('os')
 var parallel = require('run-parallel')
 var path = require('path')
+var pkgConfig = require('pkg-config')
 var uniq = require('uniq')
 
 var DEFAULT_PATTERNS = [
@@ -111,7 +112,11 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     // de-dupe
     files = uniq(files)
 
-    if (opts._gitignore) files = opts._gitignore.filter(files)
+    if (opts._gitignore) {
+      if (os.platform() === 'win32') files = files.map(toUnix)
+      files = opts._gitignore.filter(files)
+      if (os.platform() === 'win32') files = files.map(toWin32)
+    }
 
     // undocumented – do not use (used by bin/cmd.js)
     if (opts._onFiles) opts._onFiles(files)
@@ -151,10 +156,8 @@ Linter.prototype.parseOpts = function (opts) {
   } catch (e) {}
 
   if (root) {
-    var packageOpts
-    try {
-      packageOpts = require(path.join(root, 'package.json'))[self.cmd]
-    } catch (e) {}
+    var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
+
     if (packageOpts) {
       // Use ignore patterns from package.json
       if (packageOpts.ignore) addIgnorePattern(packageOpts.ignore)
@@ -178,4 +181,12 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   return opts
+}
+
+function toUnix (str) {
+  return str.replace(/\\/g, '/')
+}
+
+function toWin32 (str) {
+  return str.replace(/\//g, '\\')
 }
