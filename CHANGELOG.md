@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.8.0 - 2015-06-16
+
+ * Fix gitignore support for Windows.
+ * Refactor to use pkg-config.
+ * Update to newer version of eslint to allow extending multiple eslint-config files.
+
 ## 1.7.0 - 2015-05-30
 ### Merged from `standard`
   * NEW FEATURE: Add proper .gitignore support
