@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.8.1 - 2015-06-17
+ * Fix NPE error when opts._config is undefined. Thanks @wombleton
+
 ## 1.8.0 - 2015-06-16
 
  * Fix gitignore support for Windows.
