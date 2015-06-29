@@ -61,6 +61,7 @@ function Cli (opts) {
     Flags:
         -v, --verbose   Show error codes. (so you can ignore specific rules)
             --stdin     Read file text from stdin.
+            --parser    Use custom js parser (e.g. babel-eslint, esprima-fb)
             --version   Show current version
         -h, --help      Show usage information
     */
@@ -79,16 +80,19 @@ function Cli (opts) {
     process.exit(0)
   }
 
+  var lintOpts = {
+     parser: argv.parser
+  }
+
   if (argv.stdin) {
     stdin(function (text) {
       if (argv.format) {
         text = opts.formatter.transform(text)
         process.stdout.write(text)
       }
-      standard.lintText(text, onResult)
+      standard.lintText(text, lintOpts, onResult)
     })
   } else {
-    var lintOpts = {}
     if (argv.format) {
       lintOpts._onFiles = function (files) {
         files.forEach(function (file) {

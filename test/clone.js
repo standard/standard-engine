@@ -10,20 +10,40 @@
 
 var cp = require('child_process')
 var extend = require('xtend')
+var fs = require('fs')
 var mkdirp = require('mkdirp')
+var os = require('os')
+var parallelLimit = require('run-parallel-limit')
 var path = require('path')
-var rimraf = require('rimraf')
-var series = require('run-series')
 var test = require('tape')
 
-var TMP = path.join(__dirname, '..', 'tmp')
+var GIT = 'git'
 var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
+var TMP = path.join(__dirname, '..', 'tmp')
+
+var PARALLEL_LIMIT = Math.min(os.cpus().length * 1.5)
 
 var URLS = [
-  'https://github.com/feross/standard.git',
+  /**
+   * IF YOUR REPO USES STANDARD STYLE, PLEASE SUBMIT A PR WITH THE URL!
+   */
+  'https://github.com/ahmadnassri/echint.git',
+  'https://github.com/ahmadnassri/forwarded-http.git',
+  'https://github.com/ahmadnassri/har-convert.git',
+  'https://github.com/ahmadnassri/har-expander.git',
+  'https://github.com/ahmadnassri/har-validator.git',
+  'https://github.com/ahmadnassri/har.git',
+  'https://github.com/ahmadnassri/metalsmith-imagemin.git',
+  'https://github.com/ahmadnassri/metalsmith-jade.git',
+  'https://github.com/ahmadnassri/metalsmith-paths.git',
+  'https://github.com/ahmadnassri/metalsmith-request.git',
+  'https://github.com/ahmadnassri/node-clone-benchmark.git',
+  'https://github.com/ahmadnassri/pkg-config.git',
+  'https://github.com/ahmadnassri/stringify-clone.git',
+  'https://github.com/ahmadnassri/winston-tcp.git',
   'https://github.com/beatgammit/base64-js.git',
   'https://github.com/brandonhorst/coverage-test.git',
-  'https://github.com/brandonhorst/empty.git',
+  'https://github.com/cjb/GitTorrent.git',
   'https://github.com/feross/bittorrent-dht.git',
   'https://github.com/feross/bittorrent-protocol.git',
   'https://github.com/feross/bittorrent-swarm.git',
@@ -42,6 +62,7 @@ var URLS = [
   'https://github.com/feross/parse-torrent.git',
   'https://github.com/feross/run-auto.git',
   'https://github.com/feross/run-parallel.git',
+  'https://github.com/feross/run-parallel-limit.git',
   'https://github.com/feross/run-series.git',
   'https://github.com/feross/run-waterfall.git',
   'https://github.com/feross/simple-peer.git',
@@ -59,7 +80,7 @@ var URLS = [
   'https://github.com/Flet/exitzero.git',
   'https://github.com/Flet/standard-engine.git',
   'https://github.com/karma-runner/karma-coverage.git',
-  'https://github.com/karma-runner/karma.git',
+  // 'https://github.com/karma-runner/karma.git',
   'https://github.com/mafintosh/airpaste.git',
   'https://github.com/mafintosh/chromecasts.git',
   'https://github.com/mafintosh/cyclist.git',
@@ -83,12 +104,29 @@ var URLS = [
   'https://github.com/mafintosh/telephone.git',
   'https://github.com/mafintosh/transport-stream.git',
   'https://github.com/mafintosh/what-line-is-this.git',
+  'https://github.com/Mashape/alf-validator.git',
+  'https://github.com/Mashape/httpsnippet.git',
+  'https://github.com/maxogden/atomic-queue.git',
   'https://github.com/maxogden/dat-core.git',
   'https://github.com/maxogden/dat.git',
+  'https://github.com/maxogden/dependency-check.git',
   'https://github.com/maxogden/electron-packager.git',
   'https://github.com/maxogden/requirebin.git',
   'https://github.com/maxogden/screencat.git',
   'https://github.com/maxogden/standard-format.git',
+  'https://github.com/maxogden/tape-spawn.git',
+  'https://github.com/maxogden/temporary-directory.git',
+  'https://github.com/maxogden/torrent.git',
+  'https://github.com/mcollina/fastfall.git',
+  'https://github.com/mcollina/fastparallel.git',
+  'https://github.com/mcollina/fastq.git',
+  'https://github.com/mcollina/fastseries.git',
+  'https://github.com/mcollina/hyperemitter.git',
+  'https://github.com/mcollina/mqemitter-mongodb.git',
+  'https://github.com/mcollina/mqemitter-p2p.git',
+  'https://github.com/mcollina/mqemitter-redis.git',
+  'https://github.com/mcollina/mqemitter.git',
+  'https://github.com/mcollina/pruneold.git',
   'https://github.com/moose-team/friends-swarm.git',
   'https://github.com/moose-team/friends.git',
   'https://github.com/moose-team/peerbot.git',
@@ -99,8 +137,27 @@ var URLS = [
   'https://github.com/ngoldman/module-init.git',
   'https://github.com/ngoldman/wireframe.css.git',
   'https://github.com/npm/fstream.git',
-  'https://github.com/othiym23/packard.git'
-  // 'https://github.com/npm/npm.git' // in progress
+  'https://github.com/npm/npm.git',
+  'https://github.com/npm/docs.git',
+  'https://github.com/npm/fstream-npm.git',
+  // 'https://github.com/othiym23/packard.git',
+  'https://github.com/yoshuawuyts/assert-npm-version.git',
+  'https://github.com/yoshuawuyts/brick-router.git',
+  'https://github.com/yoshuawuyts/brick-server.git',
+  'https://github.com/yoshuawuyts/event-bulk-attach.git',
+  'https://github.com/yoshuawuyts/fat-arrow.git',
+  'https://github.com/yoshuawuyts/from2-string.git',
+  'https://github.com/yoshuawuyts/fsm-event.git',
+  'https://github.com/yoshuawuyts/initialize.git',
+  'https://github.com/yoshuawuyts/koa-logger-ndjson.git',
+  'https://github.com/yoshuawuyts/mdjson.git',
+  'https://github.com/yoshuawuyts/promise-assert.git',
+  'https://github.com/yoshuawuyts/simple-store.git',
+  'https://github.com/yoshuawuyts/urit.git',
+  'https://github.com/yoshuawuyts/virtual-raf.git',
+  'https://github.com/yoshuawuyts/vmd.git',
+  'https://github.com/yoshuawuyts/wayfarer.git',
+  'https://github.com/yoshuawuyts/year-of-code.git'
 ]
 
 var MODULES = {}
@@ -109,37 +166,44 @@ URLS.forEach(function (url) {
   MODULES[name] = url
 })
 
-test('clone repos from github', function (t) {
-  t.plan(1)
-  rimraf.sync(TMP)
+test('test github repos that use `standard`', function (t) {
+  t.plan(URLS.length)
+
   mkdirp.sync(TMP)
 
-  series(Object.keys(MODULES).map(function (name) {
+  // test an empty repo
+  mkdirp.sync(path.join(TMP, 'empty'))
+
+  parallelLimit(Object.keys(MODULES).map(function (name) {
     var url = MODULES[name]
+    var folder = path.join(TMP, name)
     return function (cb) {
-      var args = [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
-      // TODO: Start `git` in a way that works on Windows – PR welcome!
-      spawn('git', args, {}, cb)
+      fsAccess(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
+        var gitArgs = err
+          ? [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
+          : [ 'pull' ]
+        var gitOpts = err
+          ? {}
+          : { cwd: folder }
+        spawn(GIT, gitArgs, gitOpts, function (err) {
+          if (err) {
+            err.message += ' (' + name + ')'
+            return cb(err)
+          }
+
+          spawn(STANDARD, [ '--verbose' ], { cwd: folder }, function (err) {
+            t.error(err, name)
+            cb(null)
+          })
+        })
+      })
     }
-  }), function (err) {
+  }), PARALLEL_LIMIT, function (err) {
     if (err) throw err
-    t.pass('cloned repos')
   })
 })
 
-test('lint repos', function (t) {
-  t.plan(URLS.length)
-  series(Object.keys(MODULES).map(function (name) {
-    return function (cb) {
-      var cwd = path.join(TMP, name)
-      spawn(STANDARD, [], { cwd: cwd }, function (err) {
-        t.error(err, name)
-        cb(null)
-      })
-    }
-  }))
-})
-
+// TODO: Spawn in a way that works on Windows – PR welcome!
 function spawn (command, args, opts, cb) {
   var child = cp.spawn(command, args, extend({ stdio: 'inherit' }, opts))
   child.on('error', cb)
@@ -148,4 +212,12 @@ function spawn (command, args, opts, cb) {
     else cb(null)
   })
   return child
+}
+
+function fsAccess (path, mode, cb) {
+  if (typeof fs.access === 'function') {
+    fs.access(path, mode, cb)
+  } else {
+    fs.stat(path, cb)
+  }
 }

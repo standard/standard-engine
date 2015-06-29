@@ -34,6 +34,7 @@ function Linter (opts) {
   opts = opts || {}
   self.cmd = opts.cmd || 'standard'
   self.eslintConfig = defaults(opts.eslintConfig, {
+    reset: true,
     useEslintrc: false
   })
   if (!self.eslintConfig) {
@@ -113,9 +114,11 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     files = uniq(files)
 
     if (opts._gitignore) {
-      if (os.platform() === 'win32') files = files.map(toUnix)
+      files = toRelative(opts.cwd, files)
+      if (os.platform() === 'win32') files = toUnix(files)
       files = opts._gitignore.filter(files)
-      if (os.platform() === 'win32') files = files.map(toWin32)
+      files = toAbsolute(opts.cwd, files)
+      if (os.platform() === 'win32') files = toWin32(files)
     }
 
     // undocumented – do not use (used by bin/cmd.js)
@@ -148,6 +151,7 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   if (opts.ignore) addIgnorePattern(opts.ignore)
+  if (opts.parser) useCustomParser(opts.parser)
 
   // Find package.json in the project root
   var root
@@ -163,15 +167,7 @@ Linter.prototype.parseOpts = function (opts) {
       if (packageOpts.ignore) addIgnorePattern(packageOpts.ignore)
 
       // Use custom js parser from package.json
-      if (packageOpts.parser) {
-        var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
-        configFile.parser = packageOpts.parser
-        var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + packageOpts.parser)
-        fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
-
-        opts._config = opts._config || {} // default _config property if not present
-        opts._config.configFile = tmpFilename
-      }
+      if (!opts.parser && packageOpts.parser) useCustomParser(packageOpts.parser)
     }
 
     // Use ignore patterns from project root .gitignore
@@ -182,13 +178,39 @@ Linter.prototype.parseOpts = function (opts) {
     if (gitignore) opts._gitignore.addPattern(gitignore.split(/\r?\n/))
   }
 
+  function useCustomParser (parser) {
+    var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
+    configFile.parser = parser
+    var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + parser)
+    fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
+
+    opts._config = opts._config || {} // default _config property if not present
+    opts._config.configFile = tmpFilename
+  }
+
   return opts
 }
 
-function toUnix (str) {
-  return str.replace(/\\/g, '/')
+function toAbsolute (cwd, files) {
+  return files.map(function (file) {
+    return path.join(cwd, file)
+  })
 }
 
-function toWin32 (str) {
-  return str.replace(/\//g, '\\')
+function toRelative (cwd, files) {
+  return files.map(function (file) {
+    return path.relative(cwd, file)
+  })
+}
+
+function toUnix (files) {
+  return files.map(function (file) {
+    return file.replace(/\\/g, '/')
+  })
+}
+
+function toWin32 (files) {
+  return files.map(function (file) {
+    return file.replace(/\//g, '\\')
+  })
 }
