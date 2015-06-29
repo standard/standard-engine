@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.9.0 2015-06-29
+ * merge from latest standard 4.4.1 including:
+  * Fixes to the gitignore feature
+  * added `parser` parameter
+  * Lots of repos added to clone.js test and made a lot faster! @feross is the best :)
+
 ## 1.8.1 - 2015-06-17
  * Fix NPE error when opts._config is undefined. Thanks @wombleton
 
