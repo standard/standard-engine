@@ -163,10 +163,18 @@ Linter.prototype.parseOpts = function (opts) {
     var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
 
     if (packageOpts) {
-      // Use ignore patterns from package.json
+      // Use ignore patterns from package.json ("standard.ignore" property)
       if (packageOpts.ignore) addIgnorePattern(packageOpts.ignore)
 
-      // Use custom js parser from package.json
+      // Use globals from package.json ("standard.global" property)
+      var globals = packageOpts.globals || packageOpts.global
+      if (globals) {
+        self.eslintConfig.globals = Array.isArray(globals)
+          ? globals
+          : [ globals ]
+      }
+
+      // Use custom js parser from package.json ("standard.parser" property)
       if (!opts.parser && packageOpts.parser) useCustomParser(packageOpts.parser)
     }
 

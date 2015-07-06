@@ -2,8 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.9.1 2015-07-06
+## 1.10.0 2015-07-06
   * Fix bug in custom parser option to make it work.
+  * Merged from standard: New "globals" option can be set in package.json to define an array of global variables.
 
 ## 1.9.0 2015-06-29
  * merge from latest standard 4.4.1 including:
