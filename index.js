@@ -3,18 +3,15 @@ module.exports.cli = require('./bin/cmd')
 module.exports.linter = Linter
 
 var defaults = require('defaults')
+var deglob = require('deglob')
 var dezalgo = require('dezalgo')
 var eslint = require('eslint')
 var extend = require('xtend')
 var findRoot = require('find-root')
 var fs = require('fs')
-var glob = require('glob')
-var ignorePkg = require('ignore')
 var os = require('os')
-var parallel = require('run-parallel')
 var path = require('path')
 var pkgConfig = require('pkg-config')
-var uniq = require('uniq')
 
 var DEFAULT_PATTERNS = [
   '**/*.js',
@@ -90,48 +87,28 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
   if (typeof files === 'string') files = [ files ]
   if (files.length === 0) files = DEFAULT_PATTERNS
 
-  // traverse filesystem
-  parallel(files.map(function (pattern) {
-    return function (cb) {
-      glob(pattern, {
-        cwd: opts.cwd,
-        ignore: opts._ignore,
-        nodir: true
-      }, cb)
-    }
-  }), function (err, results) {
+  var deglobOpts = {
+    ignore: opts.ignore,
+    cwd: opts.cwd,
+    useGitIgnore: true,
+    usePackageJson: true,
+    configKey: self.cmd
+  }
+
+  deglob(files, deglobOpts, function (err, allFiles) {
     if (err) return cb(err)
-
-    // flatten nested arrays
-    var files = results.reduce(function (files, result) {
-      result.forEach(function (file) {
-        files.push(path.resolve(opts.cwd, file))
-      })
-      return files
-    }, [])
-
-    // de-dupe
-    files = uniq(files)
-
-    if (opts._gitignore) {
-      files = toRelative(opts.cwd, files)
-      if (os.platform() === 'win32') files = toUnix(files)
-      files = opts._gitignore.filter(files)
-      files = toAbsolute(opts.cwd, files)
-      if (os.platform() === 'win32') files = toWin32(files)
-    }
-
     // undocumented – do not use (used by bin/cmd.js)
-    if (opts._onFiles) opts._onFiles(files)
+    if (opts._onFiles) opts._onFiles(allFiles)
 
     var result
     try {
-      result = new eslint.CLIEngine(self.eslintConfig).executeOnFiles(files)
+      result = new eslint.CLIEngine(self.eslintConfig).executeOnFiles(allFiles)
     } catch (err) {
       return cb(err)
     }
     return cb(null, result)
   })
+
 }
 
 Linter.prototype.parseOpts = function (opts) {
@@ -142,15 +119,11 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts.cwd) opts.cwd = process.cwd()
 
-  opts._ignore = DEFAULT_IGNORE_PATTERNS.slice(0) // passed into glob
-  opts._gitignore = ignorePkg()
+  var ignore = DEFAULT_IGNORE_PATTERNS.slice(0) // passed into glob
 
-  function addIgnorePattern (patterns) {
-    opts._ignore = opts._ignore.concat(patterns)
-    opts._gitignore.addPattern(patterns)
-  }
+  if (opts.ignore) ignore.concat(opts.ignore)
+  opts.ignore = ignore
 
-  if (opts.ignore) addIgnorePattern(opts.ignore)
   if (opts.parser) useCustomParser(opts.parser)
 
   // Find package.json in the project root
@@ -163,9 +136,6 @@ Linter.prototype.parseOpts = function (opts) {
     var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
 
     if (packageOpts) {
-      // Use ignore patterns from package.json ("standard.ignore" property)
-      if (packageOpts.ignore) addIgnorePattern(packageOpts.ignore)
-
       // Use globals from package.json ("standard.global" property)
       var globals = packageOpts.globals || packageOpts.global
       if (globals) {
@@ -177,13 +147,6 @@ Linter.prototype.parseOpts = function (opts) {
       // Use custom js parser from package.json ("standard.parser" property)
       if (!opts.parser && packageOpts.parser) useCustomParser(packageOpts.parser)
     }
-
-    // Use ignore patterns from project root .gitignore
-    var gitignore
-    try {
-      gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8')
-    } catch (e) {}
-    if (gitignore) opts._gitignore.addPattern(gitignore.split(/\r?\n/))
   }
 
   function useCustomParser (parser) {
@@ -196,28 +159,4 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   return opts
-}
-
-function toAbsolute (cwd, files) {
-  return files.map(function (file) {
-    return path.join(cwd, file)
-  })
-}
-
-function toRelative (cwd, files) {
-  return files.map(function (file) {
-    return path.relative(cwd, file)
-  })
-}
-
-function toUnix (files) {
-  return files.map(function (file) {
-    return file.replace(/\\/g, '/')
-  })
-}
-
-function toWin32 (files) {
-  return files.map(function (file) {
-    return file.replace(/\//g, '\\')
-  })
 }
