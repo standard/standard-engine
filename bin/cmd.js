@@ -81,7 +81,7 @@ function Cli (opts) {
   }
 
   var lintOpts = {
-     parser: argv.parser
+    parser: argv.parser
   }
 
   if (argv.stdin) {
