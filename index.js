@@ -18,7 +18,7 @@ var DEFAULT_PATTERNS = [
   '**/*.jsx'
 ]
 
-var DEFAULT_IGNORE_PATTERNS = [
+var DEFAULT_IGNORE = [
   'coverage/**',
   'node_modules/**',
   '**/*.min.js',
@@ -32,7 +32,8 @@ function Linter (opts) {
   self.cmd = opts.cmd || 'standard'
   self.eslintConfig = defaults(opts.eslintConfig, {
     reset: true,
-    useEslintrc: false
+    useEslintrc: false,
+    globals: []
   })
   if (!self.eslintConfig) {
     throw new Error('No eslintConfig passed.')
@@ -44,7 +45,8 @@ function Linter (opts) {
  *
  * @param {string} text                 file text to lint
  * @param {Object=} opts                options object
- * @param {string=} opts.parser         custom js parser (e.g. babel-eslint, esprima-fb)
+ * @param {string=} opts.globals        global variables to declare
+ * @param {string=} opts.parser         custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb  callback
  */
 Linter.prototype.lintText = function (text, opts, cb) {
@@ -68,12 +70,13 @@ Linter.prototype.lintText = function (text, opts, cb) {
 /**
  * Lint files to enforce JavaScript Style.
  *
- * @param {Array.<string>} files         file globs to lint
- * @param {Object=} opts                 options object
- * @param {Array.<String>=} opts.ignore  file globs to ignore (has sane defaults)
- * @param {string=} opts.cwd             current working directory (default: process.cwd())
- * @param {string=} opts.parser          custom js parser (e.g. babel-eslint, esprima-fb)
- * @param {function(Error, Object)} cb   callback
+ * @param {Array.<string>} files        file globs to lint
+ * @param {Object=} opts                options object
+ * @param {Array.<String>=} opts.ignore file globs to ignore (has sane defaults)
+ * @param {string=} opts.cwd            current working directory (default: process.cwd())
+ * @param {string=} opts.globals        global variables to declare
+ * @param {string=} opts.parser         custom js parser (e.g. babel-eslint)
+ * @param {function(Error, Object)} cb  callback
  */
 Linter.prototype.lintFiles = function (files, opts, cb) {
   var self = this
@@ -119,43 +122,40 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts.cwd) opts.cwd = process.cwd()
 
-  var ignore = DEFAULT_IGNORE_PATTERNS.slice(0) // passed into glob
+  if (!opts.ignore) opts.ignore = []
+  if (!opts.globals) opts.globals = []
+  opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
 
-  if (opts.ignore) ignore.concat(opts.ignore)
-  opts.ignore = ignore
+  setGlobals(opts.globals || opts.global)
+  setParser(opts.parser)
 
-  if (opts.parser) useCustomParser(opts.parser)
-
-  // Find package.json in the project root
   var root
-  try {
-    root = findRoot(opts.cwd)
-  } catch (e) {}
-
+  try { root = findRoot(opts.cwd) } catch (e) {}
   if (root) {
     var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
 
     if (packageOpts) {
-      // Use globals from package.json ("standard.global" property)
-      var globals = packageOpts.globals || packageOpts.global
-      if (globals) {
-        self.eslintConfig.globals = Array.isArray(globals)
-          ? globals
-          : [ globals ]
-      }
-
-      // Use custom js parser from package.json ("standard.parser" property)
-      if (!opts.parser && packageOpts.parser) useCustomParser(packageOpts.parser)
+      setGlobals(packageOpts.globals || packageOpts.global)
+      if (!opts.parser && packageOpts.parser) setParser(packageOpts.parser)
     }
   }
 
-  function useCustomParser (parser) {
+  function setParser (parser) {
     var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
     configFile.parser = parser
-    var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + parser)
+    var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + randomNumber())
     fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
     self.eslintConfig = self.eslintConfig || {} // default _config property if not present
     self.eslintConfig.configFile = tmpFilename
+  }
+
+  function setGlobals (globals) {
+    if (!globals) return
+    self.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
+  }
+
+  function randomNumber () {
+    return Math.random().toString().substring(2, 10)
   }
 
   return opts

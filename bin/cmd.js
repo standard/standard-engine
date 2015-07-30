@@ -16,6 +16,7 @@ function Cli (opts) {
 
   var argv = minimist(process.argv.slice(2), {
     alias: {
+      global: 'globals',
       help: 'h',
       verbose: 'v',
       format: 'F'
@@ -26,6 +27,10 @@ function Cli (opts) {
       'verbose',
       'version',
       'format'
+    ],
+    string: [
+      'global',
+      'parser'
     ]
   })
 
@@ -61,6 +66,7 @@ function Cli (opts) {
     Flags:
         -v, --verbose   Show error codes. (so you can ignore specific rules)
             --stdin     Read file text from stdin.
+            --global    Declare global variable
             --parser    Use custom js parser (e.g. babel-eslint, esprima-fb)
             --version   Show current version
         -h, --help      Show usage information
@@ -81,7 +87,8 @@ function Cli (opts) {
   }
 
   var lintOpts = {
-    parser: argv.parser
+    parser: argv.parser,
+	global: argv.global
   }
 
   if (argv.stdin) {
