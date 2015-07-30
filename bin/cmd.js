@@ -2,6 +2,7 @@ module.exports = Cli
 
 var defaults = require('defaults')
 var minimist = require('minimist')
+var multiline = require('multiline')
 var stdin = require('get-stdin')
 var fs = require('fs')
 
@@ -51,10 +52,10 @@ function Cli (opts) {
 
   if (argv.help) {
     if (opts.tagline) console.log('%s - %s', opts.cmd, opts.tagline)
-    console.log(function () {
+    console.log(multiline.stripIndent(function () {
       /*
 
-      Usage:
+        Usage:
           %s <flags> [FILES...]
 
           If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
@@ -63,7 +64,7 @@ function Cli (opts) {
           Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js) are
           automatically excluded.
 
-      Flags:
+        Flags:
           -v, --verbose   Show error codes. (so you can ignore specific rules)
               --stdin     Read file text from stdin.
               --global    Declare global variable
@@ -71,9 +72,9 @@ function Cli (opts) {
               --version   Show current version
           -h, --help      Show usage information
       */
-    }.toString().split(/\n/).slice(2, -2).join('\n'), opts.cmd)
+    }), opts.cmd)
 
-    if (opts.formatter) console.log('        -F  --format    Automatically format code.')
+    if (opts.formatter) console.log('          -F  --format    Automatically format code.')
     console.log('\n')
     if (opts.homepage) console.log('Readme: %s', opts.homepage)
     if (opts.bugs) console.log('Report bugs: %s\n', opts.homepage)
