@@ -70,6 +70,7 @@ var URLS = [
   'https://github.com/feross/simple-peer.git',
   'https://github.com/feross/simple-websocket.git',
   'https://github.com/feross/snazzy.git',
+  'https://github.com/feross/standard.git',
   'https://github.com/feross/standard-www.git',
   'https://github.com/feross/studynotes.git',
   'https://github.com/feross/torrent-discovery.git',
