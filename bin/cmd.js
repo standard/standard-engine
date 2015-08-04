@@ -67,7 +67,7 @@ function Cli (opts) {
             working directory are checked, recursively.
 
             Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js) are
-            automatically excluded.
+            automatically ignored.
 
         Flags:
             %s
