@@ -17,17 +17,17 @@ function Cli (opts) {
 
   var argv = minimist(process.argv.slice(2), {
     alias: {
+      format: 'F',
       global: 'globals',
       help: 'h',
-      verbose: 'v',
-      format: 'F'
+      verbose: 'v'
     },
     boolean: [
+      'format',
       'help',
       'stdin',
       'verbose',
-      'version',
-      'format'
+      'version'
     ],
     string: [
       'global',
@@ -51,34 +51,34 @@ function Cli (opts) {
   }
 
   if (argv.help) {
-    if (opts.tagline) console.log('%s - %s', opts.cmd, opts.tagline)
+    var fmtMsg = ''
+    if (opts.formatter) {
+      fmtMsg = '-F  --format    Automatically format code.'
+      if (opts.formatterName) fmtMsg += ' (using ' + opts.formatterName + ')'
+    }
+    if (opts.tagline) console.log('%s - %s (%s)', opts.cmd, opts.tagline, opts.homepage)
     console.log(multiline.stripIndent(function () {
       /*
 
         Usage:
-          %s <flags> [FILES...]
+            %s <flags> [FILES...]
 
-          If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
-          working directory are checked, recursively.
+            If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
+            working directory are checked, recursively.
 
-          Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js) are
-          automatically excluded.
+            Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js) are
+            automatically excluded.
 
         Flags:
-          -v, --verbose   Show error codes. (so you can ignore specific rules)
-              --stdin     Read file text from stdin.
-              --global    Declare global variable
-              --parser    Use custom js parser (e.g. babel-eslint, esprima-fb)
-              --version   Show current version
-          -h, --help      Show usage information
+            %s
+            -v, --verbose   Show error codes. (so you can ignore specific rules)
+                --stdin     Read file text from stdin.
+                --global    Declare global variable
+                --parser    Use custom js parser (e.g. babel-eslint)
+                --version   Show current version
+            -h, --help      Show usage information
       */
-    }), opts.cmd)
-
-    if (opts.formatter) console.log('          -F  --format    Automatically format code.')
-    console.log('\n')
-    if (opts.homepage) console.log('Readme: %s', opts.homepage)
-    if (opts.bugs) console.log('Report bugs: %s\n', opts.homepage)
-
+    }), opts.cmd, fmtMsg)
     process.exit(0)
   }
 
@@ -116,7 +116,7 @@ function Cli (opts) {
     if (err) return onError(err)
     if (result.errorCount === 0) process.exit(0)
 
-    console.error(
+    console.log(
       opts.cmd + ': Use %s (%s) ',
       opts.tagline,
       opts.homepage
