@@ -31,7 +31,6 @@ function Linter (opts) {
   opts = opts || {}
   self.cmd = opts.cmd || 'standard'
   self.eslintConfig = defaults(opts.eslintConfig, {
-    reset: true,
     useEslintrc: false,
     globals: []
   })
