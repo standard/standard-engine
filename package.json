@@ -11,7 +11,6 @@
     "deglob": "^1.0.0",
     "dezalgo": "^1.0.2",
     "eslint": "^1.0.0",
-    "eslint-config-standard": "^4.0.0",
     "find-root": "^0.1.1",
     "get-stdin": "^4.0.1",
     "minimist": "^1.1.0",
