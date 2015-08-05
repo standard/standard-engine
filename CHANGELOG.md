@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.5  2015-08-05
+  ### `standard` is now using `standard-engine` Cool!
+  * All `standard` maintainers have been added to `standard-engine`.
+  * Instead of synchronizing, we will now just update `standard-engine` directly to add features/fixes!
+
+  ### Other things
+  * **BREAKING CHANGE** `standard-engine` is now using eslint 1.0!
+    * Be sure your eslint configuration works with eslint 1.0 before upgrading.
+
+  * Other dependencies were bumped in order to facilitate the update
+  * The code was also meticulously synchronized with `standard`
+    * CLI output is now identical
+    * A few code style updates were made for consistency
+
 ## 1.11.1 2015-07-30
   * fix standard issues in cmd.js
 
