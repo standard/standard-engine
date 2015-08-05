@@ -134,11 +134,12 @@ Linter.prototype.parseOpts = function (opts) {
 
     if (packageOpts) {
       setGlobals(packageOpts.globals || packageOpts.global)
-      if (!opts.parser && packageOpts.parser) setParser(packageOpts.parser)
+      if (!opts.parser) setParser(packageOpts.parser)
     }
   }
 
   function setParser (parser) {
+    if (!parser) return
     var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
     configFile.parser = parser
     var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + randomNumber())
