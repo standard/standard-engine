@@ -53,7 +53,7 @@ function Cli (opts) {
   if (argv.help) {
     var fmtMsg = ''
     if (opts.formatter) {
-      fmtMsg = '-F  --format    Automatically format code.'
+      fmtMsg = '-F, --format    Automatically format code.'
       if (opts.formatterName) fmtMsg += ' (using ' + opts.formatterName + ')'
     }
     if (opts.tagline) console.log('%s - %s (%s)', opts.cmd, opts.tagline, opts.homepage)
