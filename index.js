@@ -122,7 +122,6 @@ Linter.prototype.parseOpts = function (opts) {
   if (!opts.cwd) opts.cwd = process.cwd()
 
   if (!opts.ignore) opts.ignore = []
-  if (!opts.globals) opts.globals = []
   opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
 
   setGlobals(opts.globals || opts.global)
