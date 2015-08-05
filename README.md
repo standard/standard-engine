@@ -89,7 +89,7 @@ automatically ignored.
 Sometimes you need to ignore additional folders or specific minfied files. To do that, add
 a `ignore` property to `package.json`:
 
-```json
+```js
 "pocketlint": { // this key should equal the value of cmd in options.js
   "ignore": [
     "**/out/",
