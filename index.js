@@ -144,7 +144,6 @@ Linter.prototype.parseOpts = function (opts) {
     configFile.parser = parser
     var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + randomNumber())
     fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
-    self.eslintConfig = self.eslintConfig || {} // default _config property if not present
     self.eslintConfig.configFile = tmpFilename
   }
 
