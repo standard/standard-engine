@@ -110,7 +110,6 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     }
     return cb(null, result)
   })
-
 }
 
 Linter.prototype.parseOpts = function (opts) {
