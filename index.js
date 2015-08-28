@@ -19,10 +19,10 @@ var DEFAULT_PATTERNS = [
 ]
 
 var DEFAULT_IGNORE = [
-  'coverage/**',
-  'node_modules/**',
   '**/*.min.js',
   '**/bundle.js',
+  'coverage/**',
+  'node_modules/**',
   'vendor/**'
 ]
 
