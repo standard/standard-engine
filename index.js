@@ -22,7 +22,8 @@ var DEFAULT_IGNORE = [
   'coverage/**',
   'node_modules/**',
   '**/*.min.js',
-  '**/bundle.js'
+  '**/bundle.js',
+  'vendor/**'
 ]
 
 function Linter (opts) {
