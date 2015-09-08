@@ -8,9 +8,6 @@ var dezalgo = require('dezalgo')
 var eslint = require('eslint')
 var extend = require('xtend')
 var findRoot = require('find-root')
-var fs = require('fs')
-var os = require('os')
-var path = require('path')
 var pkgConfig = require('pkg-config')
 
 var DEFAULT_PATTERNS = [
@@ -140,20 +137,12 @@ Linter.prototype.parseOpts = function (opts) {
 
   function setParser (parser) {
     if (!parser) return
-    var configFile = JSON.parse(fs.readFileSync(self.eslintConfig.configFile, 'utf8'))
-    configFile.parser = parser
-    var tmpFilename = path.join(os.tmpdir(), '.eslintrc-' + randomNumber())
-    fs.writeFileSync(tmpFilename, JSON.stringify(configFile))
-    self.eslintConfig.configFile = tmpFilename
+    self.eslintConfig.parser = parser
   }
 
   function setGlobals (globals) {
     if (!globals) return
     self.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
-  }
-
-  function randomNumber () {
-    return Math.random().toString().substring(2, 10)
   }
 
   return opts
