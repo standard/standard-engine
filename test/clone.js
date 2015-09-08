@@ -20,6 +20,11 @@ var testPackages = require('standard-packages/test')
 
 testPackages = testPackages.filter(function (pkg) { return !pkg.disable })
 
+testPackages.push({
+  name: 'standard',
+  repo: 'https://github.com/feross/standard'
+})
+
 var GIT = 'git'
 var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 var TMP = path.join(__dirname, '..', 'tmp')
