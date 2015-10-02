@@ -95,6 +95,15 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     configKey: self.cmd
   }
 
+  var eslintConfig = self.eslintConfig
+
+  if (true || opts.cache || opts.cacheFile) {
+    eslintConfig = extend({}, {
+      cache: true,
+      cacheFile: opts.cacheFile || '.standardcache'
+    }, self.eslintConfig)
+  }
+
   deglob(files, deglobOpts, function (err, allFiles) {
     if (err) return cb(err)
     // undocumented – do not use (used by bin/cmd.js)
@@ -102,7 +111,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
 
     var result
     try {
-      result = new eslint.CLIEngine(self.eslintConfig).executeOnFiles(allFiles)
+      result = new eslint.CLIEngine(eslintConfig).executeOnFiles(allFiles)
     } catch (err) {
       return cb(err)
     }
