@@ -29,7 +29,7 @@ var GIT = 'git'
 var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 var TMP = path.join(__dirname, '..', 'tmp')
 
-var PARALLEL_LIMIT = Math.min(os.cpus().length * 1.5)
+var PARALLEL_LIMIT = Math.floor(os.cpus().length * 1.5)
 
 test('test github repos that use `standard`', function (t) {
   t.plan(testPackages.length)
