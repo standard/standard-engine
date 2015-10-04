@@ -59,6 +59,8 @@ module.exports = {
   homepage: pkg.homepage,
   bugs: pkg.bugs.url,
   tagline: 'Live by your own standards!', // displayed in output --help
+  cache: false, // set to true for caching
+  cacheFile: '.standardcache', // file to store cache data; implies `cache`
   eslintConfig: {
     configFile: path.join(__dirname, 'eslintrc.json')
   },
