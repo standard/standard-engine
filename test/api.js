@@ -27,3 +27,17 @@ test('api: lintText', function (t) {
     t.equal(result.errorCount, 1, 'should have used single quotes')
   })
 })
+
+test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
+  t.plan(2)
+  var opts = standard.parseOpts({parser: 'blah'})
+  t.equal(opts.parser, 'blah')
+  t.equal(standard.eslintConfig.parser, undefined)
+})
+
+test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
+  t.plan(2)
+  var opts = standard.parseOpts({globals: ['what']})
+  t.deepEqual(opts.globals, ['what'])
+  t.deepEqual(standard.eslintConfig.globals, [])
+})
