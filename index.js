@@ -57,7 +57,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
 
   var result
   try {
-    result = new eslint.CLIEngine(self.eslintConfig).executeOnText(text)
+    result = new eslint.CLIEngine(opts.eslintConfig).executeOnText(text)
   } catch (err) {
     return cb(err)
   }
@@ -102,7 +102,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
 
     var result
     try {
-      result = new eslint.CLIEngine(self.eslintConfig).executeOnFiles(allFiles)
+      result = new eslint.CLIEngine(opts.eslintConfig).executeOnFiles(allFiles)
     } catch (err) {
       return cb(err)
     }
@@ -115,6 +115,7 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts) opts = {}
   opts = extend(opts)
+  opts.eslintConfig = extend(self.eslintConfig)
 
   if (!opts.cwd) opts.cwd = process.cwd()
 
@@ -137,12 +138,12 @@ Linter.prototype.parseOpts = function (opts) {
 
   function setParser (parser) {
     if (!parser) return
-    self.eslintConfig.parser = parser
+    opts.eslintConfig.parser = parser
   }
 
   function setGlobals (globals) {
     if (!globals) return
-    self.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
+    opts.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
   }
 
   return opts
