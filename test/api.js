@@ -30,6 +30,15 @@ test('api: lintFiles with caching', function (t) {
   })
 })
 
+test('api: lintFiles without caching', function (t) {
+  t.plan(2)
+  if (getStat('.standardcache')) fs.unlinkSync('.standardcache')
+  standard.lintFiles([], { cwd: 'bin', cache: false }, function (err, result) {
+    t.error(err, 'no error while linting')
+    t.equal(typeof getStat('.standardcache'), 'undefined', '.standardcache was present')
+  })
+})
+
 test('api: lintText', function (t) {
   t.plan(3)
   standard.lintText('console.log("hi there")\n', function (err, result) {
