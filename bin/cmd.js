@@ -98,7 +98,6 @@ function Cli (opts) {
         text = opts.formatter.transform(text)
         process.stdout.write(text)
       }
-      standard.lintText(text, lintOpts, onResult)
     })
   } else {
     if (argv.format) {
