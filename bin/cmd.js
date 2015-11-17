@@ -117,7 +117,7 @@ function Cli (opts) {
     if (result.errorCount === 0) process.exit(0)
 
     console.log(
-      opts.cmd + ': Use %s (%s) ',
+      opts.cmd + ': %s (%s) ',
       opts.tagline,
       opts.homepage
     )
