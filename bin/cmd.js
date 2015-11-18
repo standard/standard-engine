@@ -114,7 +114,7 @@ function Cli (opts) {
 
   function onResult (err, result) {
     if (err) return onError(err)
-    if (result.errorCount === 0) process.exit(0)
+    if (!result.errorCount && !result.warningCount) process.exit(0)
 
     console.log(
       opts.cmd + ': %s (%s) ',
@@ -132,7 +132,7 @@ function Cli (opts) {
       })
     })
 
-    process.exit(1)
+    process.exit(result.errorCount ? 1 : 0)
   }
 
   function onError (err) {
