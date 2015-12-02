@@ -2,7 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.0.5  2015-08-05
+## 2.2.3 - 2015-11-17
+  * remove prepended "Use" from tagline output
+
+## 2.2.2 - 2015-11-06
+  * update eslint to 1.9.0
+
+## 2.2.1 - 2015-11-01
+  * lock down eslint to 1.7.3 to fix space-in-parens eslint bug
+  * avoid mutating the eslint config object that's passed in (fixes #9)
+
+## 2.2.0 - 2015-09-18
+  * update eslint to 1.5.x
+
+## 2.1.1 - 2015-09-18
+  * fix fetching of eslint with older npm versions
+
+## 2.1.0 - 2015-06-16
+  * set custom parser in non-hacky way (fixes #12)
+
+## 2.0.7 - 2105-08-28
+  * ignore vendor/ folder by default
+
+## 2.0.6 - 2105-08-07
+  * readme changes
+
+## 2.0.5 - 2015-08-05
   ### `standard` is now using `standard-engine` Cool!
   * All `standard` maintainers have been added to `standard-engine`.
   * Instead of synchronizing, we will now just update `standard-engine` directly to add features/fixes!
@@ -16,24 +41,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     * CLI output is now identical
     * A few code style updates were made for consistency
 
-## 1.11.1 2015-07-30
+## 1.11.1 - 2015-07-30
   * fix standard issues in cmd.js
 
-## 1.11.0 2015-07-30
+## 1.11.0 - 2015-07-30
   * Merged standard 5.0.0-8
   * New feature: ability to specify globals via --global flag and `global` option
 
-## 1.10.2 2015-07-17
+## 1.10.2 - 2015-07-17
   * Merged standard 4.5.4 changes: switch to using `deglob`
 
-## 1.10.1 2015-07-06
+## 1.10.1 - 2015-07-06
   * Removed a stray console.log
 
-## 1.10.0 2015-07-06
+## 1.10.0 - 2015-07-06
   * Fix bug in custom parser option to make it work.
   * Merged from standard: New "globals" option can be set in package.json to define an array of global variables.
 
-## 1.9.0 2015-06-29
+## 1.9.0 - 2015-06-29
  * merge from latest standard 4.4.1 including:
   * Fixes to the gitignore feature
   * added `parser` parameter
