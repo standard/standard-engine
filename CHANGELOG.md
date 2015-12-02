@@ -2,7 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.0.5  2015-08-05
+## 2.2.3 2015-11-17
+  * remove prepended "Use" from tagline output
+
+## 2.2.2 2015-11-06
+  * update eslint to 1.9.0
+
+## 2.2.1 2015-11-01
+  * lock down eslint to 1.7.3 to fix space-in-parens eslint bug
+  * avoid mutating the eslint config object that's passed in (fixes #9)
+
+## 2.2.0 2015-09-18
+  * update eslint to 1.5.x
+
+## 2.1.1 2015-09-18
+  * fix fetching of eslint with older npm versions
+
+## 2.1.0 2015-06-16
+  * set custom parser in non-hacky way (fixes #12)
+
+## 2.0.7 2105-08-28
+  * ignore vendor/ folder by default
+
+## 2.0.6 2105-08-07
+  * readme changes
+
+## 2.0.5 2015-08-05
   ### `standard` is now using `standard-engine` Cool!
   * All `standard` maintainers have been added to `standard-engine`.
   * Instead of synchronizing, we will now just update `standard-engine` directly to add features/fixes!
