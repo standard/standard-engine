@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.2.4 - 2015-12-02
+  * Fixed: Log warning messages when no errors are present
+
 ## 2.2.3 - 2015-11-17
   * remove prepended "Use" from tagline output
 
