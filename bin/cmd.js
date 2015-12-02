@@ -116,7 +116,7 @@ function Cli (opts) {
     if (err) return onError(err)
     if (result.errorCount === 0) process.exit(0)
 
-    console.log(
+    console.error(
       opts.cmd + ': %s (%s) ',
       opts.tagline,
       opts.homepage
