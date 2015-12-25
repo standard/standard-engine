@@ -49,11 +49,13 @@ require('standard-engine').cli(opts)
 ```
 **options.js**
 ```js
+var eslint = require('eslint')
 var path = require('path')
 var pkg = require('./package.json')
 
 module.exports = {
   // homepage, version and bugs pulled from package.json
+  eslint: eslint, // pass any version of eslint >= 1.0.0
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   version: pkg.version,
   homepage: pkg.homepage,
