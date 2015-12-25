@@ -3,7 +3,7 @@ module.exports = Cli
 var defaults = require('defaults')
 var minimist = require('minimist')
 var multiline = require('multiline')
-var stdin = require('get-stdin')
+var getStdin = require('get-stdin')
 var fs = require('fs')
 
 function Cli (opts) {
@@ -93,7 +93,7 @@ function Cli (opts) {
   }
 
   if (argv.stdin) {
-    stdin(function (text) {
+    getStdin().then(function (text) {
       if (argv.format) {
         text = opts.formatter.transform(text)
         process.stdout.write(text)
