@@ -5,7 +5,6 @@ module.exports.linter = Linter
 var defaults = require('defaults')
 var deglob = require('deglob')
 var dezalgo = require('dezalgo')
-var eslint = require('eslint')
 var extend = require('xtend')
 var findRoot = require('find-root')
 var pkgConfig = require('pkg-config')
@@ -27,7 +26,11 @@ function Linter (opts) {
   var self = this
   if (!(self instanceof Linter)) return new Linter(opts)
   opts = opts || {}
+
   self.cmd = opts.cmd || 'standard'
+  self.eslint = opts.eslint
+  if (!self.eslint) throw new Error('opts.eslint option is required')
+
   self.eslintConfig = defaults(opts.eslintConfig, {
     useEslintrc: false,
     globals: []
@@ -57,7 +60,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
 
   var result
   try {
-    result = new eslint.CLIEngine(opts.eslintConfig).executeOnText(text)
+    result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnText(text)
   } catch (err) {
     return cb(err)
   }
@@ -102,7 +105,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
 
     var result
     try {
-      result = new eslint.CLIEngine(opts.eslintConfig).executeOnFiles(allFiles)
+      result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnFiles(allFiles)
     } catch (err) {
       return cb(err)
     }
