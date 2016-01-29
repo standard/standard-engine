@@ -8,7 +8,6 @@
  * VERSION BUMP.)
  */
 
-var cp = require('child_process')
 var extend = require('xtend')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
@@ -17,19 +16,31 @@ var parallelLimit = require('run-parallel-limit')
 var path = require('path')
 var test = require('tape')
 var testPackages = require('standard-packages/test')
-
-testPackages = testPackages.filter(function (pkg) { return !pkg.disable })
+var winSpawn = require('win-spawn')
 
 testPackages.push({
   name: 'standard',
   repo: 'https://github.com/feross/standard'
 })
 
+var disabledPackages = []
+testPackages = testPackages.filter(function (pkg) {
+  if (pkg.disable) disabledPackages.push(pkg)
+  return !pkg.disable
+})
+
 var GIT = 'git'
 var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 var TMP = path.join(__dirname, '..', 'tmp')
 
-var PARALLEL_LIMIT = Math.floor(os.cpus().length * 1.5)
+var PARALLEL_LIMIT = os.cpus().length
+
+test('Disabled Packages', function (t) {
+  t.plan(disabledPackages.length)
+  disabledPackages.forEach(function (pkg) {
+    t.pass('DISABLED: ' + pkg.name + ': ' + pkg.disable + ' (' + pkg.repo + ')')
+  })
+})
 
 test('test github repos that use `standard`', function (t) {
   t.plan(testPackages.length)
@@ -44,13 +55,14 @@ test('test github repos that use `standard`', function (t) {
     var url = pkg.repo + '.git'
     var folder = path.join(TMP, name)
     return function (cb) {
-      fsAccess(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
+      fs.access(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
         var gitArgs = err
           ? [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
           : [ 'pull' ]
-        var gitOpts = err
-          ? {}
-          : { cwd: folder }
+        var gitOpts = { stdio: 'ignore' }
+        gitOpts = err
+          ? gitOpts
+          : extend(gitOpts, { cwd: folder })
         spawn(GIT, gitArgs, gitOpts, function (err) {
           if (err) {
             err.message += ' (' + name + ')'
@@ -58,7 +70,7 @@ test('test github repos that use `standard`', function (t) {
           }
 
           spawn(STANDARD, [ '--verbose' ], { cwd: folder }, function (err) {
-            t.error(err, name)
+            t.error(err, name + ' (' + pkg.repo + ')')
             cb(null)
           })
         })
@@ -69,21 +81,12 @@ test('test github repos that use `standard`', function (t) {
   })
 })
 
-// TODO: Spawn in a way that works on Windows – PR welcome!
 function spawn (command, args, opts, cb) {
-  var child = cp.spawn(command, args, extend({ stdio: 'inherit' }, opts))
+  var child = winSpawn(command, args, extend({ stdio: 'inherit' }, opts))
   child.on('error', cb)
   child.on('close', function (code) {
-    if (code !== 0) cb(new Error('non-zero exit code: ' + code))
-    else cb(null)
+    if (code !== 0) return cb(new Error('non-zero exit code: ' + code))
+    cb(null)
   })
   return child
-}
-
-function fsAccess (path, mode, cb) {
-  if (typeof fs.access === 'function') {
-    fs.access(path, mode, cb)
-  } else {
-    fs.stat(path, cb)
-  }
 }
