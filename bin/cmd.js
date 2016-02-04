@@ -20,6 +20,7 @@ function Cli (opts) {
       format: 'F',
       global: 'globals',
       plugin: 'plugins',
+      env: 'envs',
       help: 'h',
       verbose: 'v'
     },
@@ -33,7 +34,8 @@ function Cli (opts) {
     string: [
       'global',
       'plugin',
-      'parser'
+      'parser',
+      'env'
     ]
   })
 
@@ -80,6 +82,7 @@ function Cli (opts) {
                 --stdin     Read file text from stdin.
                 --global    Declare global variable
                 --plugin    Use custom eslint plugin
+                --env       Use custom eslint environment
                 --parser    Use custom js parser (e.g. babel-eslint)
                 --version   Show current version
             -h, --help      Show usage information
@@ -96,6 +99,7 @@ function Cli (opts) {
   var lintOpts = {
     globals: argv.global,
     plugins: argv.plugin,
+    envs: argv.env,
     parser: argv.parser
   }
 
