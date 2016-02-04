@@ -36,10 +36,13 @@ function Cli (opts) {
   })
 
   if (argv.format) {
-    var typeFormatter = typeof opts.formatter
-
-    if (typeFormatter !== 'object' || typeof opts.formatter.transform !== 'function') {
-      console.error('Invalid formatter API')
+    if (typeof opts.formatter === 'string') {
+      console.error(opts.cmd + ': ' + opts.formatter)
+      process.exit(1)
+    }
+    if (typeof opts.formatter !== 'object' ||
+        typeof opts.formatter.transform !== 'function') {
+      console.error(opts.cmd + ': Invalid formatter API')
       process.exit(0)
     }
   }
