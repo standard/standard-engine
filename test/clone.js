@@ -8,15 +8,23 @@
  * VERSION BUMP.)
  */
 
-var extend = require('xtend')
 var fs = require('fs')
+var minimist = require('minimist')
 var mkdirp = require('mkdirp')
 var os = require('os')
 var parallelLimit = require('run-parallel-limit')
 var path = require('path')
+var standardPackages = require('standard-packages')
 var test = require('tape')
-var testPackages = require('standard-packages/test')
 var winSpawn = require('win-spawn')
+
+var argv = minimist(process.argv.slice(2), {
+  boolean: [ 'offline', 'quick', 'quiet' ]
+})
+
+var testPackages = argv.quick
+  ? standardPackages.test.slice(0, 20)
+  : standardPackages.test
 
 testPackages.push({
   name: 'standard',
@@ -36,10 +44,15 @@ var TMP = path.join(__dirname, '..', 'tmp')
 var PARALLEL_LIMIT = os.cpus().length
 
 test('Disabled Packages', function (t) {
-  t.plan(disabledPackages.length)
-  disabledPackages.forEach(function (pkg) {
-    t.pass('DISABLED: ' + pkg.name + ': ' + pkg.disable + ' (' + pkg.repo + ')')
-  })
+  if (disabledPackages.length === 0) {
+    t.pass('no disabled packages')
+    t.end()
+  } else {
+    t.plan(disabledPackages.length)
+    disabledPackages.forEach(function (pkg) {
+      t.pass('DISABLED: ' + pkg.name + ': ' + pkg.disable + ' (' + pkg.repo + ')')
+    })
+  }
 })
 
 test('test github repos that use `standard`', function (t) {
@@ -47,33 +60,55 @@ test('test github repos that use `standard`', function (t) {
 
   mkdirp.sync(TMP)
 
-  // test an empty repo
-  mkdirp.sync(path.join(TMP, 'empty'))
-
   parallelLimit(testPackages.map(function (pkg) {
     var name = pkg.name
     var url = pkg.repo + '.git'
     var folder = path.join(TMP, name)
     return function (cb) {
       fs.access(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
-        var gitArgs = err
-          ? [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
-          : [ 'pull' ]
-        var gitOpts = { stdio: 'ignore' }
-        gitOpts = err
-          ? gitOpts
-          : extend(gitOpts, { cwd: folder })
-        spawn(GIT, gitArgs, gitOpts, function (err) {
+        if (argv.offline) {
           if (err) {
-            err.message += ' (' + name + ')'
-            return cb(err)
+            t.pass('SKIPPING (offline): ' + name + ' (' + pkg.repo + ')')
+            return cb(null)
           }
+          runStandard(cb)
+        } else {
+          downloadPackage(function (err) {
+            if (err) return cb(err)
+            runStandard(cb)
+          })
+        }
 
-          spawn(STANDARD, [ '--verbose' ], { cwd: folder }, function (err) {
-            t.error(err, name + ' (' + pkg.repo + ')')
+        function downloadPackage (cb) {
+          if (err) gitClone(cb)
+          else gitPull(cb)
+        }
+
+        function gitClone (cb) {
+          var args = [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
+          spawn(GIT, args, {}, function (err) {
+            if (err) err.message += ' (' + name + ')'
+            cb(err)
+          })
+        }
+
+        function gitPull (cb) {
+          var args = [ 'pull' ]
+          spawn(GIT, args, { cwd: folder }, function (err) {
+            if (err) err.message += ' (' + name + ')'
+            cb(err)
+          })
+        }
+
+        function runStandard (cb) {
+          var args = [ '--verbose' ]
+          if (pkg.args) args.push.apply(args, pkg.args)
+          spawn(STANDARD, args, { cwd: folder }, function (err) {
+            var str = name + ' (' + pkg.repo + ')'
+            if (err) { t.fail(str) } else { t.pass(str) }
             cb(null)
           })
-        })
+        }
       })
     }
   }), PARALLEL_LIMIT, function (err) {
@@ -82,7 +117,9 @@ test('test github repos that use `standard`', function (t) {
 })
 
 function spawn (command, args, opts, cb) {
-  var child = winSpawn(command, args, extend({ stdio: 'inherit' }, opts))
+  opts.stdio = argv.quiet ? 'ignore' : 'inherit'
+
+  var child = winSpawn(command, args, opts)
   child.on('error', cb)
   child.on('close', function (code) {
     if (code !== 0) return cb(new Error('non-zero exit code: ' + code))
