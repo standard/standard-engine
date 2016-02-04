@@ -32,7 +32,8 @@ function Linter (opts) {
 
   self.eslintConfig = defaults(opts.eslintConfig, {
     useEslintrc: false,
-    globals: []
+    globals: [],
+    plugins: []
   })
   if (!self.eslintConfig) {
     throw new Error('No eslintConfig passed.')
@@ -44,7 +45,8 @@ function Linter (opts) {
  *
  * @param {string} text                   file text to lint
  * @param {Object=} opts                  options object
- * @param {Array.<string>=} opts.globals  global variables to declare
+ * @param {Array.<string>=} opts.globals  custom global variables to declare
+ * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
  */
@@ -69,7 +71,8 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {Object=} opts                  options object
  * @param {Array.<string>=} opts.ignore   file globs to ignore (has sane defaults)
  * @param {string=} opts.cwd              current working directory (default: process.cwd())
- * @param {Array.<string>=} opts.globals  global variables to declare
+ * @param {Array.<string>=} opts.globals  custom global variables to declare
+ * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
  */
@@ -117,6 +120,7 @@ Linter.prototype.parseOpts = function (opts) {
   opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
 
   setGlobals(opts.globals || opts.global)
+  setPlugins(opts.plugins || opts.plugin)
   setParser(opts.parser)
 
   var root
@@ -126,18 +130,24 @@ Linter.prototype.parseOpts = function (opts) {
 
     if (packageOpts) {
       setGlobals(packageOpts.globals || packageOpts.global)
+      setPlugins(packageOpts.plugins || packageOpts.plugin)
       if (!opts.parser) setParser(packageOpts.parser)
     }
-  }
-
-  function setParser (parser) {
-    if (!parser) return
-    opts.eslintConfig.parser = parser
   }
 
   function setGlobals (globals) {
     if (!globals) return
     opts.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
+  }
+
+  function setPlugins (plugins) {
+    if (!plugins) return
+    opts.eslintConfig.plugins = self.eslintConfig.plugins.concat(plugins)
+  }
+
+  function setParser (parser) {
+    if (!parser) return
+    opts.eslintConfig.parser = parser
   }
 
   return opts
