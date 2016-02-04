@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.0.1 - 2016-01-29
+  * Remove `dezalgo` dependency
+
 ## 3.0.0 - 2016-01-29
   * Breaking: eslint is now a mandatory option in your options.js
 
