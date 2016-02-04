@@ -33,7 +33,8 @@ function Linter (opts) {
   self.eslintConfig = defaults(opts.eslintConfig, {
     useEslintrc: false,
     globals: [],
-    plugins: []
+    plugins: [],
+    rules: {}
   })
   if (!self.eslintConfig) {
     throw new Error('No eslintConfig passed.')
@@ -47,6 +48,7 @@ function Linter (opts) {
  * @param {Object=} opts                  options object
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
+ * @param {Object=} opts.rules            custom eslint rules
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
  */
@@ -73,6 +75,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {string=} opts.cwd              current working directory (default: process.cwd())
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
+ * @param {Object=} opts.rules            custom eslint rules
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
  */
@@ -121,6 +124,7 @@ Linter.prototype.parseOpts = function (opts) {
 
   setGlobals(opts.globals || opts.global)
   setPlugins(opts.plugins || opts.plugin)
+  setRules(opts.rules || opts.rule)
   setParser(opts.parser)
 
   var root
@@ -131,6 +135,7 @@ Linter.prototype.parseOpts = function (opts) {
     if (packageOpts) {
       setGlobals(packageOpts.globals || packageOpts.global)
       setPlugins(packageOpts.plugins || packageOpts.plugin)
+      setRules(packageOpts.rules || packageOpts.rule)
       if (!opts.parser) setParser(packageOpts.parser)
     }
   }
@@ -143,6 +148,11 @@ Linter.prototype.parseOpts = function (opts) {
   function setPlugins (plugins) {
     if (!plugins) return
     opts.eslintConfig.plugins = self.eslintConfig.plugins.concat(plugins)
+  }
+
+  function setRules (rules) {
+    if (!rules) return
+    opts.eslintConfig.rules = extend(opts.eslintConfig.rules, rules)
   }
 
   function setParser (parser) {
