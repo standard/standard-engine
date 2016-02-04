@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.0.1 - 2016-01-29
+## 3.1.0 - 2016-02-03
+  * Support `opts.format` string option to print message about how to install formatter.
+
+## 3.0.1 - 2016-02-03
   * Remove `dezalgo` dependency
 
 ## 3.0.0 - 2016-01-29
