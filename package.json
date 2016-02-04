@@ -63,6 +63,9 @@
     "url": "git://github.com/flet/standard-engine.git"
   },
   "scripts": {
-    "test": "standard && tape test/clone.js && tape test/api.js"
+    "test": "standard && tape test/clone.js test/api.js",
+    "test-offline": "npm test -- --offline",
+    "test-quick": "npm test -- --quick",
+    "test-offline-quick": "npm test -- --offline --quick"
   }
 }
