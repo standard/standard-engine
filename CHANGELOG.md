@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.1.1 - 2016-02-03
+  * Replace deprecated `win-spawn` dev dependency with `cross-spawn-async`.
+
 ## 3.1.0 - 2016-02-03
   * Support `opts.format` string option to print message about how to install formatter.
 
