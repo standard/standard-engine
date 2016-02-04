@@ -34,6 +34,7 @@ function Linter (opts) {
     useEslintrc: false,
     globals: [],
     plugins: [],
+    envs: [],
     rules: {}
   })
   if (!self.eslintConfig) {
@@ -48,6 +49,7 @@ function Linter (opts) {
  * @param {Object=} opts                  options object
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
+ * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {Object=} opts.rules            custom eslint rules
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
@@ -75,6 +77,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {string=} opts.cwd              current working directory (default: process.cwd())
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
+ * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {Object=} opts.rules            custom eslint rules
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {function(Error, Object)} cb    callback
@@ -124,6 +127,7 @@ Linter.prototype.parseOpts = function (opts) {
 
   setGlobals(opts.globals || opts.global)
   setPlugins(opts.plugins || opts.plugin)
+  setEnvs(opts.envs || opts.env)
   setRules(opts.rules || opts.rule)
   setParser(opts.parser)
 
@@ -136,6 +140,7 @@ Linter.prototype.parseOpts = function (opts) {
       setGlobals(packageOpts.globals || packageOpts.global)
       setPlugins(packageOpts.plugins || packageOpts.plugin)
       setRules(packageOpts.rules || packageOpts.rule)
+      setEnvs(packageOpts.envs || packageOpts.env)
       if (!opts.parser) setParser(packageOpts.parser)
     }
   }
@@ -153,6 +158,15 @@ Linter.prototype.parseOpts = function (opts) {
   function setRules (rules) {
     if (!rules) return
     opts.eslintConfig.rules = extend(opts.eslintConfig.rules, rules)
+  }
+
+  function setEnvs (envs) {
+    if (!envs) return
+    if (!Array.isArray(envs) && typeof envs !== 'string') {
+      // envs can be an object in `package.json`
+      envs = Object.keys(envs).filter(function (env) { return envs[env] })
+    }
+    opts.eslintConfig.envs = self.eslintConfig.envs.concat(envs)
   }
 
   function setParser (parser) {
