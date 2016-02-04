@@ -4,7 +4,6 @@ module.exports.linter = Linter
 
 var defaults = require('defaults')
 var deglob = require('deglob')
-var dezalgo = require('dezalgo')
 var extend = require('xtend')
 var findRoot = require('find-root')
 var pkgConfig = require('pkg-config')
@@ -25,7 +24,7 @@ var DEFAULT_IGNORE = [
 function Linter (opts) {
   var self = this
   if (!(self instanceof Linter)) return new Linter(opts)
-  opts = opts || {}
+  if (!opts) opts = {}
 
   self.cmd = opts.cmd || 'standard'
   self.eslint = opts.eslint
@@ -51,20 +50,16 @@ function Linter (opts) {
  */
 Linter.prototype.lintText = function (text, opts, cb) {
   var self = this
-  if (typeof opts === 'function') {
-    cb = opts
-    opts = {}
-  }
+  if (typeof opts === 'function') return self.lintText(text, null, opts)
   opts = self.parseOpts(opts)
-  cb = dezalgo(cb)
 
   var result
   try {
     result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnText(text)
   } catch (err) {
-    return cb(err)
+    return nextTick(cb, err)
   }
-  return cb(null, result)
+  return nextTick(cb, null, result)
 }
 
 /**
@@ -80,12 +75,8 @@ Linter.prototype.lintText = function (text, opts, cb) {
  */
 Linter.prototype.lintFiles = function (files, opts, cb) {
   var self = this
-  if (typeof opts === 'function') {
-    cb = opts
-    opts = {}
-  }
+  if (typeof opts === 'function') return self.lintFiles(files, null, opts)
   opts = self.parseOpts(opts)
-  cb = dezalgo(cb)
 
   if (typeof files === 'string') files = [ files ]
   if (files.length === 0) files = DEFAULT_PATTERNS
@@ -150,4 +141,10 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   return opts
+}
+
+function nextTick (cb, err, val) {
+  process.nextTick(function () {
+    cb(err, val)
+  })
 }
