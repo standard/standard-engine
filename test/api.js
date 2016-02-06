@@ -7,7 +7,7 @@ var test = require('tape')
 var standard = new Linter({
   eslint: eslint,
   eslintConfig: {
-    configFile: path.join(__dirname, '..', 'tmp', 'standard', 'rc', '.eslintrc'),
+    configFile: path.join(__dirname, '..', 'tmp', 'standard', '.eslintrc'),
     useEslintrc: false
   }
 })
