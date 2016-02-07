@@ -27,7 +27,7 @@
     "eslint-plugin-standard": "^1.1.0",
     "mkdirp": "^0.5.0",
     "run-parallel-limit": "^1.0.1",
-    "standard": "*",
+    "standard": "6.0.3",
     "standard-packages": "^3.0.1",
     "tape": "^4.0.0"
   },
