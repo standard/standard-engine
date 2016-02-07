@@ -2,14 +2,16 @@ var eslint = require('eslint')
 var Linter = require('../').linter
 var test = require('tape')
 
-// TODO: this test requires clone.js to be run first in order for the eslintrc to exist
-var standard = new Linter({
-  eslint: eslint,
-  eslintConfig: require('../tmp/standard/options').eslintConfig
-})
+function getStandard () {
+  return new Linter({
+    eslint: eslint,
+    eslintConfig: require('../tmp/standard/options').eslintConfig
+  })
+}
 
 test('api: lintFiles', function (t) {
   t.plan(3)
+  var standard = getStandard()
   standard.lintFiles([], { cwd: 'bin' }, function (err, result) {
     t.error(err, 'no error while linting')
     t.equal(typeof result, 'object', 'result is an object')
@@ -19,6 +21,7 @@ test('api: lintFiles', function (t) {
 
 test('api: lintText', function (t) {
   t.plan(3)
+  var standard = getStandard()
   standard.lintText('console.log("hi there")\n', function (err, result) {
     t.error(err, 'no error while linting')
     t.equal(typeof result, 'object', 'result is an object')
@@ -28,6 +31,7 @@ test('api: lintText', function (t) {
 
 test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
   t.plan(2)
+  var standard = getStandard()
   var opts = standard.parseOpts({parser: 'blah'})
   t.equal(opts.parser, 'blah')
   t.equal(standard.eslintConfig.parser, undefined)
@@ -35,6 +39,7 @@ test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
 
 test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
   t.plan(2)
+  var standard = getStandard()
   var opts = standard.parseOpts({globals: ['what']})
   t.deepEqual(opts.globals, ['what'])
   t.deepEqual(standard.eslintConfig.globals, [])
