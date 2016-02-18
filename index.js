@@ -28,6 +28,7 @@ function Linter (opts) {
 
   self.cmd = opts.cmd || 'standard'
   self.eslint = opts.eslint
+  self.cwd = opts.cwd
   if (!self.eslint) throw new Error('opts.eslint option is required')
 
   self.eslintConfig = defaults(opts.eslintConfig, {
@@ -120,7 +121,7 @@ Linter.prototype.parseOpts = function (opts) {
   opts = extend(opts)
   opts.eslintConfig = extend(self.eslintConfig)
 
-  if (!opts.cwd) opts.cwd = process.cwd()
+  if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
 
   if (!opts.ignore) opts.ignore = []
   opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
