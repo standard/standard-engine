@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",
-    "cross-spawn-async": "^2.1.8",
+    "cross-spawn-async": "^2.1.9",
     "eslint": "^2.0.0-rc.0",
     "eslint-config-standard": "^5.0.0",
     "eslint-config-standard-jsx": "^1.0.0",
