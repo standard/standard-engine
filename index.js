@@ -32,10 +32,11 @@ function Linter (opts) {
   if (!self.eslint) throw new Error('opts.eslint option is required')
 
   self.eslintConfig = defaults(opts.eslintConfig, {
-    useEslintrc: false,
+    envs: [],
     globals: [],
+    ignore: false,
     plugins: [],
-    envs: []
+    useEslintrc: false
   })
   if (!self.eslintConfig) {
     throw new Error('No eslintConfig passed.')
