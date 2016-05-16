@@ -42,12 +42,14 @@ function Cli (opts) {
   if (argv.format) {
     if (typeof opts.formatter === 'string') {
       console.error(opts.cmd + ': ' + opts.formatter)
-      process.exit(1)
+      process.exitCode = 1
+      return
     }
     if (typeof opts.formatter !== 'object' ||
         typeof opts.formatter.transform !== 'function') {
       console.error(opts.cmd + ': Invalid formatter API')
-      process.exit(0)
+      process.exitCode = 0
+      return
     }
   }
 
@@ -88,12 +90,14 @@ function Cli (opts) {
             -h, --help      Show usage information
       */
     }), opts.cmd, fmtMsg)
-    process.exit(0)
+    process.exitCode = 0
+    return
   }
 
   if (argv.version) {
     console.log(opts.version)
-    process.exit(0)
+    process.exitCode = 0
+    return
   }
 
   var lintOpts = {
@@ -125,7 +129,10 @@ function Cli (opts) {
 
   function onResult (err, result) {
     if (err) return onError(err)
-    if (!result.errorCount && !result.warningCount) process.exit(0)
+    if (!result.errorCount && !result.warningCount) {
+      process.exitCode = 0
+      return
+    }
 
     console.error(
       opts.cmd + ': %s (%s) ',
@@ -143,7 +150,8 @@ function Cli (opts) {
       })
     })
 
-    process.exit(result.errorCount ? 1 : 0)
+    process.exitCode = result.errorCount ? 1 : 0
+    return
   }
 
   function onError (err) {
@@ -153,7 +161,8 @@ function Cli (opts) {
       '\nIf you think this is a bug in `%s`, open an issue: %s',
       opts.cmd, opts.bugs
     )
-    process.exit(1)
+    process.exitCode = 1
+    return
   }
 
   /**
