@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 module.exports = Cli
 
 var defaults = require('defaults')
@@ -42,13 +44,13 @@ function Cli (opts) {
   if (argv.format) {
     if (typeof opts.formatter === 'string') {
       console.error(opts.cmd + ': ' + opts.formatter)
-      process.exitCode = 1
+      exit(1)
       return
     }
     if (typeof opts.formatter !== 'object' ||
         typeof opts.formatter.transform !== 'function') {
       console.error(opts.cmd + ': Invalid formatter API')
-      process.exitCode = 0
+      exit(0)
       return
     }
   }
@@ -90,13 +92,13 @@ function Cli (opts) {
             -h, --help      Show usage information
       */
     }), opts.cmd, fmtMsg)
-    process.exitCode = 0
+    exit(0)
     return
   }
 
   if (argv.version) {
     console.log(opts.version)
-    process.exitCode = 0
+    exit(0)
     return
   }
 
@@ -130,7 +132,7 @@ function Cli (opts) {
   function onResult (err, result) {
     if (err) return onError(err)
     if (!result.errorCount && !result.warningCount) {
-      process.exitCode = 0
+      exit(0)
       return
     }
 
@@ -150,7 +152,7 @@ function Cli (opts) {
       })
     })
 
-    process.exitCode = result.errorCount ? 1 : 0
+    exit(result.errorCount ? 1 : 0)
     return
   }
 
@@ -161,7 +163,7 @@ function Cli (opts) {
       '\nIf you think this is a bug in `%s`, open an issue: %s',
       opts.cmd, opts.bugs
     )
-    process.exitCode = 1
+    exit(1)
     return
   }
 
@@ -177,5 +179,17 @@ function Cli (opts) {
     } else {
       console.log.apply(console, arguments)
     }
+  }
+}
+
+function exit (code) {
+  if (/^v0.10./.test(process.version)) {
+    // Node v0.10.x lacks support for `process.exitCode`
+    process.exit(code)
+  } else {
+    // Node v6.x will truncate stdout if process.exit(code) is called, so we set
+    // process.exitCode and wait for Node to quit when there's nothing left in
+    // the event loop
+    process.exitCode = code
   }
 }
