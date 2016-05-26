@@ -2,6 +2,44 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.0.4 - 2016-05-25
+  * Fix install warning due to `cross-spawn-async`
+
+## 4.0.3 - 2016-05-25
+  * Add back node v0.10 support
+
+## 4.0.2 - 2016-05-16
+  * Fix truncated output on Node v6
+
+## 4.0.1 - 2016-04-28
+  * Do not use .eslintignore files
+
+## 4.0.0 - 2016-04-24
+  * Remove `--rules` option
+
+## 3.3.1 - 2016-02-23
+  * Update dependencies
+
+## 3.3.0 - 2016-02-18
+  * Support passing `cwd` option in Linter constructor
+
+## 3.2.4 - 2016-02-07
+  * Fix tests
+
+## 3.2.3 - 2016-02-07
+  * Fix tests
+
+## 3.2.2 - 2016-02-06
+  * Fix tests
+
+## 3.2.1 - 2016-02-05
+  * Fix tests
+
+## 3.2.0 - 2016-02-05
+  * Add `--plugin` option
+  * Add `--rules` option
+  * Add `--env` option
+
 ## 3.1.1 - 2016-02-03
   * Replace deprecated `win-spawn` dev dependency with `cross-spawn-async`.
 
