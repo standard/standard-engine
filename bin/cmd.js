@@ -27,6 +27,7 @@ function Cli (opts) {
       verbose: 'v'
     },
     boolean: [
+      'fix',
       'format',
       'help',
       'stdin',
@@ -77,19 +78,22 @@ function Cli (opts) {
             If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
             working directory are checked, recursively.
 
-            Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js) are
+            Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js, vendor/) are
             automatically ignored.
 
         Flags:
             %s
-            -v, --verbose   Show error codes. (so you can ignore specific rules)
-                --stdin     Read file text from stdin.
+            -v, --verbose   Show rule names for errors (to ignore specific rules)
+                --fix       Automatically fix problems
+                --version   Show current version
+            -h, --help      Show usage information
+
+        Flags (advanced):
+                --stdin     Read file text from stdin
                 --global    Declare global variable
                 --plugin    Use custom eslint plugin
                 --env       Use custom eslint environment
                 --parser    Use custom js parser (e.g. babel-eslint)
-                --version   Show current version
-            -h, --help      Show usage information
       */
     }), opts.cmd, fmtMsg)
     exit(0)
@@ -103,6 +107,7 @@ function Cli (opts) {
   }
 
   var lintOpts = {
+    fix: argv.fix,
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,
@@ -131,6 +136,11 @@ function Cli (opts) {
 
   function onResult (err, result) {
     if (err) return onError(err)
+
+    if (argv.fix && !argv.stdin) {
+      opts.eslint.CLIEngine.outputFixes(result)
+    }
+
     if (!result.errorCount && !result.warningCount) {
       exit(0)
       return

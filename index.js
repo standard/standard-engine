@@ -33,6 +33,7 @@ function Linter (opts) {
 
   self.eslintConfig = defaults(opts.eslintConfig, {
     envs: [],
+    fix: false,
     globals: [],
     ignore: false,
     plugins: [],
@@ -123,6 +124,8 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts.ignore) opts.ignore = []
   opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
+
+  if (opts.fix != null) opts.eslintConfig.fix = opts.fix
 
   setGlobals(opts.globals || opts.global)
   setPlugins(opts.plugins || opts.plugin)
