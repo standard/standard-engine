@@ -64,8 +64,8 @@ function Cli (opts) {
 
   if (argv.help) {
     var fmtMsg = ''
-    if (opts.formatter) {
-      fmtMsg = '-F, --format    Automatically format code.'
+    if (opts.formatter && typeof opts.formatter.transform === 'function') {
+      fmtMsg = '\n    -F, --format    Automatically format code.'
       if (opts.formatterName) fmtMsg += ' (using ' + opts.formatterName + ')'
     }
     if (opts.tagline) console.log('%s - %s (%s)', opts.cmd, opts.tagline, opts.homepage)
@@ -81,15 +81,14 @@ function Cli (opts) {
             Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js, vendor/) are
             automatically ignored.
 
-        Flags:
-            %s
+        Flags:%s
             -v, --verbose   Show rule names for errors (to ignore specific rules)
                 --fix       Automatically fix problems
+                --stdin     Read file text from stdin
                 --version   Show current version
             -h, --help      Show usage information
 
         Flags (advanced):
-                --stdin     Read file text from stdin
                 --global    Declare global variable
                 --plugin    Use custom eslint plugin
                 --env       Use custom eslint environment
