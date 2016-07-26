@@ -146,9 +146,11 @@ function Cli (opts) {
     }
 
     console.error(
-      opts.cmd + ': %s (%s) ',
+      '%s: %s (%s) %s',
+      opts.cmd,
       opts.tagline,
-      opts.homepage
+      opts.homepage,
+      'Try `' + opts.cmd + ' --fix` to automatically fix problems.'
     )
 
     result.results.forEach(function (result) {
