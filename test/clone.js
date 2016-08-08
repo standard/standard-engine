@@ -18,8 +18,18 @@ var path = require('path')
 var standardPackages = require('standard-packages')
 var test = require('tape')
 
+var GIT = 'git'
+var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
+var TMP = path.join(__dirname, '..', 'tmp')
+var PARALLEL_LIMIT = os.cpus().length
+
 var argv = minimist(process.argv.slice(2), {
-  boolean: [ 'offline', 'quick', 'quiet' ]
+  boolean: [
+    'disabled',
+    'offline',
+    'quick',
+    'quiet'
+  ]
 })
 
 var testPackages = argv.quick
@@ -37,23 +47,21 @@ testPackages = testPackages.filter(function (pkg) {
   return !pkg.disable
 })
 
-var GIT = 'git'
-var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
-var TMP = path.join(__dirname, '..', 'tmp')
-
-var PARALLEL_LIMIT = os.cpus().length
-
-test('Disabled Packages', function (t) {
-  if (disabledPackages.length === 0) {
-    t.pass('no disabled packages')
-    t.end()
-  } else {
-    t.plan(disabledPackages.length)
-    disabledPackages.forEach(function (pkg) {
-      t.pass('DISABLED: ' + pkg.name + ': ' + pkg.disable + ' (' + pkg.repo + ')')
-    })
-  }
-})
+if (argv.disabled) {
+  testPackages = disabledPackages
+} else {
+  test('Disabled Packages', function (t) {
+    if (disabledPackages.length === 0) {
+      t.pass('no disabled packages')
+      t.end()
+    } else {
+      t.plan(disabledPackages.length)
+      disabledPackages.forEach(function (pkg) {
+        t.pass('DISABLED: ' + pkg.name + ': ' + pkg.disable + ' (' + pkg.repo + ')')
+      })
+    }
+  })
+}
 
 test('test github repos that use `standard`', function (t) {
   t.plan(testPackages.length)
@@ -87,7 +95,7 @@ test('test github repos that use `standard`', function (t) {
         function gitClone (cb) {
           var args = [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
           spawn(GIT, args, { stdio: 'ignore' }, function (err) {
-            if (err) err.message += ' (' + name + ')'
+            if (err) err.message += ' (git clone) (' + name + ')'
             cb(err)
           })
         }
@@ -95,7 +103,7 @@ test('test github repos that use `standard`', function (t) {
         function gitPull (cb) {
           var args = [ 'pull' ]
           spawn(GIT, args, { cwd: folder, stdio: 'ignore' }, function (err) {
-            if (err) err.message += ' (' + name + ')'
+            if (err) err.message += ' (git pull) (' + name + ')'
             cb(err)
           })
         }
