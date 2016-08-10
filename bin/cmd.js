@@ -19,7 +19,6 @@ function Cli (opts) {
 
   var argv = minimist(process.argv.slice(2), {
     alias: {
-      format: 'F',
       global: 'globals',
       plugin: 'plugins',
       env: 'envs',
@@ -28,7 +27,6 @@ function Cli (opts) {
     },
     boolean: [
       'fix',
-      'format',
       'help',
       'stdin',
       'verbose',
@@ -42,32 +40,13 @@ function Cli (opts) {
     ]
   })
 
-  if (argv.format) {
-    if (typeof opts.formatter === 'string') {
-      console.error(opts.cmd + ': ' + opts.formatter)
-      exit(1)
-      return
-    }
-    if (typeof opts.formatter !== 'object' ||
-        typeof opts.formatter.transform !== 'function') {
-      console.error(opts.cmd + ': Invalid formatter API')
-      exit(0)
-      return
-    }
-  }
-
-  // flag `-` is equivalent to `--stdin`
+  // Unix convention: Command line argument `-` is a shorthand for `--stdin`
   if (argv._[0] === '-') {
     argv.stdin = true
     argv._.shift()
   }
 
   if (argv.help) {
-    var fmtMsg = ''
-    if (opts.formatter && typeof opts.formatter.transform === 'function') {
-      fmtMsg = '\n    -F, --format    Automatically format code.'
-      if (opts.formatterName) fmtMsg += ' (using ' + opts.formatterName + ')'
-    }
     if (opts.tagline) console.log('%s - %s (%s)', opts.cmd, opts.tagline, opts.homepage)
     console.log(multiline.stripIndent(function () {
       /*
@@ -81,7 +60,7 @@ function Cli (opts) {
             Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js, vendor/) are
             automatically ignored.
 
-        Flags:%s
+        Flags:
             -v, --verbose   Show rule names for errors (to ignore specific rules)
                 --fix       Automatically fix problems
                 --stdin     Read file text from stdin
@@ -94,7 +73,7 @@ function Cli (opts) {
                 --env       Use custom eslint environment
                 --parser    Use custom js parser (e.g. babel-eslint)
       */
-    }), opts.cmd, fmtMsg)
+    }), opts.cmd)
     exit(0)
     return
   }
@@ -115,21 +94,9 @@ function Cli (opts) {
 
   if (argv.stdin) {
     getStdin().then(function (text) {
-      if (argv.format) {
-        text = opts.formatter.transform(text)
-        process.stdout.write(text)
-      }
       standard.lintText(text, lintOpts, onResult)
     })
   } else {
-    if (argv.format) {
-      lintOpts._onFiles = function (files) {
-        files.forEach(function (file) {
-          var data = fs.readFileSync(file).toString()
-          fs.writeFileSync(file, opts.formatter.transform(data))
-        })
-      }
-    }
     standard.lintFiles(argv._, lintOpts, onResult)
   }
 
@@ -179,12 +146,12 @@ function Cli (opts) {
   }
 
   /**
-   * Print lint errors to stdout since this is expected output from `standard-engine`.
-   * Note: When formatting code from stdin (`standard --stdin --format`), the transformed
+   * Print lint errors to stdout -- this is expected output from `standard-engine`.
+   * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
    * code is printed to stdout, so print lint errors to stderr in this case.
    */
   function log () {
-    if (argv.stdin && (argv.format || argv.fix)) {
+    if (argv.stdin && argv.fix) {
       arguments[0] = opts.cmd + ': ' + arguments[0]
       console.error.apply(console, arguments)
     } else {
