@@ -178,7 +178,8 @@ be provided:
 ```js
 {
   globals: [],  // global variables to declare
-  parser: ''    // custom js parser (e.g. babel-eslint)
+  parser: '',   // custom js parser (e.g. babel-eslint)
+  fix: false    // automatically fix problems (default: true)
 }
 ```
 
@@ -193,7 +194,8 @@ The `callback` will be called with an `Error` and `results` object:
         { ruleId: '', message: '', line: 0, column: 0 }
       ],
       errorCount: 0,
-      warningCount: 0
+      warningCount: 0,
+      output: '' // fixed source code (only present with {fix: true} option)
     }
   ],
   errorCount: 0,
