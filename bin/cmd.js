@@ -106,7 +106,7 @@ function Cli (opts) {
   }
 
   var lintOpts = {
-    fix: argv.fix, // only has an effect w/ `standard.lintFiles`
+    fix: argv.fix,
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,
@@ -135,6 +135,10 @@ function Cli (opts) {
 
   function onResult (err, result) {
     if (err) return onError(err)
+
+    if (argv.stdin && argv.fix) {
+      process.stdout.write(result.results[0].output)
+    }
 
     if (!result.errorCount && !result.warningCount) {
       exit(0)
@@ -180,7 +184,7 @@ function Cli (opts) {
    * code is printed to stdout, so print lint errors to stderr in this case.
    */
   function log () {
-    if (argv.stdin && argv.format) {
+    if (argv.stdin && (argv.format || argv.fix)) {
       arguments[0] = opts.cmd + ': ' + arguments[0]
       console.error.apply(console, arguments)
     } else {
