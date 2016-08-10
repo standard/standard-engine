@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.3 - 2016-08-07
+
+- Update deps, improve tests
+
+## 4.1.2 - 2016-07-26
+
+- Add "Try `standard --fix` message" when errors are present
+
+## 4.1.1 - 2016-07-13
+
+- Remove `--format` from help when there is only an error string
+
+## 4.1.0 - 2016-07-13
+
+- Add --fix option (uses eslint's --fix)
+- Drop Node 0.12 and 0.10 support (because of ESLint 3)
+- Update deps
+
+## 4.0.5 - 2016-07-12
+
+- Update deps
+
 ## 4.0.4 - 2016-05-25
   * Fix install warning due to `cross-spawn-async`
 
