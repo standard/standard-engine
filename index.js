@@ -101,8 +101,6 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
 
   deglob(files, deglobOpts, function (err, allFiles) {
     if (err) return cb(err)
-    // undocumented – do not use (used by bin/cmd.js)
-    if (opts._onFiles) opts._onFiles(allFiles)
 
     var result
     try {

@@ -64,11 +64,7 @@ module.exports = {
   eslintConfig: {
     configFile: path.join(__dirname, 'eslintrc.json')
   },
-  cwd: '', // current working directory, passed to eslint
-
-  // These are optional. If included, the --format option will be made available
-  formatter: require('pocketlint-format'), // note you'll have to create this :)
-  formatterName: 'pocketlint-format'
+  cwd: '' // current working directory, passed to eslint
 }
 ```
 
