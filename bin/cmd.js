@@ -74,13 +74,13 @@ function Cli (opts) {
                 --parser    Use custom js parser (e.g. babel-eslint)
       */
     }), opts.cmd)
-    exit(0)
+    process.exitCode = 0
     return
   }
 
   if (argv.version) {
     console.log(opts.version)
-    exit(0)
+    process.exitCode = 0
     return
   }
 
@@ -108,7 +108,7 @@ function Cli (opts) {
     }
 
     if (!result.errorCount && !result.warningCount) {
-      exit(0)
+      process.exitCode = 0
       return
     }
 
@@ -130,7 +130,7 @@ function Cli (opts) {
       })
     })
 
-    exit(result.errorCount ? 1 : 0)
+    process.exitCode = result.errorCount ? 1 : 0
     return
   }
 
@@ -141,7 +141,7 @@ function Cli (opts) {
       '\nIf you think this is a bug in `%s`, open an issue: %s',
       opts.cmd, opts.bugs
     )
-    exit(1)
+    process.exitCode = 1
     return
   }
 
@@ -157,17 +157,5 @@ function Cli (opts) {
     } else {
       console.log.apply(console, arguments)
     }
-  }
-}
-
-function exit (code) {
-  if (/^v0.10./.test(process.version)) {
-    // Node v0.10.x lacks support for `process.exitCode`
-    process.exit(code)
-  } else {
-    // Node v6.x will truncate stdout if process.exit(code) is called, so we set
-    // process.exitCode and wait for Node to quit when there's nothing left in
-    // the event loop
-    process.exitCode = code
   }
 }
