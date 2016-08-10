@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.0 - 2016-08-10
+
+- BREAKING: Remove formatter support (replaced by ESLint's --fix)
+- BREAKING: Drop Node 0.12 and 0.10 support (because of ESLint 3)
+- Add `{fix: true}` option to `lintFiles` and `lintText` API
+- Support auto-fixing source text from --stdin
+
 ## 4.1.3 - 2016-08-07
 
 - Update deps, improve tests
@@ -17,7 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 4.1.0 - 2016-07-13
 
 - Add --fix option (uses eslint's --fix)
-- Drop Node 0.12 and 0.10 support (because of ESLint 3)
+- Drop Node 0.12 and 0.10 CI testing (because of ESLint 3)
 - Update deps
 
 ## 4.0.5 - 2016-07-12
