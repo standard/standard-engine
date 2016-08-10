@@ -106,7 +106,7 @@ function Cli (opts) {
   }
 
   var lintOpts = {
-    fix: argv.fix,
+    fix: argv.fix, // only has an effect w/ `standard.lintFiles`
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,
@@ -135,10 +135,6 @@ function Cli (opts) {
 
   function onResult (err, result) {
     if (err) return onError(err)
-
-    if (argv.fix && !argv.stdin) {
-      opts.eslint.CLIEngine.outputFixes(result)
-    }
 
     if (!result.errorCount && !result.warningCount) {
       exit(0)
