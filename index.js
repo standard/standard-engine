@@ -76,6 +76,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {Object=} opts                  options object
  * @param {Array.<string>=} opts.ignore   file globs to ignore (has sane defaults)
  * @param {string=} opts.cwd              current working directory (default: process.cwd())
+ * @param {boolean=} opts.fix             automatically fix problems
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {Array.<string>=} opts.envs     custom eslint environment
@@ -109,6 +110,11 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     } catch (err) {
       return cb(err)
     }
+
+    if (opts.fix) {
+      self.eslint.CLIEngine.outputFixes(result)
+    }
+
     return cb(null, result)
   })
 }
