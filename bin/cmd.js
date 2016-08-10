@@ -6,7 +6,6 @@ var defaults = require('defaults')
 var minimist = require('minimist')
 var multiline = require('multiline')
 var getStdin = require('get-stdin')
-var fs = require('fs')
 
 function Cli (opts) {
   var standard = require('../').linter(opts)
