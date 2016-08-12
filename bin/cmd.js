@@ -111,13 +111,22 @@ function Cli (opts) {
       return
     }
 
-    console.error(
-      '%s: %s (%s) %s',
-      opts.cmd,
-      opts.tagline,
-      opts.homepage,
-      'Try `' + opts.cmd + ' --fix` to automatically fix problems.'
-    )
+    console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
+
+    // Are any fixable rules present?
+    var isFixable = result.results.some(function (result) {
+      return result.messages.some(function (message) {
+        return !!message.fix
+      })
+    })
+
+    if (isFixable) {
+      console.error(
+        '%s: %s',
+        opts.cmd,
+        'Run `' + opts.cmd + ' --fix` to automatically fix problems.'
+      )
+    }
 
     result.results.forEach(function (result) {
       result.messages.forEach(function (message) {
