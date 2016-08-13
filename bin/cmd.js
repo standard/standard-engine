@@ -124,7 +124,7 @@ function Cli (opts) {
       console.error(
         '%s: %s',
         opts.cmd,
-        'Run `' + opts.cmd + ' --fix` to automatically fix problems.'
+        'Run `' + opts.cmd + ' --fix` to automatically fix some problems.'
       )
     }
 
