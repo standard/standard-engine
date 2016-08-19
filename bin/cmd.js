@@ -60,13 +60,13 @@ function Cli (opts) {
             automatically ignored.
 
         Flags:
-            -v, --verbose   Show rule names for errors (to ignore specific rules)
                 --fix       Automatically fix problems
-                --stdin     Read file text from stdin
+            -v, --verbose   Show rule names for errors (to ignore specific rules)
                 --version   Show current version
             -h, --help      Show usage information
 
         Flags (advanced):
+                --stdin     Read file text from stdin
                 --global    Declare global variable
                 --plugin    Use custom eslint plugin
                 --env       Use custom eslint environment
