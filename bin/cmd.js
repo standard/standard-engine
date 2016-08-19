@@ -4,7 +4,6 @@ module.exports = Cli
 
 var defaults = require('defaults')
 var minimist = require('minimist')
-var multiline = require('multiline')
 var getStdin = require('get-stdin')
 
 function Cli (opts) {
@@ -47,32 +46,29 @@ function Cli (opts) {
 
   if (argv.help) {
     if (opts.tagline) console.log('%s - %s (%s)', opts.cmd, opts.tagline, opts.homepage)
-    console.log(multiline.stripIndent(function () {
-      /*
+    console.log(`
+Usage:
+    ${opts.cmd} <flags> [FILES...]
 
-        Usage:
-            %s <flags> [FILES...]
+    If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
+    working directory are checked, recursively.
 
-            If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
-            working directory are checked, recursively.
+    Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js, vendor/) are
+    automatically ignored.
 
-            Certain paths (node_modules/, .git/, coverage/, *.min.js, bundle.js, vendor/) are
-            automatically ignored.
+Flags:
+        --fix       Automatically fix problems
+    -v, --verbose   Show rule names for errors (to ignore specific rules)
+        --version   Show current version
+    -h, --help      Show usage information
 
-        Flags:
-            -v, --verbose   Show rule names for errors (to ignore specific rules)
-                --fix       Automatically fix problems
-                --stdin     Read file text from stdin
-                --version   Show current version
-            -h, --help      Show usage information
-
-        Flags (advanced):
-                --global    Declare global variable
-                --plugin    Use custom eslint plugin
-                --env       Use custom eslint environment
-                --parser    Use custom js parser (e.g. babel-eslint)
-      */
-    }), opts.cmd)
+Flags (advanced):
+        --stdin     Read file text from stdin
+        --global    Declare global variable
+        --plugin    Use custom eslint plugin
+        --env       Use custom eslint environment
+        --parser    Use custom js parser (e.g. babel-eslint)
+    `)
     process.exitCode = 0
     return
   }
