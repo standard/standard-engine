@@ -2,18 +2,17 @@
 
 module.exports = Cli
 
-var defaults = require('defaults')
 var minimist = require('minimist')
 var getStdin = require('get-stdin')
 
 function Cli (opts) {
   var standard = require('../').linter(opts)
 
-  opts = defaults(opts, {
+  opts = Object.assign({
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
     version: require('../package.json').version
-  })
+  }, opts)
 
   var argv = minimist(process.argv.slice(2), {
     alias: {

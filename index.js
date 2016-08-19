@@ -2,9 +2,7 @@ module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
 
-var defaults = require('defaults')
 var deglob = require('deglob')
-var extend = require('xtend')
 var findRoot = require('find-root')
 var pkgConfig = require('pkg-config')
 
@@ -31,17 +29,14 @@ function Linter (opts) {
   self.cwd = opts.cwd
   if (!self.eslint) throw new Error('opts.eslint option is required')
 
-  self.eslintConfig = defaults(opts.eslintConfig, {
+  self.eslintConfig = Object.assign({
     envs: [],
     fix: false,
     globals: [],
     ignore: false,
     plugins: [],
     useEslintrc: false
-  })
-  if (!self.eslintConfig) {
-    throw new Error('No eslintConfig passed.')
-  }
+  }, opts.eslintConfig)
 }
 
 /**
@@ -121,8 +116,8 @@ Linter.prototype.parseOpts = function (opts) {
   var self = this
 
   if (!opts) opts = {}
-  opts = extend(opts)
-  opts.eslintConfig = extend(self.eslintConfig)
+  opts = Object.assign({}, opts)
+  opts.eslintConfig = Object.assign({}, self.eslintConfig)
 
   if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
 
