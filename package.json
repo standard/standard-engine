@@ -12,7 +12,6 @@
     "find-root": "^1.0.0",
     "get-stdin": "^5.0.1",
     "minimist": "^1.1.0",
-    "multiline": "^1.0.2",
     "pkg-config": "^1.0.1",
     "xtend": "^4.0.0"
   },
