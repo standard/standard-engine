@@ -1,7 +1,7 @@
 {
   "name": "standard-engine",
   "description": "Wrap your standards in a tortilla and cover it in special sauce.",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
   "bugs": {
     "url": "https://github.com/flet/standard-engine/issues"
