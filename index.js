@@ -4,6 +4,8 @@ module.exports.linter = Linter
 
 var deglob = require('deglob')
 var findRoot = require('find-root')
+var homeOrTmp = require('home-or-tmp')
+var path = require('path')
 var pkgConfig = require('pkg-config')
 
 var DEFAULT_PATTERNS = [
@@ -30,6 +32,8 @@ function Linter (opts) {
   if (!self.eslint) throw new Error('opts.eslint option is required')
 
   self.eslintConfig = Object.assign({
+    cache: true,
+    cacheLocation: path.join(homeOrTmp, '.standard-cache/'),
     envs: [],
     fix: false,
     globals: [],
