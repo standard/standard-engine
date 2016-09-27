@@ -48,6 +48,7 @@ function Linter (opts) {
  *
  * @param {string} text                   file text to lint
  * @param {Object=} opts                  options object
+ * @param {boolean=} opts.fix             automatically fix problems
  * @param {Array.<string>=} opts.globals  custom global variables to declare
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {Array.<string>=} opts.envs     custom eslint environment

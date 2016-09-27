@@ -173,9 +173,11 @@ be provided:
 
 ```js
 {
-  globals: [],  // global variables to declare
-  parser: '',   // custom js parser (e.g. babel-eslint)
-  fix: false    // automatically fix problems (default: true)
+  fix: false,   // automatically fix problems
+  globals: [],  // custom global variables to declare
+  plugins: [],  // custom eslint plugins
+  envs: [],     // custom eslint environment
+  parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```
 
@@ -205,11 +207,13 @@ Lint the provided `files` globs. An `opts` object may be provided:
 
 ```js
 {
-  globals: [],  // global variables to declare
-  parser: '',   // custom js parser (e.g. babel-eslint)
   ignore: [],   // file globs to ignore (has sane defaults)
   cwd: '',      // current working directory (default: process.cwd())
-  fix: false    // automatically fix problems (default: true)
+  fix: false,   // automatically fix problems
+  globals: [],  // custom global variables to declare
+  plugins: [],  // custom eslint plugins
+  envs: [],     // custom eslint environment
+  parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```
 
