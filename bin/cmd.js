@@ -86,8 +86,11 @@ Flags (advanced):
     parser: argv.parser
   }
 
+  var stdinText
+
   if (argv.stdin) {
     getStdin().then(function (text) {
+      stdinText = text
       standard.lintText(text, lintOpts, onResult)
     })
   } else {
@@ -98,7 +101,13 @@ Flags (advanced):
     if (err) return onError(err)
 
     if (argv.stdin && argv.fix) {
-      process.stdout.write(result.results[0].output)
+      if (result.results[0].output) {
+        // Code contained fixable errors, so print the fixed code
+        process.stdout.write(result.results[0].output)
+      } else {
+        // Code did not contain fixable errors, so print original code
+        process.stdout.write(stdinText)
+      }
     }
 
     if (!result.errorCount && !result.warningCount) {
