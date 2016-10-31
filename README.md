@@ -210,6 +210,7 @@ be provided:
 ```js
 {
   cwd: '',      // current working directory (default: process.cwd())
+  filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
@@ -264,12 +265,13 @@ The `callback` will be called with an `Error` and `results` object (same as abov
 
 ### Full set of `opts`
 
-This is the full set of options accepted by the above APIs. Not all options make sense for each API, for example `ignore` is not used with `lintText()`.
+This is the full set of options accepted by the above APIs. Not all options make sense for each API, for example `ignore` is not used with `lintText()`, and `filename` is not used with `lintFiles()`.
 
 ```js
 {
   ignore: [],   // file globs to ignore (has sane defaults)
   cwd: '',      // current working directory (default: process.cwd())
+  filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins

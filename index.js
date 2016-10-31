@@ -62,7 +62,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
 
   var result
   try {
-    result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnText(text)
+    result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
   } catch (err) {
     return nextTick(cb, err)
   }
