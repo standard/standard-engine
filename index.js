@@ -3,10 +3,9 @@ module.exports.cli = require('./bin/cmd')
 module.exports.linter = Linter
 
 var deglob = require('deglob')
-var findRoot = require('find-root')
 var homeOrTmp = require('home-or-tmp')
 var path = require('path')
-var pkgConfig = require('pkg-config')
+var pkgConf = require('pkg-conf')
 
 var DEFAULT_PATTERNS = [
   '**/*.js',
@@ -135,19 +134,12 @@ Linter.prototype.parseOpts = function (opts) {
   setEnvs(opts.envs || opts.env)
   setParser(opts.parser)
 
-  var root
-  try { root = findRoot(opts.cwd) } catch (e) {}
-  if (root) {
-    var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
-
-    if (packageOpts) {
-      setIgnore(packageOpts.ignore)
-      setGlobals(packageOpts.globals || packageOpts.global)
-      setPlugins(packageOpts.plugins || packageOpts.plugin)
-      setEnvs(packageOpts.envs || packageOpts.env)
-      if (!opts.parser) setParser(packageOpts.parser)
-    }
-  }
+  var packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
+  setIgnore(packageOpts.ignore)
+  setGlobals(packageOpts.globals || packageOpts.global)
+  setPlugins(packageOpts.plugins || packageOpts.plugin)
+  setEnvs(packageOpts.envs || packageOpts.env)
+  if (!opts.parser) setParser(packageOpts.parser)
 
   function setIgnore (ignore) {
     if (!ignore) return
