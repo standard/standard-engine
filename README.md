@@ -68,6 +68,8 @@ module.exports = {
 }
 ```
 
+Additionally an optional `parseOpts()` function can be provided. See below for details.
+
 **eslintrc.json**
  Put all your .eslintrc rules in this file. A good practice is to create an  [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
 ```js
@@ -199,6 +201,44 @@ You may use `env` as an alias for `envs` (just don't specify both).
 
 If you're using your custom linter globally (you installed it with `-g`), then you also need to
 install `babel-eslint` globally with `npm install babel-eslint -g`.
+
+### Custom options
+
+You can provide a `parseOpts()` function in the `options.js` exports:
+
+```js
+var eslint = require('eslint')
+var path = require('path')
+var pkg = require('./package.json')
+
+module.exports = {
+  // homepage, version and bugs pulled from package.json
+  version: pkg.version,
+  homepage: pkg.homepage,
+  bugs: pkg.bugs.url,
+  eslint: eslint, // pass any version of eslint >= 1.0.0
+  cmd: 'pocketlint', // should match the "bin" key in your package.json
+  tagline: 'Live by your own standards!', // displayed in output --help
+  eslintConfig: {
+    configFile: path.join(__dirname, 'eslintrc.json')
+  },
+  parseOpts (opts, packageOpts, rootDir) {
+    // provide implementation here, then return the opts object (or a new one)
+    return opts
+  }
+}
+```
+
+This function is called with the current options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
+
+Modify and return `opts`, or return a new object with the options that are to be used.
+
+The following options are provided in the `opts` object, and must be on the returned object:
+
+* `ignore`: array of file globs to ignore
+* `cwd`: string, the current working directory
+* `fix`: boolean, whether to automatically fix problems
+* `eslintConfig`: object, the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)
 
 ## API Usage
 

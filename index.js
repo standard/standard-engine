@@ -29,6 +29,7 @@ function Linter (opts) {
   self.eslint = opts.eslint
   self.cwd = opts.cwd
   if (!self.eslint) throw new Error('opts.eslint option is required')
+  self.customParseOpts = opts.parseOpts
 
   self.eslintConfig = Object.assign({
     cache: true,
@@ -140,6 +141,12 @@ Linter.prototype.parseOpts = function (opts) {
   setPlugins(packageOpts.plugins || packageOpts.plugin)
   setEnvs(packageOpts.envs || packageOpts.env)
   if (!opts.parser) setParser(packageOpts.parser)
+
+  if (self.customParseOpts) {
+    var filepath = pkgConf.filepath(packageOpts)
+    var rootDir = filepath ? path.dirname(filepath) : opts.cwd
+    opts = self.customParseOpts(opts, packageOpts, rootDir)
+  }
 
   function setIgnore (ignore) {
     if (!ignore) return
