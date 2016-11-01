@@ -6,6 +6,10 @@
   "bugs": {
     "url": "https://github.com/flet/standard-engine/issues"
   },
+  "files": [
+    "index.js",
+    "bin"
+  ],
   "dependencies": {
     "deglob": "^2.0.0",
     "find-root": "^1.0.0",
