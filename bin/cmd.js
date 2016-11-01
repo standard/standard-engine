@@ -132,15 +132,17 @@ Flags (advanced):
       )
     }
 
-    result.results.forEach(function (result) {
-      result.messages.forEach(function (message) {
-        log(
-          '  %s:%d:%d: %s%s',
-          result.filePath, message.line || 0, message.column || 0, message.message,
-          argv.verbose ? ' (' + message.ruleId + ')' : ''
-        )
-      })
-    })
+    /**
+     * Print lint errors to stdout -- this is expected output from `standard-engine`.
+     * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
+     * code is printed to stdout, so print lint errors to stderr in this case.
+     */
+    var output = getFormatter()(result.results)
+    if (argv.stdin && argv.fix) {
+      console.error(output)
+    } else {
+      console.log(output)
+    }
 
     process.exitCode = result.errorCount ? 1 : 0
     return
@@ -157,17 +159,15 @@ Flags (advanced):
     return
   }
 
-  /**
-   * Print lint errors to stdout -- this is expected output from `standard-engine`.
-   * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
-   * code is printed to stdout, so print lint errors to stderr in this case.
-   */
-  function log () {
-    if (argv.stdin && argv.fix) {
-      arguments[0] = opts.cmd + ': ' + arguments[0]
-      console.error.apply(console, arguments)
-    } else {
-      console.log.apply(console, arguments)
+  function getFormatter () {
+    if (!opts.formatter) {
+      return require('../lib/formatter')(opts, argv)
     }
+
+    if (typeof opts.formatter === 'function') {
+      return opts.formatter
+    }
+
+    return opts.eslint.CLIEngine.getFormatter(opts.formatter)
   }
 }
