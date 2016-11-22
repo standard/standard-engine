@@ -135,17 +135,54 @@ Or, disable the `"no-use-before-define"` rule for **multiple lines**:
 /*eslint-enable no-use-before-define */
 ```
 
-### Defining Globals in a project's  `package.json`
+### Defining Globals in a project's `package.json`
 
 `standard-engine` will also look in a project's `package.json` and respect any global variables defined like so:
 
 ```js
 {
   "pocketlint": { // this key should equal the value of cmd in options.js
-    "global": [ "myVar1", "myVar2" ]
+    "globals": [ // can be a string or an array of strings
+      "myVar1",
+      "myVar2"
+    ]
   }
 }
 ```
+
+You may use `global` as an alias for `globals` (just don't specify both).
+
+### Loading ESLint plugins in a project's `package.json`
+
+Additional ESLint plugins can be specified like so:
+
+```js
+{
+  "pocketlint": { // this key should equal the value of cmd in options.js
+    "plugins": [ // can be a string or an array of strings
+      "flowtype"
+    ]
+  }
+}
+```
+
+You may use `plugin` as an alias for `plugins` (just don't specify both). Plugins must be installed (example: `npm install eslint-plugin-flowtype` or globally: `npm install eslint-plugin-flowtype -g`).
+
+### Loading additional environments in a project's `package.json`
+
+Additional environments can be specified like so:
+
+```js
+{
+  "pocketlint": { // this key should equal the value of cmd in options.js
+    "envs": [ "browser", "mocha" ]
+  }
+}
+```
+
+`envs` can be a string, an array of strings, or an object. In the latter case the keys are used as the environment name, but falsy values mean the environment is not actually loaded. You cannot unload environments by setting a falsy value.
+
+You may use `env` as an alias for `envs` (just don't specify both).
 
 ### Custom JS parsers for bleeding-edge ES6 or ES7 support?
 
@@ -160,7 +197,6 @@ Or, disable the `"no-use-before-define"` rule for **multiple lines**:
 }
 ```
 
-
 If you're using your custom linter globally (you installed it with `-g`), then you also need to
 install `babel-eslint` globally with `npm install babel-eslint -g`.
 
@@ -173,6 +209,8 @@ be provided:
 
 ```js
 {
+  cwd: '',      // current working directory (default: process.cwd())
+  filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
@@ -180,6 +218,8 @@ be provided:
   parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```
+
+Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
 The `callback` will be called with an `Error` and `results` object:
 
@@ -217,4 +257,39 @@ Lint the provided `files` globs. An `opts` object may be provided:
 }
 ```
 
+Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
+
+Both `ignore` and `files` globs are resolved relative to the current working directory.
+
 The `callback` will be called with an `Error` and `results` object (same as above).
+
+### Full set of `opts`
+
+This is the full set of options accepted by the above APIs. Not all options make sense for each API, for example `ignore` is not used with `lintText()`, and `filename` is not used with `lintFiles()`.
+
+```js
+{
+  ignore: [],   // file globs to ignore (has sane defaults)
+  cwd: '',      // current working directory (default: process.cwd())
+  filename: '', // path of the file containing the text being linted (optional)
+  fix: false,   // automatically fix problems
+  globals: [],  // custom global variables to declare
+  plugins: [],  // custom eslint plugins
+  envs: [],     // custom eslint environment
+  parser: ''    // custom js parser (e.g. babel-eslint)
+}
+```
+
+The following aliases are available:
+
+```js
+{
+  global: [],  // custom global variables to declare
+  plugin: [],  // custom eslint plugins
+  env: [],     // custom eslint environment
+}
+```
+
+Note that `globals`, `plugins` and `envs` take preference.
+
+The `parser` option takes preference over any `parser` setting in the project's `package.json`.
