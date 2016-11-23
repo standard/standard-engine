@@ -15,8 +15,8 @@
     "pkg-config": "^1.0.1"
   },
   "devDependencies": {
-    "cross-spawn": "^4.0.0",
     "babel-eslint": "^7.1.1",
+    "cross-spawn": "^5.0.0",
     "eslint": "^3.0.1",
     "eslint-config-standard": "^6.0.0-beta.0",
     "eslint-config-standard-jsx": "^3.0.0",
