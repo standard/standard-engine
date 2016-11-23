@@ -7,7 +7,7 @@
     "url": "https://github.com/flet/standard-engine/issues"
   },
   "dependencies": {
-    "deglob": "^2.0.0",
+    "deglob": "^2.1.0",
     "find-root": "^1.0.0",
     "get-stdin": "^5.0.1",
     "home-or-tmp": "^2.0.0",
