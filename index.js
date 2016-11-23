@@ -95,8 +95,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
     ignore: opts.ignore,
     cwd: opts.cwd,
     useGitIgnore: true,
-    usePackageJson: true,
-    configKey: self.cmd
+    usePackageJson: false
   }
 
   deglob(files, deglobOpts, function (err, allFiles) {
@@ -142,11 +141,17 @@ Linter.prototype.parseOpts = function (opts) {
     var packageOpts = pkgConfig(self.cmd, { root: false, cwd: opts.cwd })
 
     if (packageOpts) {
+      setIgnore(packageOpts.ignore)
       setGlobals(packageOpts.globals || packageOpts.global)
       setPlugins(packageOpts.plugins || packageOpts.plugin)
       setEnvs(packageOpts.envs || packageOpts.env)
       if (!opts.parser) setParser(packageOpts.parser)
     }
+  }
+
+  function setIgnore (ignore) {
+    if (!ignore) return
+    opts.ignore = opts.ignore.concat(ignore)
   }
 
   function setGlobals (globals) {
