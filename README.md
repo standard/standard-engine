@@ -64,9 +64,12 @@ module.exports = {
   eslintConfig: {
     configFile: path.join(__dirname, 'eslintrc.json')
   },
-  cwd: '' // current working directory, passed to eslint
+  cwd: '', // current working directory, passed to eslint
+  formatter: '' // formatter for errors and warnings
 }
 ```
+
+By default `standard-engine`'s formatter is used. Alternatively provide one of ESLint's [built-in formatters](http://eslint.org/docs/developer-guide/nodejs-api#getformatter), an absolute path to a custom formatter (for example `require.resolve('my-custom-formatter-module')`) or a formatter function.
 
 **eslintrc.json**
  Put all your .eslintrc rules in this file. A good practice is to create an  [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
