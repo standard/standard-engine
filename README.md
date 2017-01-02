@@ -200,6 +200,28 @@ You may use `env` as an alias for `envs` (just don't specify both).
 If you're using your custom linter globally (you installed it with `-g`), then you also need to
 install `babel-eslint` globally with `npm install babel-eslint -g`.
 
+### Extension whitelist
+
+`standard-engine` can be set up to look for whitelisted
+[ESLint shareable config](http://eslint.org/docs/developer-guide/shareable-configs)s
+to extend the rules from.
+
+For example, an `opts` object may include:
+
+```js
+{
+  whitelist: ['pocketlint-node', 'pocketlint-ava']
+}
+```
+
+Then, if any of the packages `eslint-config-pocketlint-node`/`eslint-config-pocketlint-ava`
+are found to be installed, the rules will extend from them, as well.
+
+This feature allows users of this package to curate a set of official extensions.
+
+Intentionally, this is not read from `package.json`. If it were, it would not have been
+a whitelist feature.
+
 ## API Usage
 
 ### `standardEngine.lintText(text, [opts], callback)`
@@ -215,6 +237,7 @@ be provided:
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
   envs: [],     // custom eslint environment
+  whitelist: []// shareable configs to extend from if installed
   parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```
@@ -253,6 +276,7 @@ Lint the provided `files` globs. An `opts` object may be provided:
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
   envs: [],     // custom eslint environment
+  whitelist: []// shareable configs to extend from if installed
   parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```
@@ -276,6 +300,7 @@ This is the full set of options accepted by the above APIs. Not all options make
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
   envs: [],     // custom eslint environment
+  whitelist: []// shareable configs to extend from if installed
   parser: ''    // custom js parser (e.g. babel-eslint)
 }
 ```

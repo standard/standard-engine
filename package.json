@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
+    "clone": "^2.1.0",
     "cross-spawn": "^5.0.0",
     "eslint": "^3.0.1",
     "eslint-config-standard": "^6.0.0-beta.0",
@@ -24,6 +25,8 @@
     "eslint-plugin-react": "^6.0.0",
     "eslint-plugin-standard": "^2.0.0",
     "mkdirp": "^0.5.0",
+    "mock-require": "^2.0.0",
+    "require-uncached": "^1.0.3",
     "run-parallel-limit": "^1.0.1",
     "standard": "*",
     "standard-packages": "^3.0.14",
