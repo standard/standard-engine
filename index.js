@@ -41,6 +41,24 @@ function Linter (opts) {
     plugins: [],
     useEslintrc: false
   }, opts.eslintConfig)
+
+  if (opts.whitelist) {
+    let original = self.eslintConfig.extends
+    let ekstends = original
+    ekstends = typeof ekstends === 'string' ? [ekstends] : ekstends || []
+    opts.whitelist.forEach((shareable) => {
+      let installed = true
+      try {
+        require('eslint-config-' + shareable)
+      } catch (e) {
+        installed = false
+      }
+      if (installed) {
+        ekstends.push(shareable)
+      }
+    })
+    self.eslintConfig.extends = ekstends.length ? ekstends : original
+  }
 }
 
 /**
