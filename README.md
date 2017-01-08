@@ -292,4 +292,4 @@ The following aliases are available:
 
 Note that `globals`, `plugins` and `envs` take preference.
 
-The `parser` option takes preference over any `parser` setting in the project's `package.json`.
+When `globals`, `plugins`, `envs` and `parser` options (and their aliases) are provided to the above APIs, the corresponding settings in the project's `package.json` are ignored. Use a custom `parseOpts()` function to merge the settings as needed.
