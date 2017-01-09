@@ -17,7 +17,6 @@ var DEFAULT_IGNORE = [
   '**/*.min.js',
   '**/bundle.js',
   'coverage/**',
-  'node_modules/**',
   'vendor/**'
 ]
 
