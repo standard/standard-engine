@@ -1,3 +1,4 @@
+const saneEslintIgnore = require('sane-eslint-ignore')
 module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
@@ -13,13 +14,7 @@ var DEFAULT_PATTERNS = [
   '**/*.jsx'
 ]
 
-var DEFAULT_IGNORE = [
-  '**/*.min.js',
-  '**/bundle.js',
-  'coverage/**',
-  'node_modules/**',
-  'vendor/**'
-]
+var DEFAULT_IGNORE = saneEslintIgnore
 
 function Linter (opts) {
   var self = this
