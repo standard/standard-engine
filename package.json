@@ -12,7 +12,8 @@
     "get-stdin": "^5.0.1",
     "home-or-tmp": "^2.0.0",
     "minimist": "^1.1.0",
-    "pkg-config": "^1.0.1"
+    "pkg-config": "^1.0.1",
+    "sane-eslint-files": "^1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",

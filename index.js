@@ -1,3 +1,4 @@
+const saneEslintfiles = require('sane-eslint-files')
 module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
@@ -8,10 +9,7 @@ var homeOrTmp = require('home-or-tmp')
 var path = require('path')
 var pkgConfig = require('pkg-config')
 
-var DEFAULT_PATTERNS = [
-  '**/*.js',
-  '**/*.jsx'
-]
+var DEFAULT_PATTERNS = saneEslintfiles
 
 var DEFAULT_IGNORE = [
   '**/*.min.js',
