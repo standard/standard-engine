@@ -122,25 +122,25 @@ Linter.prototype.parseOpts = function (opts) {
   if (!opts) opts = {}
   opts = Object.assign({}, opts)
   opts.eslintConfig = Object.assign({}, self.eslintConfig)
+  opts.eslintConfig.fix = !!opts.fix
 
   if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
+  var packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
 
   if (!opts.ignore) opts.ignore = []
-  opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
+  addIgnore(packageOpts.ignore)
+  addIgnore(DEFAULT_IGNORE)
 
-  if (opts.fix != null) opts.eslintConfig.fix = opts.fix
+  addGlobals(packageOpts.globals || packageOpts.global)
+  addGlobals(opts.globals || opts.global)
 
-  setGlobals(opts.globals || opts.global)
-  setPlugins(opts.plugins || opts.plugin)
-  setEnvs(opts.envs || opts.env)
-  setParser(opts.parser)
+  addPlugins(packageOpts.plugins || packageOpts.plugin)
+  addPlugins(opts.plugins || opts.plugin)
 
-  var packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
-  setIgnore(packageOpts.ignore)
-  setGlobals(packageOpts.globals || packageOpts.global)
-  setPlugins(packageOpts.plugins || packageOpts.plugin)
-  setEnvs(packageOpts.envs || packageOpts.env)
-  if (!opts.parser) setParser(packageOpts.parser)
+  addEnvs(packageOpts.envs || packageOpts.env)
+  addEnvs(opts.envs || opts.env)
+
+  setParser(packageOpts.parser || opts.parser)
 
   if (self.customParseOpts) {
     var filepath = pkgConf.filepath(packageOpts)
@@ -148,22 +148,22 @@ Linter.prototype.parseOpts = function (opts) {
     opts = self.customParseOpts(opts, packageOpts, rootDir)
   }
 
-  function setIgnore (ignore) {
+  function addIgnore (ignore) {
     if (!ignore) return
     opts.ignore = opts.ignore.concat(ignore)
   }
 
-  function setGlobals (globals) {
+  function addGlobals (globals) {
     if (!globals) return
     opts.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
   }
 
-  function setPlugins (plugins) {
+  function addPlugins (plugins) {
     if (!plugins) return
     opts.eslintConfig.plugins = self.eslintConfig.plugins.concat(plugins)
   }
 
-  function setEnvs (envs) {
+  function addEnvs (envs) {
     if (!envs) return
     if (!Array.isArray(envs) && typeof envs !== 'string') {
       // envs can be an object in `package.json`
