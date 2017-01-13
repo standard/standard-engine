@@ -130,10 +130,12 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (opts.fix != null) opts.eslintConfig.fix = opts.fix
 
-  setGlobals(opts.globals || opts.global)
-  setPlugins(opts.plugins || opts.plugin)
-  setEnvs(opts.envs || opts.env)
-  setParser(opts.parser)
+  var preventOverride = {}
+
+  preventOverride.globals = setGlobals(opts.globals || opts.global)
+  preventOverride.plugins = setPlugins(opts.plugins || opts.plugin)
+  preventOverride.envs = setEnvs(opts.envs || opts.env)
+  preventOverride.parser = setParser(opts.parser)
 
   var root
   try { root = findRoot(opts.cwd) } catch (e) {}
@@ -142,10 +144,10 @@ Linter.prototype.parseOpts = function (opts) {
 
     if (packageOpts) {
       setIgnore(packageOpts.ignore)
-      setGlobals(packageOpts.globals || packageOpts.global)
-      setPlugins(packageOpts.plugins || packageOpts.plugin)
-      setEnvs(packageOpts.envs || packageOpts.env)
-      if (!opts.parser) setParser(packageOpts.parser)
+      if (!preventOverride.globals) setGlobals(packageOpts.globals || packageOpts.global)
+      if (!preventOverride.plugins) setPlugins(packageOpts.plugins || packageOpts.plugin)
+      if (!preventOverride.envs) setEnvs(packageOpts.envs || packageOpts.env)
+      if (!preventOverride.parser) setParser(packageOpts.parser)
     }
   }
 
@@ -155,27 +157,31 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   function setGlobals (globals) {
-    if (!globals) return
+    if (!globals) return false
     opts.eslintConfig.globals = self.eslintConfig.globals.concat(globals)
+    return true
   }
 
   function setPlugins (plugins) {
-    if (!plugins) return
+    if (!plugins) return false
     opts.eslintConfig.plugins = self.eslintConfig.plugins.concat(plugins)
+    return true
   }
 
   function setEnvs (envs) {
-    if (!envs) return
+    if (!envs) return false
     if (!Array.isArray(envs) && typeof envs !== 'string') {
       // envs can be an object in `package.json`
       envs = Object.keys(envs).filter(function (env) { return envs[env] })
     }
     opts.eslintConfig.envs = self.eslintConfig.envs.concat(envs)
+    return true
   }
 
   function setParser (parser) {
-    if (!parser) return
+    if (!parser) return false
     opts.eslintConfig.parser = parser
+    return true
   }
 
   return opts
