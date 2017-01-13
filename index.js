@@ -126,7 +126,7 @@ Linter.prototype.parseOpts = function (opts) {
   if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
 
   if (!opts.ignore) opts.ignore = []
-  opts.ignore = opts.ignore.concat(DEFAULT_IGNORE)
+  setIgnore(DEFAULT_IGNORE)
 
   if (opts.fix != null) opts.eslintConfig.fix = opts.fix
 
