@@ -145,7 +145,6 @@ Flags (advanced):
     })
 
     process.exitCode = result.errorCount ? 1 : 0
-    return
   }
 
   function onError (err) {
@@ -156,7 +155,6 @@ Flags (advanced):
       opts.cmd, opts.bugs
     )
     process.exitCode = 1
-    return
   }
 
   /**
