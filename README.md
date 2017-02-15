@@ -251,7 +251,7 @@ be provided:
 ```js
 {
   cwd: '',      // current working directory (default: process.cwd())
-  filename: '', // path of the file containing the text being linted, you should specify it when running `lintText` with eslint plugins
+  filename: '', // path of the file containing the text being linted (optional, though some eslint plugins require it)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
   plugins: [],  // custom eslint plugins
