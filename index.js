@@ -53,6 +53,7 @@ function Linter (opts) {
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
+ * @param {string=} opts.filename         path of the file containing the text being linted
  * @param {function(Error, Object)} cb    callback
  */
 Linter.prototype.lintText = function (text, opts, cb) {
