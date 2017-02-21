@@ -21,17 +21,16 @@ var DEFAULT_IGNORE = [
 ]
 
 function Linter (opts) {
-  var self = this
-  if (!(self instanceof Linter)) return new Linter(opts)
+  if (!(this instanceof Linter)) return new Linter(opts)
   if (!opts) opts = {}
 
-  self.cmd = opts.cmd || 'standard'
-  self.eslint = opts.eslint
-  self.cwd = opts.cwd
-  if (!self.eslint) throw new Error('opts.eslint option is required')
-  self.customParseOpts = opts.parseOpts
+  this.cmd = opts.cmd || 'standard'
+  this.eslint = opts.eslint
+  this.cwd = opts.cwd
+  if (!this.eslint) throw new Error('opts.eslint option is required')
+  this.customParseOpts = opts.parseOpts
 
-  self.eslintConfig = Object.assign({
+  this.eslintConfig = Object.assign({
     cache: true,
     cacheLocation: path.join(homeOrTmp, '.standard-cache/'),
     envs: [],
@@ -54,20 +53,10 @@ function Linter (opts) {
  * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {string=} opts.filename         path of the file containing the text being linted
- * @param {function(Error, Object)} cb    callback
  */
-Linter.prototype.lintText = function (text, opts, cb) {
-  var self = this
-  if (typeof opts === 'function') return self.lintText(text, null, opts)
-  opts = self.parseOpts(opts)
-
-  var result
-  try {
-    result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
-  } catch (err) {
-    return nextTick(cb, err)
-  }
-  return nextTick(cb, null, result)
+Linter.prototype.lintText = function (text, opts) {
+  opts = this.parseOpts(opts)
+  return new this.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
 }
 
 /**
@@ -179,10 +168,4 @@ Linter.prototype.parseOpts = function (opts) {
   }
 
   return opts
-}
-
-function nextTick (cb, err, val) {
-  process.nextTick(function () {
-    cb(err, val)
-  })
 }

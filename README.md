@@ -243,7 +243,7 @@ The following options are provided in the `opts` object, and must be on the retu
 
 ## API Usage
 
-### `standardEngine.lintText(text, [opts], callback)`
+### `results = standardEngine.lintText(text, [opts])`
 
 Lint the provided source `text` to enforce your defined style. An `opts` object may
 be provided:
@@ -262,7 +262,7 @@ be provided:
 
 Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
-The `callback` will be called with an `Error` and `results` object:
+If an error occurs, an exception is thrown. Otherwise, a `results` object is returned:
 
 ```js
 {
