@@ -20,13 +20,11 @@ test('api: lintFiles', function (t) {
 })
 
 test('api: lintText', function (t) {
-  t.plan(3)
+  t.plan(2)
   var standard = getStandard()
-  standard.lintText('console.log("hi there")\n', function (err, result) {
-    t.error(err, 'no error while linting')
-    t.equal(typeof result, 'object', 'result is an object')
-    t.equal(result.errorCount, 1, 'should have used single quotes')
-  })
+  var result = standard.lintText('console.log("hi there")\n')
+  t.equal(typeof result, 'object', 'result is an object')
+  t.equal(result.errorCount, 1, 'should have used single quotes')
 })
 
 test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
