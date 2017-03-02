@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - BREAKING: make `lintText` into a sync method
 
 Before: `standardEngine.lintText(text, [opts], callback)`
+
 After: `results = standardEngine.lintText(text, [opts])`
 
 If an error occurs, an exception is thrown. Otherwise, a `results` object is
