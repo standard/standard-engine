@@ -2,6 +2,55 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.0 - 2017-02-20
+
+- BREAKING: make `lintText` into a sync method
+
+Before: `standardEngine.lintText(text, [opts], callback)`
+After: `results = standardEngine.lintText(text, [opts])`
+
+If an error occurs, an exception is thrown. Otherwise, a `results` object is
+returned.
+
+## 5.4.0 - 2017-02-08
+
+- Replace find-root and pkg-config by pkg-conf
+- Support parseOpts() option
+- Improve help message
+  - add missing ignored files
+  - add note about .gitignore files
+- Prevent package.json `parser` option from overriding explicit option
+
+## 5.3.0 - 2016-11-23
+
+- Resolve ignore options in standard-engine, not deglob
+
+## 5.2.0 - 2016-11-22
+
+- Support filename option in lintText()
+- Update dependencies
+
+## 5.1.1 - 2016-10-11
+
+- Fix crash when 'stdin' and 'fix' options are used on code with no errors
+
+## 5.1.0 - 2016-08-19
+
+- Add ESLint `cache` option
+
+## 5.0.3 - 2016-08-18
+
+- Remove unneeded `xtend`, `defaults`, `multiline` dependencies
+- Re-order help commands
+
+## 5.0.2 - 2016-08-12
+
+- Clarify it's only *some* problems that get fixed
+
+## 5.0.1 - 2016-08-12
+
+- Only recommend `--fix` when fixable rules are present
+
 ## 5.0.0 - 2016-08-10
 
 - BREAKING: Remove formatter support (replaced by ESLint's --fix)
