@@ -1,14 +1,13 @@
-# Standard Engine
-[![travis][travis-image]][travis-url]
-[![npm][npm-image]][npm-url]
-[![downloads][downloads-image]][downloads-url]
+# standard-engine [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
-[travis-image]: https://img.shields.io/travis/Flet/standard-engine.svg?style=flat
+[travis-image]: https://img.shields.io/travis/Flet/standard-engine/master.svg
 [travis-url]: https://travis-ci.org/Flet/standard-engine
-[npm-image]: https://img.shields.io/npm/v/standard-engine.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/standard-engine.svg
 [npm-url]: https://npmjs.org/package/standard-engine
-[downloads-image]: https://img.shields.io/npm/dm/standard-engine.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/standard-engine.svg
 [downloads-url]: https://npmjs.org/package/standard-engine
+[standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+[standard-url]: https://standardjs.com
 
 ## Overview
 Wrap your own eslint rules in a easy-to-use command line tool and/or a JS module.
@@ -21,7 +20,7 @@ npm install standard-engine
 ## Who is using `standard-engine`?
 Here is a list of packages using `standard-engine`. Dive into them for ideas!
 
-- [standard](https://github.com/feross/standard) - JavaScript Standard Style.
+- [standard](https://standardjs.com) - JavaScript Standard Style.
 -  [semistandard](https://github.com/Flet/semistandard) - Its `standard` with semicolons sprinkled on top.
 - [happiness](https://github.com/JedWatson/happiness) - JavaScript Happiness Style (semicolons and tabs)
 - [doublestandard](https://github.com/flet/doublestandard) - Require TWO semicolons at the end of every line!
