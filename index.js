@@ -3,9 +3,10 @@ module.exports.cli = require('./bin/cmd')
 module.exports.linter = Linter
 
 var deglob = require('deglob')
-var homeOrTmp = require('home-or-tmp')
 var path = require('path')
 var pkgConf = require('pkg-conf')
+
+var HOME_OR_TMP = os.homedir() || os.tmpdir()
 
 var DEFAULT_PATTERNS = [
   '**/*.js',
@@ -32,7 +33,7 @@ function Linter (opts) {
 
   this.eslintConfig = Object.assign({
     cache: true,
-    cacheLocation: path.join(homeOrTmp, '.standard-cache/'),
+    cacheLocation: path.join(HOME_OR_TMP, '.standard-cache/'),
     envs: [],
     fix: false,
     globals: [],
