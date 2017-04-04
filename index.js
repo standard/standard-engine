@@ -3,6 +3,7 @@ module.exports.cli = require('./bin/cmd')
 module.exports.linter = Linter
 
 var deglob = require('deglob')
+var os = require('os')
 var path = require('path')
 var pkgConf = require('pkg-conf')
 
