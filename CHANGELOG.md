@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 7.0.0 - 2017-04-04
 
-- BREAKING: rename the syncronous `lintText` method to `lintTextSync`
+- BREAKING: rename the synchronous `lintText` method to `lintTextSync`
 - Add an asyncronous `lintText` method (that just calls `lintTextSync` internally)
 
 This effectively undoes the breaking change introduced in 6.0.0, making it safe to
