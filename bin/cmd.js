@@ -93,13 +93,7 @@ Flags (advanced):
   if (argv.stdin) {
     getStdin().then(function (text) {
       stdinText = text
-      var result
-      try {
-        result = standard.lintText(text, lintOpts)
-      } catch (err) {
-        return onResult(err)
-      }
-      onResult(null, result)
+      standard.lintText(text, lintOpts, onResult)
     })
   } else {
     standard.lintFiles(argv._, lintOpts, onResult)

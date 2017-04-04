@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0.0 - 2017-04-04
+
+- BREAKING: rename the syncronous `lintText` method to `lintTextSync`
+- Add an asyncronous `lintText` method (that just calls `lintTextSync` internally)
+
+This effectively undoes the breaking change introduced in 6.0.0, making it safe to
+upgrade from `standard-engine` 5.x to 7.x without introducing any breaking changes.
+
+Related issues:
+
+- https://github.com/feross/standard/issues/807
+- https://github.com/Flet/standard-engine/issues/156
+
 ## 6.0.0 - 2017-02-20
 
 - BREAKING: make `lintText` into a sync method

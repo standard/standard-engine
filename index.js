@@ -54,9 +54,20 @@ function Linter (opts) {
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
  * @param {string=} opts.filename         path of the file containing the text being linted
  */
-Linter.prototype.lintText = function (text, opts) {
+Linter.prototype.lintTextSync = function (text, opts) {
   opts = this.parseOpts(opts)
   return new this.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
+}
+
+Linter.prototype.lintText = function (text, opts, cb) {
+  if (typeof opts === 'function') return this.lintText(text, null, opts)
+  var result
+  try {
+    result = this.lintTextSync(text, opts)
+  } catch (err) {
+    return process.nextTick(cb, err)
+  }
+  process.nextTick(cb, null, result)
 }
 
 /**
