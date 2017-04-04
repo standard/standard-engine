@@ -242,7 +242,7 @@ The following options are provided in the `opts` object, and must be on the retu
 
 ## API Usage
 
-### `results = standardEngine.lintText(text, [opts])`
+### `engine.lintText(text, [opts], callback)`
 
 Lint the provided source `text` to enforce your defined style. An `opts` object may
 be provided:
@@ -261,7 +261,9 @@ be provided:
 
 Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
-If an error occurs, an exception is thrown. Otherwise, a `results` object is returned:
+The `callback` will be called with an `Error` and `results` object.
+
+The `results` object will contain the following properties:
 
 ```js
 {
@@ -281,7 +283,12 @@ If an error occurs, an exception is thrown. Otherwise, a `results` object is ret
 }
 ```
 
-### `standardEngine.lintFiles(files, [opts], callback)`
+### `results = engine.lintTextSync(text, [opts])`
+
+Synchronous version of `engine.lintText()`. If an error occurs, an exception is
+thrown. Otherwise, a `results` object is returned.
+
+### `engine.lintFiles(files, [opts], callback)`
 
 Lint the provided `files` globs. An `opts` object may be provided:
 
@@ -302,6 +309,8 @@ Additional options may be loaded from a `package.json` if it's found for the cur
 Both `ignore` and `files` globs are resolved relative to the current working directory.
 
 The `callback` will be called with an `Error` and `results` object (same as above).
+
+**NOTE: There is no synchronous version of `engine.lintFiles()`.**
 
 ### Full set of `opts`
 
