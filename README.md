@@ -266,7 +266,7 @@ The `callback` will be called with an `Error` and `results` object.
 The `results` object will contain the following properties:
 
 ```js
-{
+var results = {
   results: [
     {
       filePath: '',
