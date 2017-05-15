@@ -80,6 +80,18 @@ Additionally an optional `parseOpts()` function can be provided. See below for d
 ```
 Take a look at [eslint-config-standard](https://github.com/feross/eslint-config-standard) as an example, or if you want to extend/mutate `standard`, see [eslint-config-semistandard](https://github.com/flet/eslint-config-semistandard).
 
+## Editor Integrations
+
+### Atom
+
+[linter-js-standard-engine][atom-plugin] is an Atom plugin that supports some of
+the more popular standard-engine implementations out of the box. It detects them
+by scanning through the dependencies of the project that you are editing.
+You can use it with any other implementation through configuration in the
+projects `package.json` file.
+
+[atom-plugin]: https://github.com/gustavnikolaj/linter-js-standard-engine
+
 ## Engine Features
 
 ### Ignoring Files
