@@ -132,7 +132,9 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts.ignore) opts.ignore = []
   addIgnore(packageOpts.ignore)
-  addIgnore(DEFAULT_IGNORE)
+  if (!packageOpts.noDefaultIgnore) {
+    addIgnore(DEFAULT_IGNORE)
+  }
 
   addGlobals(packageOpts.globals || packageOpts.global)
   addGlobals(opts.globals || opts.global)
