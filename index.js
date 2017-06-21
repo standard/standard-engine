@@ -57,7 +57,7 @@ function Linter (opts) {
  * @param {string=} opts.filename         path of the file containing the text being linted
  */
 Linter.prototype.lintTextSync = function (text, opts) {
-  opts = this.parseOpts(opts)
+  opts = this.parseOpts(opts, false)
   return new this.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
 }
 
@@ -89,7 +89,7 @@ Linter.prototype.lintText = function (text, opts, cb) {
 Linter.prototype.lintFiles = function (files, opts, cb) {
   var self = this
   if (typeof opts === 'function') return self.lintFiles(files, null, opts)
-  opts = self.parseOpts(opts)
+  opts = self.parseOpts(opts, true)
 
   if (typeof files === 'string') files = [ files ]
   if (files.length === 0) files = DEFAULT_PATTERNS
@@ -119,7 +119,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
   })
 }
 
-Linter.prototype.parseOpts = function (opts) {
+Linter.prototype.parseOpts = function (opts, usePackageJson) {
   var self = this
 
   if (!opts) opts = {}
@@ -128,7 +128,9 @@ Linter.prototype.parseOpts = function (opts) {
   opts.eslintConfig.fix = !!opts.fix
 
   if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
-  var packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
+  var packageOpts = usePackageJson
+    ? pkgConf.sync(self.cmd, { cwd: opts.cwd })
+    : {}
 
   if (!opts.ignore) opts.ignore = []
   addIgnore(packageOpts.ignore)
@@ -146,8 +148,13 @@ Linter.prototype.parseOpts = function (opts) {
   setParser(packageOpts.parser || opts.parser)
 
   if (self.customParseOpts) {
-    var filepath = pkgConf.filepath(packageOpts)
-    var rootDir = filepath ? path.dirname(filepath) : opts.cwd
+    var rootDir
+    if (usePackageJson) {
+      var filePath = pkgConf.filepath(packageOpts)
+      rootDir = filePath ? path.dirname(filePath) : opts.cwd
+    } else {
+      rootDir = opts.cwd
+    }
     opts = self.customParseOpts(opts, packageOpts, rootDir)
   }
 
