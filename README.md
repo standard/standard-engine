@@ -234,7 +234,7 @@ module.exports = {
   eslintConfig: {
     configFile: path.join(__dirname, 'eslintrc.json')
   },
-  parseOpts (opts, packageOpts, rootDir) {
+  parseOpts: function (opts, packageOpts, rootDir) {
     // provide implementation here, then return the opts object (or a new one)
     return opts
   }
