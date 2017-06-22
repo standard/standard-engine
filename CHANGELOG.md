@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.1.0 - 2017-06-21
+
+- `engine.lintText` and `engine.lintTextSync` do not take into account the `package.json`
+  configuration settings. These now do not behave differently depending on the current
+  working directory. See https://github.com/Flet/standard-engine/pull/166
+
 ## 7.0.0 - 2017-04-04
 
 - BREAKING: rename the synchronous `lintText` method to `lintTextSync`
