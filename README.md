@@ -1,7 +1,7 @@
 # standard-engine [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
-[travis-image]: https://img.shields.io/travis/Flet/standard-engine/master.svg
-[travis-url]: https://travis-ci.org/Flet/standard-engine
+[travis-image]: https://img.shields.io/travis/standard/standard-engine/master.svg
+[travis-url]: https://travis-ci.org/standard/standard-engine
 [npm-image]: https://img.shields.io/npm/v/standard-engine.svg
 [npm-url]: https://npmjs.org/package/standard-engine
 [downloads-image]: https://img.shields.io/npm/dm/standard-engine.svg
