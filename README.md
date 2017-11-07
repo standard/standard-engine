@@ -114,6 +114,20 @@ a `ignore` property to `package.json`:
 }
 ```
 
+Some files are ignored by default:
+
+```js
+var DEFAULT_IGNORE = [
+  '**/*.min.js',
+  '**/bundle.js',
+  'coverage/**',
+  'node_modules/**',
+  'vendor/**'
+]
+```
+
+You can disable these default ignores by setting `noDefaultIgnore` option to `true`.
+
 ### Hiding Warnings
 
 Since `standard-engine` uses [`eslint`](http://eslint.org/) under-the-hood, you can
