@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.2.0 2017-11-07
+
+- New Feature: `noDefaultIgnore` option to can now be used to turn off default ignores.
+
 ## 7.1.0 - 2017-06-21
 
 - `engine.lintText` and `engine.lintTextSync` do not take into account the `package.json`
