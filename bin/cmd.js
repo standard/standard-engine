@@ -23,6 +23,7 @@ function Cli (opts) {
       verbose: 'v'
     },
     boolean: [
+      'cache',
       'fix',
       'help',
       'stdin',
@@ -30,11 +31,15 @@ function Cli (opts) {
       'version'
     ],
     string: [
+      'cache-location',
       'global',
       'plugin',
       'parser',
       'env'
-    ]
+    ],
+    default: {
+      'cache': true // when not used, a boolean defaults to false, not undefined
+    }
   })
 
   // Unix convention: Command line argument `-` is a shorthand for `--stdin`
@@ -58,17 +63,19 @@ Usage:
     Paths in a project's root .gitignore file are also automatically ignored.
 
 Flags:
-        --fix       Automatically fix problems
-    -v, --verbose   Show rule names for errors (to ignore specific rules)
-        --version   Show current version
-    -h, --help      Show usage information
+        --fix              Automatically fix problems
+    -v, --verbose          Show rule names for errors (to ignore specific rules)
+        --version          Show current version
+    -h, --help             Show usage information
 
 Flags (advanced):
-        --stdin     Read file text from stdin
-        --global    Declare global variable
-        --plugin    Use custom eslint plugin
-        --env       Use custom eslint environment
-        --parser    Use custom js parser (e.g. babel-eslint)
+        --stdin            Read file text from stdin
+        --global           Declare global variable
+        --plugin           Use custom eslint plugin
+        --env              Use custom eslint environment
+        --parser           Use custom js parser (e.g. babel-eslint)
+        --cache            Only check changed files - default: true
+        --cache-location   Path to the cache file or directory
     `)
     process.exitCode = 0
     return
@@ -85,7 +92,9 @@ Flags (advanced):
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,
-    parser: argv.parser
+    parser: argv.parser,
+    cache: argv.cache,
+    cacheLocation: argv['cache-location']
   }
 
   var stdinText
