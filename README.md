@@ -275,15 +275,18 @@ be provided:
 
 ```js
 {
-  cwd: '',      // current working directory (default: process.cwd())
-  filename: '', // path of the file containing the text being linted (optional, though some eslint plugins require it)
-  fix: false,   // automatically fix problems
-  globals: [],  // custom global variables to declare
-  plugins: [],  // custom eslint plugins
-  envs: [],     // custom eslint environment
-  parser: ''    // custom js parser (e.g. babel-eslint)
+  cwd: '',              // current working directory (default: process.cwd())
+  filename: '',         // path of file containing the text being linted
+  fix: false,           // automatically fix problems
+  globals: [],          // custom global variables to declare
+  plugins: [],          // custom eslint plugins
+  envs: [],             // custom eslint environment
+  parser: '',           // custom js parser (e.g. babel-eslint)
+  usePackageJson: true  // use options from nearest package.json?
 }
 ```
+
+All options are optional, though some ESLint plugins require the `filename` option.
 
 Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
@@ -320,13 +323,14 @@ Lint the provided `files` globs. An `opts` object may be provided:
 
 ```js
 {
-  ignore: [],   // file globs to ignore (has sane defaults)
-  cwd: '',      // current working directory (default: process.cwd())
-  fix: false,   // automatically fix problems
-  globals: [],  // custom global variables to declare
-  plugins: [],  // custom eslint plugins
-  envs: [],     // custom eslint environment
-  parser: ''    // custom js parser (e.g. babel-eslint)
+  ignore: [],           // file globs to ignore (has sane defaults)
+  cwd: '',              // current working directory (default: process.cwd())
+  fix: false,           // automatically fix problems
+  globals: [],          // custom global variables to declare
+  plugins: [],          // custom eslint plugins
+  envs: [],             // custom eslint environment
+  parser: '',           // custom js parser (e.g. babel-eslint)
+  usePackageJson: true  // use options from nearest package.json?
 }
 ```
 

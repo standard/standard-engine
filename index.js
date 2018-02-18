@@ -54,10 +54,11 @@ function Linter (opts) {
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
- * @param {string=} opts.filename         path of the file containing the text being linted
+ * @param {string=} opts.filename         path of file containing the text being linted
+ * @param {boolean=} opts.usePackageJson  use options from nearest package.json? (default: true)
  */
 Linter.prototype.lintTextSync = function (text, opts) {
-  opts = this.parseOpts(opts, false)
+  opts = this.parseOpts(opts)
   return new this.eslint.CLIEngine(opts.eslintConfig).executeOnText(text, opts.filename)
 }
 
@@ -84,12 +85,13 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {Array.<string>=} opts.plugins  custom eslint plugins
  * @param {Array.<string>=} opts.envs     custom eslint environment
  * @param {string=} opts.parser           custom js parser (e.g. babel-eslint)
+ * @param {boolean=} opts.usePackageJson  use options from nearest package.json? (default: true)
  * @param {function(Error, Object)} cb    callback
  */
 Linter.prototype.lintFiles = function (files, opts, cb) {
   var self = this
   if (typeof opts === 'function') return self.lintFiles(files, null, opts)
-  opts = self.parseOpts(opts, true)
+  opts = self.parseOpts(opts)
 
   if (typeof files === 'string') files = [ files ]
   if (files.length === 0) files = DEFAULT_PATTERNS
@@ -119,7 +121,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
   })
 }
 
-Linter.prototype.parseOpts = function (opts, usePackageJson) {
+Linter.prototype.parseOpts = function (opts) {
   var self = this
 
   if (!opts) opts = {}
@@ -128,6 +130,12 @@ Linter.prototype.parseOpts = function (opts, usePackageJson) {
   opts.eslintConfig.fix = !!opts.fix
 
   if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
+
+  // If no usePackageJson option is given, default to `true`
+  var usePackageJson = opts.usePackageJson != null
+    ? opts.usePackageJson
+    : true
+
   var packageOpts = usePackageJson
     ? pkgConf.sync(self.cmd, { cwd: opts.cwd })
     : {}
