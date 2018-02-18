@@ -21,7 +21,7 @@ var test = require('tape')
 var GIT = 'git'
 var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 var TMP = path.join(__dirname, '..', 'tmp')
-var PARALLEL_LIMIT = os.cpus().length
+var PARALLEL_LIMIT = Math.max(os.cpus().length - 1, 1)
 
 var argv = minimist(process.argv.slice(2), {
   boolean: [
