@@ -17,7 +17,7 @@
     "cross-spawn": "^6.0.3",
     "eslint": "*",
     "eslint-config-standard": "*",
-    "eslint-config-standard-jsx": "*",
+    "eslint-config-standard-jsx": ">=5.0.0",
     "eslint-plugin-import": "*",
     "eslint-plugin-node": "*",
     "eslint-plugin-promise": "*",
