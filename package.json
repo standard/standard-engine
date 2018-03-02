@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "deglob": "^2.1.0",
-    "get-stdin": "^5.0.1",
+    "get-stdin": "^6.0.0",
     "minimist": "^1.1.0",
     "pkg-conf": "^2.0.0"
   },
