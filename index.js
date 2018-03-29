@@ -157,6 +157,9 @@ Linter.prototype.parseOpts = function (opts) {
 
   setParser(packageOpts.parser || opts.parser)
 
+  setCache()
+  setCacheLocation()
+
   if (self.customParseOpts) {
     var rootDir
     if (usePackageJson) {
@@ -195,6 +198,22 @@ Linter.prototype.parseOpts = function (opts) {
   function setParser (parser) {
     if (!parser) return
     opts.eslintConfig.parser = parser
+  }
+
+  function setCache () {
+    if (typeof packageOpts.cache !== 'undefined') {
+      opts.eslintConfig.cache = packageOpts.cache
+    } else if (typeof opts.cache !== 'undefined') {
+      opts.eslintConfig.cache = opts.cache
+    }
+  }
+
+  function setCacheLocation () {
+    if (typeof packageOpts.cacheLocation !== 'undefined') {
+      opts.eslintConfig.cacheLocation = packageOpts.cacheLocation
+    } else if (typeof opts.cacheLocation !== 'undefined') {
+      opts.eslintConfig.cacheLocation = opts.cacheLocation
+    }
   }
 
   return opts
