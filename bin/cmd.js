@@ -4,9 +4,10 @@ module.exports = Cli
 
 var minimist = require('minimist')
 var getStdin = require('get-stdin')
+var Linter = require('../').linter
 
 function Cli (opts) {
-  var standard = require('../').linter(opts)
+  var standard = new Linter(opts)
 
   opts = Object.assign({
     cmd: 'standard-engine',
