@@ -11,7 +11,7 @@ function Cli (opts) {
   opts = Object.assign({
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
-    version: require('../package.json').version
+    version: '0.0.0'
   }, opts)
 
   var argv = minimist(process.argv.slice(2), {
