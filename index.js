@@ -26,7 +26,9 @@ function Linter (opts) {
   if (!(this instanceof Linter)) return new Linter(opts)
   if (!opts) opts = {}
 
-  this.cmd = opts.cmd || 'standard'
+  this.cmd = opts.cmd
+  if (!this.cmd) throw new Error('opts.cmd option is required')
+
   this.eslint = opts.eslint
   this.cwd = opts.cwd
   if (!this.eslint) throw new Error('opts.eslint option is required')
