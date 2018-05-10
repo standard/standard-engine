@@ -26,21 +26,23 @@ function Linter (opts) {
   if (!(this instanceof Linter)) return new Linter(opts)
   if (!opts) opts = {}
 
+  if (!opts.cmd) throw new Error('opts.cmd option is required')
+  if (!opts.eslint) throw new Error('opts.eslint option is required')
+
   this.cmd = opts.cmd
-  if (!this.cmd) throw new Error('opts.cmd option is required')
-
-  this.version = opts.version
-  if (!this.version) throw new Error('opts.version option is required')
-
   this.eslint = opts.eslint
-  if (!this.eslint) throw new Error('opts.eslint option is required')
-
   this.cwd = opts.cwd || process.cwd()
   this.customParseOpts = opts.parseOpts
 
+  var m = opts.version && opts.version.match(/^(\d+)\./)
+  var majorVersion = (m && m[1]) || '0'
+
+  // Example cache location: .standard-v12-cache/
+  var cacheLocation = path.join(HOME_OR_TMP, `.${this.cmd}-v${majorVersion}-cache/`)
+
   this.eslintConfig = Object.assign({
     cache: true,
-    cacheLocation: path.join(HOME_OR_TMP, '.standard-cache/'),
+    cacheLocation: cacheLocation,
     envs: [],
     fix: false,
     globals: [],
