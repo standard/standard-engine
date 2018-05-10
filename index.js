@@ -30,8 +30,9 @@ function Linter (opts) {
   if (!this.cmd) throw new Error('opts.cmd option is required')
 
   this.eslint = opts.eslint
-  this.cwd = opts.cwd
   if (!this.eslint) throw new Error('opts.eslint option is required')
+
+  this.cwd = opts.cwd || process.cwd()
   this.customParseOpts = opts.parseOpts
 
   this.eslintConfig = Object.assign({
@@ -131,7 +132,7 @@ Linter.prototype.parseOpts = function (opts) {
   opts.eslintConfig = Object.assign({}, self.eslintConfig)
   opts.eslintConfig.fix = !!opts.fix
 
-  if (!opts.cwd) opts.cwd = self.cwd || process.cwd()
+  if (!opts.cwd) opts.cwd = self.cwd
 
   // If no usePackageJson option is given, default to `true`
   var usePackageJson = opts.usePackageJson != null
