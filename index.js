@@ -29,6 +29,9 @@ function Linter (opts) {
   this.cmd = opts.cmd
   if (!this.cmd) throw new Error('opts.cmd option is required')
 
+  this.version = opts.version
+  if (!this.version) throw new Error('opts.version option is required')
+
   this.eslint = opts.eslint
   if (!this.eslint) throw new Error('opts.eslint option is required')
 
