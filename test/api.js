@@ -4,6 +4,8 @@ var test = require('tape')
 
 function getStandard () {
   return new Linter({
+    cmd: 'pocketlint',
+    version: '0.0.0',
     eslint: eslint,
     eslintConfig: require('../tmp/standard/options').eslintConfig
   })

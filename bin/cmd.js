@@ -6,12 +6,13 @@ var minimist = require('minimist')
 var getStdin = require('get-stdin')
 
 function Cli (opts) {
-  var standard = require('../').linter(opts)
+  var Linter = require('../').linter
+  var standard = new Linter(opts)
 
   opts = Object.assign({
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
-    version: require('../package.json').version
+    version: '0.0.0'
   }, opts)
 
   var argv = minimist(process.argv.slice(2), {
