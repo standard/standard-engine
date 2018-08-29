@@ -42,7 +42,7 @@ test('api: lintTextSync', function (t) {
 test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
   t.plan(2)
   var standard = getStandard()
-  var opts = standard.parseOpts({parser: 'blah'})
+  var opts = standard.parseOpts({ parser: 'blah' })
   t.equal(opts.parser, 'blah')
   t.equal(standard.eslintConfig.parser, undefined)
 })
@@ -50,7 +50,7 @@ test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
 test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
   t.plan(2)
   var standard = getStandard()
-  var opts = standard.parseOpts({globals: ['what']})
+  var opts = standard.parseOpts({ globals: ['what'] })
   t.deepEqual(opts.globals, ['what'])
   t.deepEqual(standard.eslintConfig.globals, [])
 })
