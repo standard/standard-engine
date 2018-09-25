@@ -13,7 +13,7 @@
     "pkg-conf": "^2.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^9.0.0",
+    "babel-eslint": "^10.0.0",
     "cross-spawn": "^6.0.3",
     "eslint": "*",
     "eslint-config-standard": "*",
