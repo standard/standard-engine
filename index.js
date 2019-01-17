@@ -138,6 +138,7 @@ Linter.prototype.parseOpts = function (opts) {
   opts.eslintConfig.fix = !!opts.fix
 
   if (!opts.cwd) opts.cwd = self.cwd
+  opts.eslintConfig.cwd = opts.cwd
 
   // If no usePackageJson option is given, default to `true`
   var usePackageJson = opts.usePackageJson != null
