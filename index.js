@@ -101,7 +101,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
   if (typeof opts === 'function') return self.lintFiles(files, null, opts)
   opts = self.parseOpts(opts)
 
-  if (typeof files === 'string') files = [ files ]
+  if (typeof files === 'string') files = [files]
   if (files.length === 0) files = DEFAULT_PATTERNS
 
   var deglobOpts = {

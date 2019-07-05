@@ -35,7 +35,7 @@ test('test `standard` repo', function (t) {
     }
 
     function gitClone (cb) {
-      var args = [ 'clone', '--depth', 1, url, path.join(TMP, name) ]
+      var args = ['clone', '--depth', 1, url, path.join(TMP, name)]
       spawn(GIT, args, { stdio: 'ignore' }, function (err) {
         if (err) err.message += ' (git clone) (' + name + ')'
         cb(err)
@@ -43,7 +43,7 @@ test('test `standard` repo', function (t) {
     }
 
     function gitPull (cb) {
-      var args = [ 'pull' ]
+      var args = ['pull']
       spawn(GIT, args, { cwd: folder, stdio: 'ignore' }, function (err) {
         if (err) err.message += ' (git pull) (' + name + ')'
         cb(err)
@@ -51,7 +51,7 @@ test('test `standard` repo', function (t) {
     }
 
     function runStandard () {
-      var args = [ '--verbose' ]
+      var args = ['--verbose']
       if (pkg.args) args.push.apply(args, pkg.args)
       spawn(STANDARD, args, { cwd: folder }, function (err) {
         var str = name + ' (' + pkg.repo + ')'
