@@ -82,6 +82,27 @@ Take a look at [eslint-config-standard](https://github.com/feross/eslint-config-
 
 ## Editor Integrations
 
+Integrations and plugins should recoginize the `standard-engine` tag in a
+`package.json` file. This allows end users to specify an arbitrary `standard-engine`
+compatible linter that the plugin should use. The `standard-engine` tag can be a
+string of the package:
+
+```json
+{
+  "standard-engine": "semistandard"
+}
+```
+
+or an object with a `name` value of the package:
+
+```json
+{
+  "standard-engine": {
+    "name": "semistandard"
+  }
+}
+```
+
 ### Atom
 
 [linter-js-standard-engine][atom-plugin] is an Atom plugin that supports some of
