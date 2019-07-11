@@ -8,12 +8,12 @@
   },
   "dependencies": {
     "deglob": "^3.0.0",
-    "get-stdin": "^6.0.0",
+    "get-stdin": "^7.0.0",
     "minimist": "^1.1.0",
-    "pkg-conf": "^2.0.0"
+    "pkg-conf": "^3.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "^9.0.0",
+    "babel-eslint": "^10.0.2",
     "cross-spawn": "^6.0.3",
     "eslint": "*",
     "eslint-config-standard": "*",
