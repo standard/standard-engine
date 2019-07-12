@@ -50,6 +50,11 @@ function Linter (opts) {
     plugins: [],
     useEslintrc: false
   }, opts.eslintConfig)
+
+  if (this.eslintConfig.configFile != null) {
+    this.eslintConfig.resolvePluginsRelativeTo =
+      path.dirname(this.eslintConfig.configFile)
+  }
 }
 
 /**
