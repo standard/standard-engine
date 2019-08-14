@@ -11,7 +11,8 @@ var HOME_OR_TMP = os.homedir() || os.tmpdir()
 
 var DEFAULT_PATTERNS = [
   '**/*.js',
-  '**/*.jsx'
+  '**/*.jsx',
+  '**/*.mjs'
 ]
 
 var DEFAULT_IGNORE = [

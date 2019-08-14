@@ -50,8 +50,8 @@ function Cli (opts) {
 Usage:
     ${opts.cmd} <flags> [FILES...]
 
-    If FILES is omitted, then all JavaScript source files (*.js, *.jsx) in the current
-    working directory are checked, recursively.
+    If FILES is omitted, then all JavaScript source files (*.js, *.jsx, *.mjs)
+    in the current working directory are checked, recursively.
 
     Certain paths (node_modules/, coverage/, vendor/, *.min.js, bundle.js, and
     files/folders that begin with '.' like .git/) are automatically ignored.
