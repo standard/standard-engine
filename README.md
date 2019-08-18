@@ -82,7 +82,7 @@ Take a look at [eslint-config-standard](https://github.com/feross/eslint-config-
 
 ## Editor Integrations
 
-Integrations and plugins should recoginize the `standard-engine` tag in a
+Integrations and plugins should recognize the `standard-engine` tag in a
 `package.json` file. This allows end users to specify an arbitrary `standard-engine`
 compatible linter that the plugin should use. The `standard-engine` tag can be a
 string of the package:
