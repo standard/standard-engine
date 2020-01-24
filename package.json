@@ -23,7 +23,7 @@
     "eslint-plugin-promise": "*",
     "eslint-plugin-react": "*",
     "eslint-plugin-standard": "*",
-    "mkdirp": "^0.5.0",
+    "mkdirp": "^1.0.0",
     "standard": "*",
     "tape": "^4.0.0"
   },
