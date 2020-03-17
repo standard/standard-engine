@@ -1,6 +1,7 @@
-var eslint = require('eslint')
-var Linter = require('../').linter
-var test = require('tape')
+const eslint = require('eslint')
+const Linter = require('../').linter
+const test = require('tape')
+const path = require('path')
 
 function getStandard () {
   return new Linter({
@@ -13,8 +14,8 @@ function getStandard () {
 
 test('api: lintFiles', function (t) {
   t.plan(3)
-  var standard = getStandard()
-  standard.lintFiles([], { cwd: '../bin' }, function (err, result) {
+  const standard = getStandard()
+  standard.lintFiles([], { cwd: path.join(__dirname, '../bin') }, function (err, result) {
     t.error(err, 'no error while linting')
     t.equal(typeof result, 'object', 'result is an object')
     t.equal(result.errorCount, 0)
@@ -23,7 +24,7 @@ test('api: lintFiles', function (t) {
 
 test('api: lintText', function (t) {
   t.plan(3)
-  var standard = getStandard()
+  const standard = getStandard()
   standard.lintText('console.log("hi there")\n', function (err, result) {
     t.error(err, 'no error while linting')
     t.equal(typeof result, 'object', 'result is an object')
@@ -33,24 +34,24 @@ test('api: lintText', function (t) {
 
 test('api: lintTextSync', function (t) {
   t.plan(2)
-  var standard = getStandard()
-  var result = standard.lintTextSync('console.log("hi there")\n')
+  const standard = getStandard()
+  const result = standard.lintTextSync('console.log("hi there")\n')
   t.equal(typeof result, 'object', 'result is an object')
   t.equal(result.errorCount, 1, 'should have used single quotes')
 })
 
 test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
   t.plan(2)
-  var standard = getStandard()
-  var opts = standard.parseOpts({ parser: 'blah' })
+  const standard = getStandard()
+  const opts = standard.parseOpts({ parser: 'blah' })
   t.equal(opts.parser, 'blah')
   t.equal(standard.eslintConfig.parser, undefined)
 })
 
 test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
   t.plan(2)
-  var standard = getStandard()
-  var opts = standard.parseOpts({ globals: ['what'] })
+  const standard = getStandard()
+  const opts = standard.parseOpts({ globals: ['what'] })
   t.deepEqual(opts.globals, ['what'])
   t.deepEqual(standard.eslintConfig.globals, [])
 })
