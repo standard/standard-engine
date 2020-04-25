@@ -6,7 +6,7 @@ function getStandard () {
   return new Linter({
     cmd: 'pocketlint',
     version: '0.0.0',
-    eslint: eslint,
+    eslint,
     eslintConfig: require('../tmp/standard/options').eslintConfig
   })
 }
