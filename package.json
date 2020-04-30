@@ -1,33 +1,7 @@
 {
   "name": "standard-engine",
-  "description": "Wrap your standards in a tortilla and cover it in special sauce.",
   "version": "12.0.0",
-  "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
-  "bugs": {
-    "url": "https://github.com/flet/standard-engine/issues"
-  },
-  "dependencies": {
-    "deglob": "^4.0.0",
-    "get-stdin": "^7.0.0",
-    "minimist": "^1.1.0",
-    "pkg-conf": "^3.1.0"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "cross-spawn": "^7.0.0",
-    "eslint": "*",
-    "eslint-config-standard": "*",
-    "eslint-config-standard-jsx": "*",
-    "eslint-plugin-import": "*",
-    "eslint-plugin-node": "*",
-    "eslint-plugin-promise": "*",
-    "eslint-plugin-react": "*",
-    "eslint-plugin-standard": "*",
-    "mkdirp": "^0.5.0",
-    "standard": "*",
-    "tape": "^4.0.0"
-  },
-  "homepage": "https://github.com/flet/standard-engine",
+  "description": "Wrap your standards in a tortilla and cover it in special sauce.",
   "keywords": [
     "JavaScript Standard Style",
     "check",
@@ -53,14 +27,32 @@
     "style linter",
     "verify"
   ],
+  "repository": "standard/standard-engine",
   "license": "MIT",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/flet/standard-engine.git"
-  },
+  "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
   "scripts": {
     "test": "standard && tape test/clone.js test/api.js"
+  },
+  "dependencies": {
+    "deglob": "^4.0.1",
+    "get-stdin": "^7.0.0",
+    "minimist": "^1.2.5",
+    "pkg-conf": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cross-spawn": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-jsx": "^8.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "mkdirp": "^0.5.5",
+    "standard": "^14.3.3",
+    "tape": "^5.0.0"
   },
   "engines": {
     "node": ">=8.10"

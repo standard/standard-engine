@@ -2,4 +2,8 @@ cache:
   npm: false
 language: node_js
 node_js:
-  - lts/*
+  - 8.10
+  - 8
+  - 10
+  - 12
+  - 14

@@ -10,18 +10,21 @@
 [standard-url]: https://standardjs.com
 
 ## Overview
+
 Wrap your own eslint rules in a easy-to-use command line tool and/or a JS module.
 
 ## Install
-```
+
+```sh
 npm install standard-engine
 ```
 
 ## Who is using `standard-engine`?
+
 Here is a list of packages using `standard-engine`. Dive into them for ideas!
 
 - [standard](https://standardjs.com) - JavaScript Standard Style.
--  [semistandard](https://github.com/Flet/semistandard) - Its `standard` with semicolons sprinkled on top.
+- [semistandard](https://github.com/Flet/semistandard) - Its `standard` with semicolons sprinkled on top.
 - [happiness](https://github.com/JedWatson/happiness) - JavaScript Happiness Style (semicolons and tabs)
 - [doublestandard](https://github.com/flet/doublestandard) - Require TWO semicolons at the end of every line!
 - [strict-standard](https://github.com/denis-sokolov/strict-standard) - Standard Style with strict error checking.
@@ -31,9 +34,11 @@ Here is a list of packages using `standard-engine`. Dive into them for ideas!
 Did you make your own? Create a pull request and we will add it to the README!
 
 ## Usage
+
 Create the files below and fill in your own values for `options.js`.
 
-**index.js**
+### `index.js`
+
 ```js
 // programmatic usage
 var Linter = require('standard-engine').linter
@@ -41,14 +46,17 @@ var opts = require('./options.js')
 module.exports = new Linter(opts)
 ```
 
-**cli.js**
+### `cli.js`
+
 ```js
 #!/usr/bin/env node
 
 var opts = require('../options.js')
 require('standard-engine').cli(opts)
 ```
-**options.js**
+
+### `options.js`
+
 ```js
 var eslint = require('eslint')
 var path = require('path')
@@ -71,14 +79,17 @@ module.exports = {
 
 Additionally an optional `parseOpts()` function can be provided. See below for details.
 
-**eslintrc.json**
- Put all your .eslintrc rules in this file. A good practice is to create an  [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
+### `eslintrc.json`
+
+Put all your .eslintrc rules in this file. A good practice is to create an  [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
+
 ```js
 {
   // pretend that the package eslint-config-pocketlint exists!
   "extends": ["pocketlint"]
 }
 ```
+
 Take a look at [eslint-config-standard](https://github.com/feross/eslint-config-standard) as an example, or if you want to extend/mutate `standard`, see [eslint-config-semistandard](https://github.com/flet/eslint-config-semistandard).
 
 ## Editor Integrations
@@ -283,10 +294,10 @@ Modify and return `opts`, or return a new object with the options that are to be
 
 The following options are provided in the `opts` object, and must be on the returned object:
 
-* `ignore`: array of file globs to ignore
-* `cwd`: string, the current working directory
-* `fix`: boolean, whether to automatically fix problems
-* `eslintConfig`: object, the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)
+- `ignore`: array of file globs to ignore
+- `cwd`: string, the current working directory
+- `fix`: boolean, whether to automatically fix problems
+- `eslintConfig`: object, the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)
 
 ## API Usage
 
