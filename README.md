@@ -26,6 +26,7 @@ Here is a list of packages using `standard-engine`. Dive into them for ideas!
 - [doublestandard](https://github.com/flet/doublestandard) - Require TWO semicolons at the end of every line!
 - [strict-standard](https://github.com/denis-sokolov/strict-standard) - Standard Style with strict error checking.
 - [standard-own](https://github.com/o2team/standard-own) - Standard configurable.
+- [ts-standard](https://github.com/toddbluhm/ts-standard) - Typescript Standard Style.
 
 Did you make your own? Create a pull request and we will add it to the README!
 
