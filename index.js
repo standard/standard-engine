@@ -43,7 +43,7 @@ function Linter (opts) {
 
   this.eslintConfig = Object.assign({
     cache: true,
-    cacheLocation: cacheLocation,
+    cacheLocation,
     envs: [],
     fix: false,
     globals: [],

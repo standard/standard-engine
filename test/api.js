@@ -1,12 +1,13 @@
 var eslint = require('eslint')
 var Linter = require('../').linter
+var path = require('path')
 var test = require('tape')
 
 function getStandard () {
   return new Linter({
     cmd: 'pocketlint',
     version: '0.0.0',
-    eslint: eslint,
+    eslint,
     eslintConfig: require('../tmp/standard/options').eslintConfig
   })
 }
@@ -14,7 +15,7 @@ function getStandard () {
 test('api: lintFiles', function (t) {
   t.plan(3)
   var standard = getStandard()
-  standard.lintFiles([], { cwd: '../bin' }, function (err, result) {
+  standard.lintFiles([], { cwd: path.join(__dirname, '../bin') }, function (err, result) {
     t.error(err, 'no error while linting')
     t.equal(typeof result, 'object', 'result is an object')
     t.equal(result.errorCount, 0)
