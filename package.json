@@ -61,5 +61,8 @@
   },
   "scripts": {
     "test": "standard && tape test/clone.js test/api.js"
+  },
+  "engines": {
+    "node": ">=8.10"
   }
 }
