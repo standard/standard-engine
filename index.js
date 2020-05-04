@@ -38,7 +38,7 @@ function Linter (opts) {
   var m = opts.version && opts.version.match(/^(\d+)\./)
   var majorVersion = (m && m[1]) || '0'
 
-  // Example cache location: .standard-v12-cache/
+  // Example cache location: ~/.cache/standard/v12/
   var cacheLocation = path.join(CACHE_HOME, this.cmd, `v${majorVersion}/`)
 
   this.eslintConfig = Object.assign({
