@@ -37,7 +37,8 @@
     "deglob": "^4.0.1",
     "get-stdin": "^7.0.0",
     "minimist": "^1.2.5",
-    "pkg-conf": "^3.1.0"
+    "pkg-conf": "^3.1.0",
+    "xdg-basedir": "^4.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
