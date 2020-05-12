@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "deglob": "^4.0.1",
-    "get-stdin": "^7.0.0",
+    "get-stdin": "^8.0.0",
     "minimist": "^1.2.5",
     "pkg-conf": "^3.1.0"
   },
