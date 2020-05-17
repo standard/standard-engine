@@ -7,7 +7,7 @@ var getStdin = require('get-stdin')
 
 function Cli (opts) {
   var Linter = require('../').linter
-  var standard = new Linter(opts)
+  var standard = opts.linter || new Linter(opts)
 
   opts = Object.assign({
     cmd: 'standard-engine',
