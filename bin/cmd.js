@@ -53,7 +53,7 @@ Usage:
     If FILES is omitted, all JavaScript source files (*.js, *.jsx, *.mjs, *.cjs)
     in the current working directory are checked, recursively.
 
-    Certain paths (node_modules/, coverage/, vendor/, *.min.js, bundle.js, and
+    Certain paths (node_modules/, coverage/, vendor/, *.min.js, and
     files/folders that begin with '.' like .git/) are automatically ignored.
 
     Paths in a project's root .gitignore file are also automatically ignored.
