@@ -130,7 +130,7 @@ projects `package.json` file.
 
 ### Ignoring Files
 
-The paths `node_modules/**`, `*.min.js`, `bundle.js`, `coverage/**`, hidden files/folders
+The paths `node_modules/**`, `*.min.js`, `coverage/**`, hidden files/folders
 (beginning with `.`), and all patterns in a project's root `.gitignore` file are
 automatically ignored.
 
@@ -153,7 +153,6 @@ Some files are ignored by default:
 ```js
 var DEFAULT_IGNORE = [
   '**/*.min.js',
-  '**/bundle.js',
   'coverage/**',
   'node_modules/**',
   'vendor/**'
