@@ -24,7 +24,8 @@ npm install standard-engine
 Here is a list of packages using `standard-engine`. Dive into them for ideas!
 
 - [standard](https://standardjs.com) - JavaScript Standard Style.
-- [semistandard](https://github.com/Flet/semistandard) - Its `standard` with semicolons sprinkled on top.
+- [semistandard](https://github.com/standard/semistandard) - It's `standard` with semicolons sprinkled on top.
+- [standardx](https://github.com/standard/standardx) - JavaScript Standard Style with custom tweaks
 - [happiness](https://github.com/JedWatson/happiness) - JavaScript Happiness Style (semicolons and tabs)
 - [doublestandard](https://github.com/flet/doublestandard) - Require TWO semicolons at the end of every line!
 - [strict-standard](https://github.com/denis-sokolov/strict-standard) - Standard Style with strict error checking.
