@@ -1,3 +1,4 @@
+/*! standard-engine. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter

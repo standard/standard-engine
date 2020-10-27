@@ -29,7 +29,11 @@
   ],
   "repository": "standard/standard-engine",
   "license": "MIT",
-  "author": "Dan Flettre <flettre@gmail.com> (http://twitter.com/flettre/)",
+  "author": {
+    "name": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org"
+  },
   "scripts": {
     "test": "standard && tape test/clone.js test/api.js"
   },
@@ -57,5 +61,19 @@
   },
   "engines": {
     "node": ">=8.10"
-  }
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/feross"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/feross"
+    },
+    {
+      "type": "consulting",
+      "url": "https://feross.org/support"
+    }
+  ]
 }
