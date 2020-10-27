@@ -7,7 +7,7 @@ var os = require('os')
 var path = require('path')
 var pkgConf = require('pkg-conf')
 
-var HOME_OR_TMP = os.homedir() || os.tmpdir()
+var CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
 var DEFAULT_PATTERNS = [
   '**/*.js',
@@ -38,8 +38,8 @@ function Linter (opts) {
   var m = opts.version && opts.version.match(/^(\d+)\./)
   var majorVersion = (m && m[1]) || '0'
 
-  // Example cache location: .standard-v12-cache/
-  var cacheLocation = path.join(HOME_OR_TMP, `.${this.cmd}-v${majorVersion}-cache/`)
+  // Example cache location: ~/.cache/standard/v12/
+  var cacheLocation = path.join(CACHE_HOME, this.cmd, `v${majorVersion}/`)
 
   this.eslintConfig = Object.assign({
     cache: true,
