@@ -147,13 +147,15 @@ Linter.prototype.parseOpts = function (opts) {
   opts.eslintConfig.cwd = opts.cwd
   opts.eslintConfig.fix = opts.fix
 
-  var packageOpts = opts.usePackageJson
-    ? pkgConf.sync(self.cmd, { cwd: opts.cwd })
-    : {}
+  var packageOpts = {}
+  var rootPath = null
 
-  var rootPath = opts.usePackageJson
-    ? path.dirname(pkgConf.filepath(packageOpts))
-    : null
+  if (opts.usePackageJson || opts.useGitIgnore) {
+    packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
+    rootPath = path.dirname(pkgConf.filepath(packageOpts))
+  }
+
+  if (!opts.usePackageJson) packageOpts = {}
 
   if (!packageOpts.noDefaultIgnore) {
     addIgnore(DEFAULT_IGNORE)
