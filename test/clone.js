@@ -2,7 +2,6 @@
 
 var crossSpawn = require('cross-spawn')
 var fs = require('fs')
-var mkdirp = require('mkdirp')
 var path = require('path')
 var test = require('tape')
 
@@ -18,7 +17,7 @@ const pkg = {
 test('test `standard` repo', function (t) {
   t.plan(1)
 
-  mkdirp.sync(TMP)
+  fs.mkdirSync(TMP, { recursive: true })
 
   var name = pkg.name
   var url = pkg.repo + '.git'
