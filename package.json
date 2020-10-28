@@ -38,7 +38,6 @@
     "test": "standard && tape test/clone.js test/api.js"
   },
   "dependencies": {
-    "deglob": "^4.0.1",
     "get-stdin": "^8.0.0",
     "minimist": "^1.2.5",
     "pkg-conf": "^3.1.0",
