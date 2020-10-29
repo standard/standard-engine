@@ -142,7 +142,10 @@ Flags (advanced):
       result.messages.forEach(function (message) {
         log(
           '  %s:%d:%d: %s%s',
-          result.filePath, message.line || 0, message.column || 0, message.message,
+          result.filePath,
+          message.line || 0,
+          message.column || 0,
+          message.message,
           argv.verbose ? ' (' + message.ruleId + ')' : ''
         )
       })
@@ -156,7 +159,8 @@ Flags (advanced):
     console.error(err.stack || err.message || err)
     console.error(
       '\nIf you think this is a bug in `%s`, open an issue: %s',
-      opts.cmd, opts.bugs
+      opts.cmd,
+      opts.bugs
     )
     process.exitCode = 1
   }
