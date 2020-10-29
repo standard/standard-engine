@@ -3,21 +3,21 @@ module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
 
-var os = require('os')
-var path = require('path')
-var pkgConf = require('pkg-conf')
-var fs = require('fs')
+const os = require('os')
+const path = require('path')
+const pkgConf = require('pkg-conf')
+const fs = require('fs')
 
-var CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
+const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
-var DEFAULT_EXTENSIONS = [
+const DEFAULT_EXTENSIONS = [
   '.js',
   '.jsx',
   '.mjs',
   '.cjs'
 ]
 
-var DEFAULT_IGNORE = [
+const DEFAULT_IGNORE = [
   '**/*.min.js',
   'coverage/**',
   'node_modules/**',
@@ -36,11 +36,11 @@ function Linter (opts) {
   this.cwd = opts.cwd || process.cwd()
   this.customParseOpts = opts.parseOpts
 
-  var m = opts.version && opts.version.match(/^(\d+)\./)
-  var majorVersion = (m && m[1]) || '0'
+  const m = opts.version && opts.version.match(/^(\d+)\./)
+  const majorVersion = (m && m[1]) || '0'
 
   // Example cache location: ~/.cache/standard/v12/
-  var cacheLocation = path.join(CACHE_HOME, this.cmd, `v${majorVersion}/`)
+  const cacheLocation = path.join(CACHE_HOME, this.cmd, `v${majorVersion}/`)
 
   this.eslintConfig = Object.assign({
     cache: true,
@@ -80,7 +80,7 @@ Linter.prototype.lintTextSync = function (text, opts) {
 
 Linter.prototype.lintText = function (text, opts, cb) {
   if (typeof opts === 'function') return this.lintText(text, null, opts)
-  var result
+  let result
   try {
     result = this.lintTextSync(text, opts)
   } catch (err) {
@@ -105,14 +105,14 @@ Linter.prototype.lintText = function (text, opts, cb) {
  * @param {function(Error, Object)} cb    callback
  */
 Linter.prototype.lintFiles = function (files, opts, cb) {
-  var self = this
+  const self = this
   if (typeof opts === 'function') return self.lintFiles(files, null, opts)
   opts = self.parseOpts(opts)
 
   if (typeof files === 'string') files = [files]
   if (files.length === 0) files = ['.']
 
-  var result
+  let result
   try {
     result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnFiles(files)
   } catch (err) {
@@ -127,7 +127,7 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
 }
 
 Linter.prototype.parseOpts = function (opts) {
-  var self = this
+  const self = this
 
   opts = {
     eslintConfig: { ...self.eslintConfig },
@@ -148,8 +148,8 @@ Linter.prototype.parseOpts = function (opts) {
   opts.eslintConfig.cwd = opts.cwd
   opts.eslintConfig.fix = opts.fix
 
-  var packageOpts = {}
-  var rootPath = null
+  let packageOpts = {}
+  let rootPath = null
 
   if (opts.usePackageJson || opts.useGitIgnore) {
     packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
@@ -199,9 +199,9 @@ Linter.prototype.parseOpts = function (opts) {
   setParser(packageOpts.parser || opts.parser)
 
   if (self.customParseOpts) {
-    var rootDir
+    let rootDir
     if (opts.usePackageJson) {
-      var filePath = pkgConf.filepath(packageOpts)
+      const filePath = pkgConf.filepath(packageOpts)
       rootDir = filePath ? path.dirname(filePath) : opts.cwd
     } else {
       rootDir = opts.cwd

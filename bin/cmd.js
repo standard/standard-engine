@@ -2,12 +2,12 @@
 
 module.exports = Cli
 
-var minimist = require('minimist')
-var getStdin = require('get-stdin')
+const minimist = require('minimist')
+const getStdin = require('get-stdin')
 
 function Cli (opts) {
-  var Linter = require('../').linter
-  var standard = opts.linter || new Linter(opts)
+  const Linter = require('../').linter
+  const standard = opts.linter || new Linter(opts)
 
   opts = Object.assign({
     cmd: 'standard-engine',
@@ -15,7 +15,7 @@ function Cli (opts) {
     version: '0.0.0'
   }, opts)
 
-  var argv = minimist(process.argv.slice(2), {
+  const argv = minimist(process.argv.slice(2), {
     alias: {
       global: 'globals',
       plugin: 'plugins',
@@ -83,7 +83,7 @@ Flags (advanced):
     return
   }
 
-  var lintOpts = {
+  const lintOpts = {
     fix: argv.fix,
     extensions: argv.ext,
     globals: argv.global,
@@ -92,7 +92,7 @@ Flags (advanced):
     parser: argv.parser
   }
 
-  var stdinText
+  let stdinText
 
   if (argv.stdin) {
     getStdin().then(function (text) {
@@ -124,7 +124,7 @@ Flags (advanced):
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
     // Are any fixable rules present?
-    var isFixable = result.results.some(function (result) {
+    const isFixable = result.results.some(function (result) {
       return result.messages.some(function (message) {
         return !!message.fix
       })

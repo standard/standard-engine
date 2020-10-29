@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-var crossSpawn = require('cross-spawn')
-var fs = require('fs')
-var path = require('path')
-var test = require('tape')
+const crossSpawn = require('cross-spawn')
+const fs = require('fs')
+const path = require('path')
+const test = require('tape')
 
-var GIT = 'git'
-var STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
-var TMP = path.join(__dirname, '..', 'tmp')
+const GIT = 'git'
+const STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
+const TMP = path.join(__dirname, '..', 'tmp')
 
 const pkg = {
   name: 'standard',
@@ -19,9 +19,9 @@ test('test `standard` repo', function (t) {
 
   fs.mkdirSync(TMP, { recursive: true })
 
-  var name = pkg.name
-  var url = pkg.repo + '.git'
-  var folder = path.join(TMP, name)
+  const name = pkg.name
+  const url = pkg.repo + '.git'
+  const folder = path.join(TMP, name)
   fs.access(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
     downloadPackage(function (err) {
       if (err) throw err
@@ -34,7 +34,7 @@ test('test `standard` repo', function (t) {
     }
 
     function gitClone (cb) {
-      var args = ['clone', '--depth', 1, url, path.join(TMP, name)]
+      const args = ['clone', '--depth', 1, url, path.join(TMP, name)]
       spawn(GIT, args, { stdio: 'ignore' }, function (err) {
         if (err) err.message += ' (git clone) (' + name + ')'
         cb(err)
@@ -42,7 +42,7 @@ test('test `standard` repo', function (t) {
     }
 
     function gitPull (cb) {
-      var args = ['pull']
+      const args = ['pull']
       spawn(GIT, args, { cwd: folder, stdio: 'ignore' }, function (err) {
         if (err) err.message += ' (git pull) (' + name + ')'
         cb(err)
@@ -50,10 +50,10 @@ test('test `standard` repo', function (t) {
     }
 
     function runStandard () {
-      var args = ['--verbose']
+      const args = ['--verbose']
       if (pkg.args) args.push.apply(args, pkg.args)
       spawn(STANDARD, args, { cwd: folder }, function (err) {
-        var str = name + ' (' + pkg.repo + ')'
+        const str = name + ' (' + pkg.repo + ')'
         if (err) { t.fail(str) } else { t.pass(str) }
       })
     }
@@ -63,7 +63,7 @@ test('test `standard` repo', function (t) {
 function spawn (command, args, opts, cb) {
   if (!opts.stdio) opts.stdio = 'inherit'
 
-  var child = crossSpawn(command, args, opts)
+  const child = crossSpawn(command, args, opts)
   child.on('error', cb)
   child.on('close', function (code) {
     if (code !== 0) return cb(new Error('non-zero exit code: ' + code))
