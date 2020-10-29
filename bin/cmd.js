@@ -34,6 +34,7 @@ function Cli (opts) {
       'global',
       'plugin',
       'parser',
+      'ext',
       'env'
     ]
   })
@@ -66,6 +67,7 @@ Flags:
 
 Flags (advanced):
         --stdin     Read file text from stdin
+        --ext       Specify JavaScript file extensions
         --global    Declare global variable
         --plugin    Use custom eslint plugin
         --env       Use custom eslint environment
@@ -83,6 +85,7 @@ Flags (advanced):
 
   var lintOpts = {
     fix: argv.fix,
+    extensions: argv.ext,
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,
