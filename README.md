@@ -102,7 +102,7 @@ string of the package:
 
 ```json
 {
-  "standard-engine": "semistandard"
+  "standard-engine": "pocketlint"
 }
 ```
 
@@ -111,7 +111,7 @@ or an object with a `name` value of the package:
 ```json
 {
   "standard-engine": {
-    "name": "semistandard"
+    "name": "pocketlint"
   }
 }
 ```
@@ -127,6 +127,19 @@ projects `package.json` file.
 [atom-plugin]: https://github.com/gustavnikolaj/linter-js-standard-engine
 
 ## Engine Features
+
+### Extensions
+
+The extensions `.js`, `.jsx`, `.mjs`, and `.cjs` are linted by default. If you
+pass directory paths to the `standardEngine.lintFiles()` method,
+`standard-engine` checks the files in those directories that have the given
+extensions.
+
+For example, when passing the `src/` directory and the `extensions` option is
+`['.js', '.jsx']`, `standard-engine` will lint `*.js` and `*.jsx` files in
+`src/`.
+
+You can disable these default ignores by setting the `noDefaultExensions` option to `true`.
 
 ### Ignoring Files
 
@@ -152,14 +165,14 @@ Some files are ignored by default:
 
 ```js
 var DEFAULT_IGNORE = [
-  '**/*.min.js',
-  'coverage/**',
-  'node_modules/**',
-  'vendor/**'
+  '*.min.js',
+  'coverage/',
+  'node_modules/',
+  'vendor/'
 ]
 ```
 
-You can disable these default ignores by setting `noDefaultIgnore` option to `true`.
+You can disable these default ignores by setting the `noDefaultIgnore` option to `true`.
 
 ### Hiding Warnings
 
@@ -294,7 +307,7 @@ Modify and return `opts`, or return a new object with the options that are to be
 
 The following options are provided in the `opts` object, and must be on the returned object:
 
-- `ignore`: array of file globs to ignore
+- `ignore`: array of file patterns (in `.gitignore` format) to ignore
 - `cwd`: string, the current working directory
 - `fix`: boolean, whether to automatically fix problems
 - `eslintConfig`: object, the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)
@@ -308,14 +321,19 @@ be provided:
 
 ```js
 {
-  cwd: '',              // current working directory (default: process.cwd())
+  // unique to lintText
   filename: '',         // path of file containing the text being linted
+
+  // common to lintText and lintFiles
+  cwd: '',              // current working directory (default: process.cwd())
   fix: false,           // automatically fix problems
+  extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
   plugins: [],          // custom eslint plugins
   envs: [],             // custom eslint environment
   parser: '',           // custom js parser (e.g. babel-eslint)
-  usePackageJson: true  // use options from nearest package.json?
+  usePackageJson: true, // use options from nearest package.json?
+  useGitIgnore: true    // use file ignore patterns from .gitignore?
 }
 ```
 
@@ -356,20 +374,25 @@ Lint the provided `files` globs. An `opts` object may be provided:
 
 ```js
 {
+  // unique to lintFiles
   ignore: [],           // file globs to ignore (has sane defaults)
+
+  // common to lintText and lintFiles
   cwd: '',              // current working directory (default: process.cwd())
   fix: false,           // automatically fix problems
+  extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
   plugins: [],          // custom eslint plugins
   envs: [],             // custom eslint environment
   parser: '',           // custom js parser (e.g. babel-eslint)
-  usePackageJson: true  // use options from nearest package.json?
+  usePackageJson: true, // use options from nearest package.json?
+  useGitIgnore: true    // use file ignore patterns from .gitignore?
 }
 ```
 
 Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
-Both `ignore` and `files` globs are resolved relative to the current working directory.
+Both `ignore` and `files` patterns are resolved relative to the current working directory.
 
 The `callback` will be called with an `Error` and `results` object (same as above).
 
@@ -381,7 +404,7 @@ This is the full set of options accepted by the above APIs. Not all options make
 
 ```js
 {
-  ignore: [],   // file globs to ignore (has sane defaults)
+  ignore: [],   // file patterns to ignore (has sane defaults)
   cwd: '',      // current working directory (default: process.cwd())
   filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
