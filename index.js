@@ -3,18 +3,18 @@ module.exports.cli = require('./bin/cmd')
 
 module.exports.linter = Linter
 
-var deglob = require('deglob')
 var os = require('os')
 var path = require('path')
 var pkgConf = require('pkg-conf')
+var fs = require('fs')
 
 var CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
-var DEFAULT_PATTERNS = [
-  '**/*.js',
-  '**/*.jsx',
-  '**/*.mjs',
-  '**/*.cjs'
+var DEFAULT_EXTENSIONS = [
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs'
 ]
 
 var DEFAULT_IGNORE = [
@@ -48,8 +48,9 @@ function Linter (opts) {
     envs: [],
     fix: false,
     globals: [],
-    ignore: false,
     plugins: [],
+    ignorePattern: [],
+    extensions: DEFAULT_EXTENSIONS,
     useEslintrc: false
   }, opts.eslintConfig)
 
@@ -109,57 +110,71 @@ Linter.prototype.lintFiles = function (files, opts, cb) {
   opts = self.parseOpts(opts)
 
   if (typeof files === 'string') files = [files]
-  if (files.length === 0) files = DEFAULT_PATTERNS
+  if (files.length === 0) files = ['.']
 
-  var deglobOpts = {
-    ignore: opts.ignore,
-    cwd: opts.cwd,
-    useGitIgnore: true,
-    usePackageJson: false
+  var result
+  try {
+    result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnFiles(files)
+  } catch (err) {
+    return cb(err)
   }
 
-  deglob(files, deglobOpts, function (err, allFiles) {
-    if (err) return cb(err)
+  if (opts.fix) {
+    self.eslint.CLIEngine.outputFixes(result)
+  }
 
-    var result
-    try {
-      result = new self.eslint.CLIEngine(opts.eslintConfig).executeOnFiles(allFiles)
-    } catch (err) {
-      return cb(err)
-    }
-
-    if (opts.fix) {
-      self.eslint.CLIEngine.outputFixes(result)
-    }
-
-    return cb(null, result)
-  })
+  return cb(null, result)
 }
 
 Linter.prototype.parseOpts = function (opts) {
   var self = this
 
-  if (!opts) opts = {}
-  opts = Object.assign({}, opts)
-  opts.eslintConfig = Object.assign({}, self.eslintConfig)
-  opts.eslintConfig.fix = !!opts.fix
+  opts = {
+    eslintConfig: { ...self.eslintConfig },
+    usePackageJson: true,
+    useGitIgnore: true,
+    gitIgnoreFile: ['.gitignore', '.git/info/exclude'],
+    cwd: self.cwd,
+    fix: false,
+    ignore: [],
+    ...opts
+  }
 
-  if (!opts.cwd) opts.cwd = self.cwd
+  if (!Array.isArray(opts.gitIgnoreFile)) {
+    opts.gitIgnoreFile = [opts.gitIgnoreFile]
+  }
+
   opts.eslintConfig.cwd = opts.cwd
+  opts.eslintConfig.fix = opts.fix
 
-  // If no usePackageJson option is given, default to `true`
-  var usePackageJson = opts.usePackageJson != null
-    ? opts.usePackageJson
-    : true
+  var packageOpts = {}
+  var rootPath = null
 
-  var packageOpts = usePackageJson
-    ? pkgConf.sync(self.cmd, { cwd: opts.cwd })
-    : {}
+  if (opts.usePackageJson || opts.useGitIgnore) {
+    packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
+    rootPath = path.dirname(pkgConf.filepath(packageOpts))
+  }
 
-  if (!opts.ignore) opts.ignore = []
-  addIgnore(packageOpts.ignore)
+  if (!opts.usePackageJson) packageOpts = {}
+
   if (!packageOpts.noDefaultIgnore) {
     addIgnore(DEFAULT_IGNORE)
+  }
+  addIgnore(packageOpts.ignore)
+
+  if (opts.useGitIgnore) {
+    opts.gitIgnoreFile
+      .map(gitIgnoreFile => {
+        try {
+          return fs.readFileSync(path.join(rootPath, gitIgnoreFile), 'utf8')
+        } catch (err) {
+          return null
+        }
+      })
+      .filter(Boolean)
+      .forEach(gitignore => {
+        addIgnore(gitignore.split(/\r?\n/))
+      })
   }
 
   addGlobals(packageOpts.globals || packageOpts.global)
@@ -175,7 +190,7 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (self.customParseOpts) {
     var rootDir
-    if (usePackageJson) {
+    if (opts.usePackageJson) {
       var filePath = pkgConf.filepath(packageOpts)
       rootDir = filePath ? path.dirname(filePath) : opts.cwd
     } else {
@@ -186,7 +201,7 @@ Linter.prototype.parseOpts = function (opts) {
 
   function addIgnore (ignore) {
     if (!ignore) return
-    opts.ignore = opts.ignore.concat(ignore)
+    opts.eslintConfig.ignorePattern = opts.eslintConfig.ignorePattern.concat(ignore)
   }
 
   function addGlobals (globals) {
