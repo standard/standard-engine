@@ -50,7 +50,7 @@ function Linter (opts) {
     globals: [],
     plugins: [],
     ignorePattern: [],
-    extensions: DEFAULT_EXTENSIONS,
+    extensions: [],
     useEslintrc: false
   }, opts.eslintConfig)
 
@@ -137,6 +137,7 @@ Linter.prototype.parseOpts = function (opts) {
     cwd: self.cwd,
     fix: false,
     ignore: [],
+    extensions: [],
     ...opts
   }
 
@@ -157,10 +158,19 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (!opts.usePackageJson) packageOpts = {}
 
-  if (!packageOpts.noDefaultIgnore) {
+  addIgnore(packageOpts.ignore)
+  addIgnore(opts.ignore)
+
+  if (!packageOpts.noDefaultIgnore && !opts.noDefaultIgnore) {
     addIgnore(DEFAULT_IGNORE)
   }
-  addIgnore(packageOpts.ignore)
+
+  addExtensions(packageOpts.extensions)
+  addExtensions(opts.extensions)
+
+  if (!packageOpts.noDefaultExtensions && !opts.noDefaultExtensions) {
+    addExtensions(DEFAULT_EXTENSIONS)
+  }
 
   if (opts.useGitIgnore) {
     opts.gitIgnoreFile
@@ -197,6 +207,11 @@ Linter.prototype.parseOpts = function (opts) {
       rootDir = opts.cwd
     }
     opts = self.customParseOpts(opts, packageOpts, rootDir)
+  }
+
+  function addExtensions (extensions) {
+    if (!extensions) return
+    opts.eslintConfig.extensions = opts.eslintConfig.extensions.concat(extensions)
   }
 
   function addIgnore (ignore) {
