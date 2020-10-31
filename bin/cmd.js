@@ -123,14 +123,29 @@ Flags (advanced):
 
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
+    // Are any warnings present?
+    const isSomeWarnings = result.results.some(function (result) {
+      return result.messages.some(function (message) {
+        return message.severity === 1
+      })
+    })
+
+    if (isSomeWarnings) {
+      console.error(
+        '%s: %s',
+        opts.cmd,
+        'Some warnings are present which will be errors in the next version (https://standardjs.com'
+      )
+    }
+
     // Are any fixable rules present?
-    const isFixable = result.results.some(function (result) {
+    const isSomeFixable = result.results.some(function (result) {
       return result.messages.some(function (message) {
         return !!message.fix
       })
     })
 
-    if (isFixable) {
+    if (isSomeFixable) {
       console.error(
         '%s: %s',
         opts.cmd,
@@ -141,12 +156,13 @@ Flags (advanced):
     result.results.forEach(function (result) {
       result.messages.forEach(function (message) {
         log(
-          '  %s:%d:%d: %s%s',
+          '  %s:%d:%d: %s%s%s',
           result.filePath,
           message.line || 0,
           message.column || 0,
           message.message,
-          argv.verbose ? ' (' + message.ruleId + ')' : ''
+          argv.verbose ? ' (' + message.ruleId + ')' : '',
+          argv.verbose && message.severity === 1 ? ' (warning)' : ''
         )
       })
     })
