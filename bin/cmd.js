@@ -31,10 +31,10 @@ function Cli (opts) {
       'version'
     ],
     string: [
+      'ext',
       'global',
       'plugin',
       'parser',
-      'ext',
       'env'
     ]
   })
