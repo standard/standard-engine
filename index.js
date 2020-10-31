@@ -153,7 +153,8 @@ Linter.prototype.parseOpts = function (opts) {
 
   if (opts.usePackageJson || opts.useGitIgnore) {
     packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
-    rootPath = path.dirname(pkgConf.filepath(packageOpts))
+    const packageJsonPath = pkgConf.filepath(packageOpts)
+    if (packageJsonPath) rootPath = path.dirname(packageJsonPath)
   }
 
   if (!opts.usePackageJson) packageOpts = {}
@@ -172,7 +173,7 @@ Linter.prototype.parseOpts = function (opts) {
     addExtensions(DEFAULT_EXTENSIONS)
   }
 
-  if (opts.useGitIgnore) {
+  if (opts.useGitIgnore && rootPath) {
     opts.gitIgnoreFile
       .map(gitIgnoreFile => {
         try {
