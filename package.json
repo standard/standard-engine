@@ -44,7 +44,6 @@
     "xdg-basedir": "^4.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
     "cross-spawn": "^7.0.3",
     "eslint": "^7.12.1",
     "eslint-config-standard": "^16.0.0",
