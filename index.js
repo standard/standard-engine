@@ -5,8 +5,8 @@ module.exports.linter = Linter
 
 const os = require('os')
 const path = require('path')
-const pkgConf = require('pkg-conf')
 const fs = require('fs')
+const { cosmiconfigSync } = require('cosmiconfig')
 
 const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
@@ -151,9 +151,12 @@ Linter.prototype.parseOpts = function (opts) {
   let packageOpts = {}
   let rootPath = null
 
+  // try default search places up to ~
+  const explorerRes = cosmiconfigSync(self.cmd).search(opts.cwd)
+
   if (opts.usePackageJson || opts.useGitIgnore) {
-    packageOpts = pkgConf.sync(self.cmd, { cwd: opts.cwd })
-    const packageJsonPath = pkgConf.filepath(packageOpts)
+    packageOpts = explorerRes ? explorerRes.config : {}
+    const packageJsonPath = explorerRes && explorerRes.filepath
     if (packageJsonPath) rootPath = path.dirname(packageJsonPath)
   }
 
@@ -202,7 +205,7 @@ Linter.prototype.parseOpts = function (opts) {
   if (self.customParseOpts) {
     let rootDir
     if (opts.usePackageJson) {
-      const filePath = pkgConf.filepath(packageOpts)
+      const filePath = explorerRes.filepath
       rootDir = filePath ? path.dirname(filePath) : opts.cwd
     } else {
       rootDir = opts.cwd

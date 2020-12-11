@@ -12,6 +12,17 @@ function getStandard () {
   })
 }
 
+function getStandardRcConfig () {
+  return new Linter({
+    // start in dir containing rc file
+    cwd: path.resolve(__dirname, 'lib'),
+    cmd: 'pocketlint',
+    version: '0.0.0',
+    eslint: eslint,
+    eslintConfig: require('../tmp/standard/options').eslintConfig
+  })
+}
+
 test('api: lintFiles', function (t) {
   t.plan(3)
   const standard = getStandard()
@@ -54,4 +65,12 @@ test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
   const opts = standard.parseOpts({ globals: ['what'] })
   t.deepEqual(opts.globals, ['what'])
   t.deepEqual(standard.eslintConfig.globals, [])
+})
+
+test('api: parseOpts -- load config from rc file', function (t) {
+  t.plan(2)
+  const standard = getStandardRcConfig()
+  const opts = standard.parseOpts()
+  t.deepEqual(opts.globals, undefined)
+  t.deepEqual(opts.eslintConfig.globals, ['foorc'])
 })
