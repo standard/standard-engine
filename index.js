@@ -6,9 +6,10 @@ module.exports.linter = Linter
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
+const xdgBasedir = require('xdg-basedir')
 const { cosmiconfigSync } = require('cosmiconfig')
 
-const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
+const CACHE_HOME = xdgBasedir.cache || os.tmpdir()
 
 const DEFAULT_EXTENSIONS = [
   '.js',
@@ -22,6 +23,15 @@ const DEFAULT_IGNORE = [
   'coverage/**',
   'node_modules/**',
   'vendor/**'
+]
+
+const XDG_CONFIG_SEARCH_PLACES = [
+  'config',
+  'config.json',
+  'config.yaml',
+  'config.yml',
+  'config.js',
+  'config.cjs'
 ]
 
 function Linter (opts) {
@@ -152,7 +162,19 @@ Linter.prototype.parseOpts = function (opts) {
   let rootPath = null
 
   // try default search places up to ~
-  const explorerRes = cosmiconfigSync(self.cmd).search(opts.cwd)
+  let explorerRes = cosmiconfigSync(self.cmd).search(opts.cwd)
+
+  // Fallback to XDG config base dir if no config is found
+  if (!explorerRes && xdgBasedir.config) {
+    explorerRes = cosmiconfigSync(self.cmd, {
+      searchPlaces: XDG_CONFIG_SEARCH_PLACES,
+      // Only search the specific config dir
+      stopDir: path.join(xdgBasedir.config)
+    }).search(
+      // ie. ~/.config/standard/config.js
+      path.join(xdgBasedir.config, self.cmd)
+    )
+  }
 
   if (opts.usePackageJson || opts.useGitIgnore) {
     packageOpts = explorerRes ? explorerRes.config : {}
