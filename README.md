@@ -141,6 +141,37 @@ For example, when passing the `src/` directory and the `extensions` option is
 
 You can disable these default ignores by setting the `noDefaultExensions` option to `true`.
 
+### Configuration Formats
+
+This documentation shows examples of adding configuration to `standard-engine` via the `package.json`. Alternatively, a configuration file can be used. The configuration can be provided as follows:
+
+```js
+[
+  'package.json',
+  `.pocketlintrc`,
+  `.pocketlintrc.json`,
+  `.pocketlintrc.yaml`,
+  `.pocketlintrc.yml`,
+  `.pocketlintrc.js`,
+  `.pocketlintrc.cjs`,
+  `pocketlint.config.js`,
+  `pocketlint.config.cjs`,
+]
+```
+
+Configuration is searched for in the current directory. If configuration is not found, the parent directory is then searched, and so on until the user's home directory is reached. If configuration is still not found, the `XDG_CONFIG_HOME` is then searched for confguration. The configuration in the XDG config directory can be provided as follows:
+
+```js
+[
+  'pocketlint/config',
+  'pocketlint/config.json',
+  'pocketlint/config.yaml',
+  'pocketlint/config.yml',
+  'pocketlint/config.js',
+  'pocketlint/config.cjs'
+]
+```
+
 ### Ignoring Files
 
 The paths `node_modules/**`, `*.min.js`, `coverage/**`, hidden files/folders
