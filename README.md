@@ -174,19 +174,6 @@ var DEFAULT_IGNORE = [
 
 You can disable these default ignores by setting the `noDefaultIgnore` option to `true`.
 
-### Hiding Warnings
-
-Since `standard-engine` uses [`eslint`](http://eslint.org/) under-the-hood, you can
-hide warnings as you normally would if you used `eslint` directly.
-
-To get verbose output (so you can find the particular rule name to ignore), run:
-
-```bash
-$ pocketlint --verbose
-Error: Live by your own standards!
-  routes/error.js:20:36: 'file' was used before it was defined. (no-use-before-define)
-```
-
 Disable **all rules** on a specific line:
 
 ```js
