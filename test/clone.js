@@ -50,7 +50,7 @@ test('test `standard` repo', function (t) {
     }
 
     function runStandard () {
-      const args = ['--verbose']
+      const args = []
       if (pkg.args) args.push.apply(args, pkg.args)
       spawn(STANDARD, args, { cwd: folder }, function (err) {
         const str = name + ' (' + pkg.repo + ')'
