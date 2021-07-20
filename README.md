@@ -42,9 +42,9 @@ Create the files below and fill in your own values for `options.js`.
 
 ```js
 // programmatic usage
-var Linter = require('standard-engine').linter
-var opts = require('./options.js')
-module.exports = new Linter(opts)
+import { Linter } from 'standard-engine'
+import options from './options.js'
+export default new Linter(options)
 ```
 
 ### `cli.js`
@@ -52,18 +52,19 @@ module.exports = new Linter(opts)
 ```js
 #!/usr/bin/env node
 
-var opts = require('../options.js')
-require('standard-engine').cli(opts)
+import options from './options.js'
+import { Cli } from 'standard-engine/bin/cmd.js'
+Cli(options)
 ```
 
 ### `options.js`
 
 ```js
-var eslint = require('eslint')
-var path = require('path')
-var pkg = require('./package.json')
+import eslint from 'eslint'
+import path from 'path'
+import pkg from './package.json'
 
-module.exports = {
+export default {
   // homepage, version and bugs pulled from package.json
   version: pkg.version,
   homepage: pkg.homepage,
@@ -72,7 +73,7 @@ module.exports = {
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    configFile: '.eslintrc.json'
   },
   cwd: '' // current working directory, passed to eslint
 }
@@ -270,11 +271,11 @@ install `babel-eslint` globally with `npm install babel-eslint -g`.
 You can provide a `parseOpts()` function in the `options.js` exports:
 
 ```js
-var eslint = require('eslint')
-var path = require('path')
-var pkg = require('./package.json')
+import eslint from 'eslint'
+import path from 'path'
+import pkg from './package.json'
 
-module.exports = {
+export default {
   // homepage, version and bugs pulled from package.json
   version: pkg.version,
   homepage: pkg.homepage,
@@ -283,7 +284,7 @@ module.exports = {
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    configFile: '.eslintrc.json'
   },
   parseOpts: function (opts, packageOpts, rootDir) {
     // provide implementation here, then return the opts object (or a new one)

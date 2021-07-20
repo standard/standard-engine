@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-module.exports = Cli
+import minimist from 'minimist'
+import getStdin from 'get-stdin'
+import { Linter } from '../index.js'
 
-const minimist = require('minimist')
-const getStdin = require('get-stdin')
-
-function Cli (opts) {
-  const Linter = require('../').linter
+export function Cli (opts) {
   const standard = opts.linter || new Linter(opts)
 
   opts = Object.assign({

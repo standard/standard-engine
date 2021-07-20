@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
-const crossSpawn = require('cross-spawn')
-const fs = require('fs')
-const path = require('path')
-const test = require('tape')
+import crossSpawn from 'cross-spawn'
+import fs from 'node:fs'
+import path from 'node:path'
+import test from 'tape'
+import { fileURLToPath } from 'node:url'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const GIT = 'git'
 const STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
 const TMP = path.join(__dirname, '..', 'tmp')

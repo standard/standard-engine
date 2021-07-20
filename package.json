@@ -2,6 +2,7 @@
   "name": "standard-engine",
   "version": "14.0.1",
   "description": "Wrap your standards in a tortilla and cover it in special sauce.",
+  "type": "module",
   "keywords": [
     "JavaScript Standard Style",
     "check",
@@ -35,10 +36,10 @@
     "url": "https://feross.org"
   },
   "scripts": {
-    "test": "standard && tape test/clone.js test/api.js"
+    "test": "standard && tape-es test/clone.js test/api.js"
   },
   "dependencies": {
-    "get-stdin": "^8.0.0",
+    "get-stdin": "^9.0.0",
     "minimist": "^1.2.5",
     "pkg-conf": "^3.1.0",
     "xdg-basedir": "^4.0.0"
@@ -53,10 +54,10 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.21.5",
     "standard": "*",
-    "tape": "^5.0.1"
+    "tape-es": "^1.2.11"
   },
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12"
   },
   "funding": [
     {

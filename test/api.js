@@ -1,14 +1,19 @@
-const eslint = require('eslint')
-const Linter = require('../').linter
-const path = require('path')
-const test = require('tape')
+import eslint from 'eslint'
+import { Linter } from '../index.js'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { eslintConfig } from '../tmp/standard/options'
+import test from 'tape'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 function getStandard () {
   return new Linter({
     cmd: 'pocketlint',
     version: '0.0.0',
     eslint,
-    eslintConfig: require('../tmp/standard/options').eslintConfig
+    eslintConfig
   })
 }
 

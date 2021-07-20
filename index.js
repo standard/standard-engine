@@ -1,14 +1,12 @@
 /*! standard-engine. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-module.exports.cli = require('./bin/cmd')
 
-module.exports.linter = Linter
+import os from 'node:os'
+import path from 'node:path'
+import pkgConf from 'pkg-conf'
+import { cache as xdgCache } from 'xdg-basedir'
+import fs from 'node:fs'
 
-const os = require('os')
-const path = require('path')
-const pkgConf = require('pkg-conf')
-const fs = require('fs')
-
-const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
+const CACHE_HOME = xdgCache || os.tmpdir()
 
 const DEFAULT_EXTENSIONS = [
   '.js',
@@ -24,7 +22,7 @@ const DEFAULT_IGNORE = [
   'vendor/**'
 ]
 
-function Linter (opts) {
+export function Linter (opts) {
   if (!(this instanceof Linter)) return new Linter(opts)
   if (!opts) opts = {}
 
