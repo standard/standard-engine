@@ -41,7 +41,7 @@
     "get-stdin": "^8.0.0",
     "minimist": "^1.2.5",
     "pkg-conf": "^3.1.0",
-    "xdg-basedir": "^4.0.0"
+    "xdg-basedir": "^5.0.1"
   },
   "devDependencies": {
     "cross-spawn": "^7.0.3",
