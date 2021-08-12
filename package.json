@@ -38,9 +38,9 @@
     "test": "standard && tape test/clone.js test/api.js"
   },
   "dependencies": {
+    "cosmiconfig": "^7.0.0",
     "get-stdin": "^8.0.0",
     "minimist": "^1.2.5",
-    "pkg-conf": "^3.1.0",
     "xdg-basedir": "^4.0.0"
   },
   "devDependencies": {
