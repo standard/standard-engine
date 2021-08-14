@@ -267,7 +267,7 @@ install `babel-eslint` globally with `npm install babel-eslint -g`.
 
 ### Custom options
 
-You can provide a `parseOpts()` function in the `options.js` exports:
+You can provide a `resolveEslintConfig()` function in the `options.js` exports:
 
 ```js
 var eslint = require('eslint')
@@ -285,24 +285,16 @@ module.exports = {
   eslintConfig: {
     configFile: path.join(__dirname, 'eslintrc.json')
   },
-  parseOpts: function (opts, packageOpts, rootDir) {
-    // provide implementation here, then return the opts object (or a new one)
-    return opts
+  resolveEslintConfig: function (eslintConfig, opts, packageOpts, rootDir) {
+    // provide implementation here, then return the eslintConfig object (or a new one)
+    return eslintConfig
   }
 }
 ```
 
-This function is called with the current options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
+This function is called with the current ESLint config (the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)), the options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
 
-Modify and return `opts`, or return a new object with the options that are to be used.
-
-The following options are provided in the `opts` object, and must be on the returned object:
-
-- `ignore`: array of file patterns (in `.gitignore` format) to ignore
-- `cwd`: string, the current working directory
-- `fix`: boolean, whether to automatically fix problems
-- `eslintConfig`: object, the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)
-
+Modify and return `eslintConfig`, or return a new object with the eslint config to be used.
 ## API Usage
 
 ### `engine.lintText(text, [opts], callback)`

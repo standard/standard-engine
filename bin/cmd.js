@@ -5,15 +5,28 @@ module.exports = Cli
 const minimist = require('minimist')
 const getStdin = require('get-stdin')
 
-function Cli (opts) {
-  const Linter = require('../').linter
-  const standard = opts.linter || new Linter(opts)
+/**
+ * @typedef StandardCliOptions
+ * @property {import('../').linter} [linter]
+ * @property {string} [cmd]
+ * @property {string} [tagline]
+ * @property {string} [homepage]
+ * @property {string} [bugs]
+ */
 
-  opts = Object.assign({
+/**
+ * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
+ */
+function Cli (rawOpts) {
+  const opts = {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
-    version: '0.0.0'
-  }, opts)
+    version: '0.0.0',
+    ...rawOpts
+  }
+
+  const Linter = require('../').linter
+  const standard = rawOpts.linter || new Linter(opts)
 
   const argv = minimist(process.argv.slice(2), {
     alias: {
@@ -89,6 +102,7 @@ Flags (advanced):
     parser: argv.parser
   }
 
+  /** @type {string} */
   let stdinText
 
   if (argv.stdin) {
@@ -100,11 +114,13 @@ Flags (advanced):
     standard.lintFiles(argv._, lintOpts, onResult)
   }
 
+  /** @type {import('../').LinterCallback} */
   function onResult (err, result) {
     if (err) return onError(err)
+    if (!result) throw new Error('expected a result')
 
     if (argv.stdin && argv.fix) {
-      if (result.results[0].output) {
+      if (result.results[0] && result.results[0].output) {
         // Code contained fixable errors, so print the fixed code
         process.stdout.write(result.results[0].output)
       } else {
@@ -167,6 +183,7 @@ Flags (advanced):
     process.exitCode = result.errorCount ? 1 : 0
   }
 
+  /** @param {Error} err */
   function onError (err) {
     console.error(opts.cmd + ': Unexpected linter output:\n')
     console.error(err.stack || err.message || err)
@@ -182,13 +199,14 @@ Flags (advanced):
    * Print lint errors to stdout -- this is expected output from `standard-engine`.
    * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
    * code is printed to stdout, so print lint errors to stderr in this case.
+   * @type {(message?: any, ...optionalParams: any[]) => void}
    */
-  function log () {
+  function log (...args) {
     if (argv.stdin && argv.fix) {
-      arguments[0] = opts.cmd + ': ' + arguments[0]
-      console.error.apply(console, arguments)
+      args[0] = opts.cmd + ': ' + args[0]
+      console.error.apply(console, args)
     } else {
-      console.log.apply(console, arguments)
+      console.log.apply(console, args)
     }
   }
 }

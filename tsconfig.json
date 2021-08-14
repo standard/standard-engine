@@ -1,0 +1,22 @@
+{
+  "extends": "@tsconfig/node10/tsconfig.json",
+  "files": [
+    "index.js",
+  ],
+  "include": [
+    "bin/**/*.js",
+    "lib/**/*.js",
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+
+    /* New checks being tried out */
+    "noUncheckedIndexedAccess": true,
+
+    /* Additional checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+  },
+}
