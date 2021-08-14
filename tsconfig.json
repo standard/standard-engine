@@ -8,15 +8,15 @@
     "lib/**/*.js",
   ],
   "compilerOptions": {
+    /* Configures it for targeting javascript */
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
 
-    /* New checks being tried out */
+    /* Adds additional checks beyond "strict": true  */
     "noUncheckedIndexedAccess": true,
-
-    /* Additional checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+
   },
 }
