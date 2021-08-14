@@ -199,7 +199,7 @@ Flags (advanced):
    * Print lint errors to stdout -- this is expected output from `standard-engine`.
    * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
    * code is printed to stdout, so print lint errors to stderr in this case.
-   * @type {(message?: any, ...optionalParams: any[]) => void}
+   * @type {typeof console.log}
    */
   function log (...args) {
     if (argv.stdin && argv.fix) {
