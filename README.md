@@ -295,6 +295,7 @@ module.exports = {
 This function is called with the current ESLint config (the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)), the options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
 
 Modify and return `eslintConfig`, or return a new object with the eslint config to be used.
+
 ## API Usage
 
 ### `engine.lintText(text, [opts], callback)`
