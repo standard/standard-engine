@@ -148,7 +148,5 @@ class Linter {
   }
 }
 
-module.exports = {
-  cli: require('./bin/cmd'),
-  Linter
-}
+module.exports.cli = require('./bin/cmd')
+module.exports.Linter = Linter
