@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-module.exports = Cli
-
 const minimist = require('minimist')
 const getStdin = require('get-stdin')
 
 /**
  * @typedef StandardCliOptions
- * @property {import('../').linter} [linter]
+ * @property {import('../').Linter} [linter]
  * @property {string} [cmd]
  * @property {string} [tagline]
  * @property {string} [homepage]
@@ -17,7 +15,7 @@ const getStdin = require('get-stdin')
 /**
  * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
  */
-function Cli (rawOpts) {
+function cli (rawOpts) {
   const opts = {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
@@ -25,7 +23,7 @@ function Cli (rawOpts) {
     ...rawOpts
   }
 
-  const Linter = require('../').linter
+  const { Linter } = require('../')
   const standard = rawOpts.linter || new Linter(opts)
 
   const argv = minimist(process.argv.slice(2), {
@@ -210,3 +208,5 @@ Flags (advanced):
     }
   }
 }
+
+module.exports = cli
