@@ -47,7 +47,7 @@
     "@tsconfig/node10": "^1.0.8",
     "@types/eslint": "^7.28.0",
     "@types/minimist": "^1.2.2",
-    "@types/node": "^10.17.60",
+    "@types/node": "^16.6.1",
     "cross-spawn": "^7.0.3",
     "eslint": "^7.12.1",
     "eslint-config-standard": "^16.0.0",
