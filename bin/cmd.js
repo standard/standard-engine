@@ -181,10 +181,14 @@ Flags (advanced):
     process.exitCode = result.errorCount ? 1 : 0
   }
 
-  /** @param {Error} err */
+  /** @param {Error|unknown} err */
   function onError (err) {
     console.error(opts.cmd + ': Unexpected linter output:\n')
-    console.error(err.stack || err.message || err)
+    if (err instanceof Error) {
+      console.error(err.stack || err.message)
+    } else {
+      console.error(err)
+    }
     console.error(
       '\nIf you think this is a bug in `%s`, open an issue: %s',
       opts.cmd,
