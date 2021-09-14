@@ -1,7 +1,8 @@
 const eslint = require('eslint')
-const Linter = require('../').linter
 const path = require('path')
 const test = require('tape')
+
+const { Linter } = require('../')
 
 function getStandard () {
   return new Linter({
@@ -40,7 +41,7 @@ test('api: lintTextSync', function (t) {
   t.equal(result.errorCount, 1, 'should have used single quotes')
 })
 
-test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
+test('api: resolveEslintConfig -- avoid this.eslintConfig parser mutation', function (t) {
   t.plan(2)
   const standard = getStandard()
   const opts = standard.resolveEslintConfig({ parser: 'blah' })
@@ -48,7 +49,7 @@ test('api: parseOpts -- avoid self.eslintConfig parser mutation', function (t) {
   t.equal(standard.eslintConfig.parser, undefined)
 })
 
-test('api: parseOpts -- avoid self.eslintConfig global mutation', function (t) {
+test('api: resolveEslintConfig -- avoid this.eslintConfig global mutation', function (t) {
   t.plan(2)
   const standard = getStandard()
   const opts = standard.resolveEslintConfig({ globals: ['what'] })

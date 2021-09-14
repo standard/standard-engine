@@ -42,8 +42,8 @@ Create the files below and fill in your own values for `options.js`.
 
 ```js
 // programmatic usage
-var Linter = require('standard-engine').linter
-var opts = require('./options.js')
+const { Linter } = require('standard-engine')
+const opts = require('./options.js')
 module.exports = new Linter(opts)
 ```
 
@@ -52,16 +52,17 @@ module.exports = new Linter(opts)
 ```js
 #!/usr/bin/env node
 
-var opts = require('../options.js')
+const opts = require('../options.js')
+
 require('standard-engine').cli(opts)
 ```
 
 ### `options.js`
 
 ```js
-var eslint = require('eslint')
-var path = require('path')
-var pkg = require('./package.json')
+const eslint = require('eslint')
+const path = require('path')
+const pkg = require('./package.json')
 
 module.exports = {
   // homepage, version and bugs pulled from package.json
@@ -78,7 +79,7 @@ module.exports = {
 }
 ```
 
-Additionally an optional `parseOpts()` function can be provided. See below for details.
+Additionally an optional `resolveEslintConfig()` function can be provided. See below for details.
 
 ### `eslintrc.json`
 
@@ -164,7 +165,7 @@ a `ignore` property to `package.json`:
 Some files are ignored by default:
 
 ```js
-var DEFAULT_IGNORE = [
+const DEFAULT_IGNORE = [
   '*.min.js',
   'coverage/',
   'node_modules/',
@@ -270,9 +271,9 @@ install `babel-eslint` globally with `npm install babel-eslint -g`.
 You can provide a `resolveEslintConfig()` function in the `options.js` exports:
 
 ```js
-var eslint = require('eslint')
-var path = require('path')
-var pkg = require('./package.json')
+const eslint = require('eslint')
+const path = require('path')
+const pkg = require('./package.json')
 
 module.exports = {
   // homepage, version and bugs pulled from package.json
@@ -330,7 +331,7 @@ The `callback` will be called with an `Error` and `results` object.
 The `results` object will contain the following properties:
 
 ```js
-var results = {
+const results = {
   results: [
     {
       filePath: '',
