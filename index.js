@@ -12,7 +12,7 @@ const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 
 /** @typedef {ConstructorParameters<typeof import('eslint').CLIEngine>[0]} CLIEngineOptions */
 /** @typedef {Omit<import('./lib/resolve-eslint-config').ResolveOptions, 'cmd'|'cwd'>} BaseLintOptions */
-/** @typedef {(err: Error|null, result?: import('eslint').CLIEngine.LintReport) => void} LinterCallback */
+/** @typedef {(err: Error|unknown, result?: import('eslint').CLIEngine.LintReport) => void} LinterCallback */
 
 /**
  * @typedef LinterOptions
