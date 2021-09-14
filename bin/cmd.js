@@ -23,8 +23,7 @@ function cli (rawOpts) {
     ...rawOpts
   }
 
-  const { Linter } = require('../')
-  const standard = rawOpts.linter || new Linter(opts)
+  const standard = rawOpts.linter || new (require('../').Linter)(opts)
 
   const argv = minimist(process.argv.slice(2), {
     alias: {
