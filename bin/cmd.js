@@ -144,7 +144,7 @@ Flags (advanced):
       console.error(
         '%s: %s',
         opts.cmd,
-        'Some warnings are present which will be errors in the next version (https://standardjs.com'
+        'Some warnings are present which will be errors in the next version'
       )
     }
 
