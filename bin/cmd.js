@@ -141,10 +141,11 @@ Flags (advanced):
     })
 
     if (isSomeWarnings) {
+      const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
       console.error(
         '%s: %s',
         opts.cmd,
-        'Some warnings are present which will be errors in the next version'
+        `Some warnings are present which will be errors in the next version${homepage}`
       )
     }
 
