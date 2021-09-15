@@ -34,6 +34,7 @@ function cli (rawOpts) {
     },
     boolean: [
       'fix',
+      'format',
       'help',
       'stdin',
       'version'
@@ -69,6 +70,7 @@ Usage:
 
 Flags:
         --fix       Automatically fix problems
+        --format    Aggressively format code for consistency
         --version   Show current version
     -h, --help      Show usage information
 
@@ -92,6 +94,7 @@ Flags (advanced):
 
   const lintOpts = {
     fix: argv.fix,
+    format: argv.format,
     extensions: argv.ext,
     globals: argv.global,
     plugins: argv.plugin,

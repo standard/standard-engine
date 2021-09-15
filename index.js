@@ -1,7 +1,9 @@
 /*! standard-engine. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 const os = require('os')
+const fs = require('fs')
 const path = require('path')
+const globby = require('globby')
 
 const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
@@ -12,11 +14,18 @@ const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 /** @typedef {(err: Error|unknown, result?: import('eslint').CLIEngine.LintReport) => void} LinterCallback */
 
 /**
+ * @typedef PrettierOptions
+ * @property {string | null} [configFile]
+ */
+
+/**
  * @typedef LinterOptions
  * @property {string} cmd
  * @property {import('eslint')} eslint
+ * @property {import('prettier')} prettier
  * @property {string} [cwd]
  * @property {CLIEngineOptions} [eslintConfig]
+ * @property {PrettierOptions} [prettierConfig]
  * @property {import('./lib/resolve-eslint-config').CustomEslintConfigResolver} [resolveEslintConfig]
  * @property {string} [version]
  */
@@ -28,11 +37,14 @@ class Linter {
   constructor (opts) {
     if (!opts || !opts.cmd) throw new Error('opts.cmd option is required')
     if (!opts.eslint) throw new Error('opts.eslint option is required')
+    if (!opts.prettier) throw new Error('opts.prettier option is required')
 
     /** @type {string} */
     this.cmd = opts.cmd
     /** @type {import('eslint')} */
     this.eslint = opts.eslint
+    /** @type {import('prettier')} */
+    this.prettier = opts.prettier
     /** @type {string} */
     this.cwd = opts.cwd || process.cwd()
     this.customEslintConfigResolver = opts.resolveEslintConfig
@@ -55,6 +67,11 @@ class Linter {
       extensions: [],
       useEslintrc: false,
       ...(opts.eslintConfig || {})
+    }
+
+    /** @type {PrettierOptions} */
+    this.prettierConfig = {
+      configFile: opts.prettierConfig != null ? opts.prettierConfig.configFile : null
     }
 
     if (this.eslintConfig.configFile != null) {
@@ -102,18 +119,53 @@ class Linter {
    * Lint files to enforce JavaScript Style.
    *
    * @param {Array.<string>} files          file globs to lint
-   * @param {BaseLintOptions & { cwd?: string }} [opts] base options + file globs to ignore (has sane defaults) + current working directory (default: process.cwd())
+   * @param {BaseLintOptions & { cwd?: string, format?: boolean }} [opts] base options + file globs to ignore (has sane defaults) + current working directory (default: process.cwd())
    * @param {LinterCallback} [cb]
    * @returns {void}
    */
   lintFiles (files, opts, cb) {
     if (typeof opts === 'function') { return this.lintFiles(files, undefined, opts) }
     if (!cb) throw new Error('callback is required')
+    const format = opts == null ? false : opts.format
 
     const eslintConfig = this.resolveEslintConfig(opts)
 
     if (typeof files === 'string') files = [files]
     if (files.length === 0) files = ['.']
+
+    if (format) {
+      /** @type {string[]} */
+      const extensionsArray = []
+      this.prettier.getSupportInfo().languages.forEach((language) => {
+        if (language != null && language.extensions != null) {
+          extensionsArray.push(...language.extensions)
+        }
+      })
+      const extensions = extensionsArray.join(',')
+      const prettierOptions = this.prettier.resolveConfig.sync(
+        this.prettierConfig.configFile == null ? path.join(__dirname, '.prettierrc.json') : this.prettierConfig.configFile
+      ) || {}
+      const ignore = typeof eslintConfig.ignorePattern === 'string'
+        ? [eslintConfig.ignorePattern]
+        : eslintConfig.ignorePattern == null
+          ? []
+          : eslintConfig.ignorePattern
+      const files = globby.sync([`**/*{${extensions}}`], {
+        ignore,
+        cwd: opts == null ? undefined : opts.cwd
+      })
+      for (const file of files) {
+        const filePath = path.join(process.cwd(), file)
+        const fileInfo = this.prettier.getFileInfo.sync(filePath, {})
+        prettierOptions.parser = fileInfo.inferredParser == null ? 'babel' : fileInfo.inferredParser
+        const input = fs.readFileSync(filePath, 'utf8')
+        const output = this.prettier.format(input, prettierOptions)
+        const formatted = input !== output
+        if (formatted) {
+          fs.writeFileSync(filePath, output, { encoding: 'utf8' })
+        }
+      }
+    }
 
     let result
     try {
@@ -122,7 +174,7 @@ class Linter {
       return cb(err)
     }
 
-    if (eslintConfig.fix) {
+    if (eslintConfig.fix || format) {
       this.eslint.CLIEngine.outputFixes(result)
     }
 

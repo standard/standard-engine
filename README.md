@@ -11,7 +11,7 @@
 
 ## Overview
 
-Wrap your own eslint rules in a easy-to-use command line tool and/or a JS module.
+Wrap your own eslint and prettier rules in a easy-to-use command line tool and/or a JS module.
 
 ## Install
 
@@ -61,6 +61,7 @@ require('standard-engine').cli(opts)
 
 ```js
 const eslint = require('eslint')
+const prettier = require('prettier')
 const path = require('path')
 const pkg = require('./package.json')
 
@@ -70,10 +71,14 @@ module.exports = {
   homepage: pkg.homepage,
   bugs: pkg.bugs.url,
   eslint: eslint, // pass any version of eslint >= 1.0.0
+  prettier: prettier, // pass any version of prettier >= 2.0.0
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    configFile: path.join(__dirname, '.eslintrc.json')
+  },
+  prettierConfig: {
+    configFile: path.join(__dirname, '.prettierrc.json')
   },
   cwd: '' // current working directory, passed to eslint
 }
@@ -81,9 +86,9 @@ module.exports = {
 
 Additionally an optional `resolveEslintConfig()` function can be provided. See below for details.
 
-### `eslintrc.json`
+### `.eslintrc.json`
 
-Put all your .eslintrc rules in this file. A good practice is to create an  [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
+Put all your .eslintrc rules in this file. A good practice is to create an [ESLint Shareable Config](http://eslint.org/docs/developer-guide/shareable-configs) and extend it, but its not required:
 
 ```js
 {
@@ -165,12 +170,7 @@ a `ignore` property to `package.json`:
 Some files are ignored by default:
 
 ```js
-const DEFAULT_IGNORE = [
-  '*.min.js',
-  'coverage/',
-  'node_modules/',
-  'vendor/'
-]
+const DEFAULT_IGNORE = ['*.min.js', 'coverage/', 'node_modules/', 'vendor/']
 ```
 
 You can disable these default ignores by setting the `noDefaultIgnore` option to `true`.
@@ -272,6 +272,7 @@ You can provide a `resolveEslintConfig()` function in the `options.js` exports:
 
 ```js
 const eslint = require('eslint')
+const prettier = require('prettier')
 const path = require('path')
 const pkg = require('./package.json')
 
@@ -281,10 +282,14 @@ module.exports = {
   homepage: pkg.homepage,
   bugs: pkg.bugs.url,
   eslint: eslint, // pass any version of eslint >= 1.0.0
+  prettier: prettier, // pass any version of prettier >= 2.0.0
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    configFile: path.join(__dirname, '.eslintrc.json')
+  },
+  prettierConfig: {
+    configFile: path.join(__dirname, '.prettierrc.json')
   },
   resolveEslintConfig: function (eslintConfig, opts, packageOpts, rootDir) {
     // provide implementation here, then return the eslintConfig object (or a new one)
@@ -312,6 +317,7 @@ be provided:
   // common to lintText and lintFiles
   cwd: '',              // current working directory (default: process.cwd())
   fix: false,           // automatically fix problems
+  format: false,        // aggressively format code for consistency
   extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
   plugins: [],          // custom eslint plugins
@@ -335,9 +341,7 @@ const results = {
   results: [
     {
       filePath: '',
-      messages: [
-        { ruleId: '', message: '', line: 0, column: 0 }
-      ],
+      messages: [{ ruleId: '', message: '', line: 0, column: 0 }],
       errorCount: 0,
       warningCount: 0,
       output: '' // fixed source code (only present with {fix: true} option)
@@ -365,6 +369,7 @@ Lint the provided `files` globs. An `opts` object may be provided:
   // common to lintText and lintFiles
   cwd: '',              // current working directory (default: process.cwd())
   fix: false,           // automatically fix problems
+  format: false,        // aggressively format code for consistency
   extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
   plugins: [],          // custom eslint plugins
@@ -394,6 +399,7 @@ This is the full set of options accepted by the above APIs. Not all options make
   filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
+  format: false, // aggressively format code for consistency
   plugins: [],  // custom eslint plugins
   envs: [],     // custom eslint environment
   parser: ''    // custom js parser (e.g. babel-eslint)
