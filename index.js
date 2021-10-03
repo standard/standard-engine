@@ -9,7 +9,6 @@ const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 
 /** @typedef {ConstructorParameters<typeof import('eslint').CLIEngine>[0]} CLIEngineOptions */
 /** @typedef {Omit<import('./lib/resolve-eslint-config').ResolveOptions, 'cmd'|'cwd'>} BaseLintOptions */
-/** @typedef {(err: Error|unknown, result?: import('eslint').CLIEngine.LintReport) => void} LinterCallback */
 
 /**
  * @typedef LinterOptions
@@ -82,51 +81,32 @@ class Linter {
    *
    * @param {string} text file text to lint
    * @param {Omit<BaseLintOptions, 'ignore'|'noDefaultIgnore'> & { filename?: string }} [opts] base options + path of file containing the text being linted
-   * @param {LinterCallback} [cb]
-   * @returns {void}
+   * @returns {Promise<import('eslint').CLIEngine.LintReport>}
    */
-  lintText (text, opts, cb) {
-    if (typeof opts === 'function') return this.lintText(text, undefined, opts)
-    if (!cb) throw new Error('callback is required')
-
-    let result
-    try {
-      result = this.lintTextSync(text, opts)
-    } catch (err) {
-      return process.nextTick(cb, err)
-    }
-    process.nextTick(cb, null, result)
+  async lintText (text, opts) {
+    return this.lintTextSync(text, opts)
   }
 
   /**
    * Lint files to enforce JavaScript Style.
    *
-   * @param {Array.<string>} files          file globs to lint
+   * @param {Array<string>} files file globs to lint
    * @param {BaseLintOptions & { cwd?: string }} [opts] base options + file globs to ignore (has sane defaults) + current working directory (default: process.cwd())
-   * @param {LinterCallback} [cb]
-   * @returns {void}
+   * @returns {Promise<import('eslint').CLIEngine.LintReport>}
    */
-  lintFiles (files, opts, cb) {
-    if (typeof opts === 'function') { return this.lintFiles(files, undefined, opts) }
-    if (!cb) throw new Error('callback is required')
-
+  async lintFiles (files, opts) {
     const eslintConfig = this.resolveEslintConfig(opts)
 
     if (typeof files === 'string') files = [files]
     if (files.length === 0) files = ['.']
 
-    let result
-    try {
-      result = new this.eslint.CLIEngine(eslintConfig).executeOnFiles(files)
-    } catch (err) {
-      return cb(err)
-    }
+    const result = new this.eslint.CLIEngine(eslintConfig).executeOnFiles(files)
 
     if (eslintConfig.fix) {
       this.eslint.CLIEngine.outputFixes(result)
     }
 
-    return cb(null, result)
+    return result
   }
 
   /**

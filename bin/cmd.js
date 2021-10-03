@@ -14,8 +14,9 @@ const getStdin = require('get-stdin')
 
 /**
  * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
+ * @returns {Promise<void>}
  */
-function cli (rawOpts) {
+async function cli (rawOpts) {
   const opts = {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
@@ -99,90 +100,35 @@ Flags (advanced):
     parser: argv.parser
   }
 
+  const outputFixed = argv.stdin && argv.fix
+
+  /**
+   * Print lint errors to stdout -- this is expected output from `standard-engine`.
+   * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
+   * code is printed to stdout, so print lint errors to stderr in this case.
+   * @type {typeof console.log}
+   */
+  const log = (...args) => {
+    if (outputFixed) {
+      args[0] = opts.cmd + ': ' + args[0]
+      console.error.apply(console, args)
+    } else {
+      console.log.apply(console, args)
+    }
+  }
+
   /** @type {string} */
-  let stdinText
+  const stdinText = argv.stdin ? await getStdin() : ''
+  /** @type {import('eslint').CLIEngine.LintReport} */
+  let result
 
-  if (argv.stdin) {
-    getStdin().then(function (text) {
-      stdinText = text
-      standard.lintText(text, lintOpts, onResult)
-    })
-  } else {
-    standard.lintFiles(argv._, lintOpts, onResult)
-  }
-
-  /** @type {import('../').LinterCallback} */
-  function onResult (err, result) {
-    if (err) return onError(err)
-    if (!result) throw new Error('expected a result')
-
-    if (argv.stdin && argv.fix) {
-      if (result.results[0] && result.results[0].output) {
-        // Code contained fixable errors, so print the fixed code
-        process.stdout.write(result.results[0].output)
-      } else {
-        // Code did not contain fixable errors, so print original code
-        process.stdout.write(stdinText)
-      }
+  try {
+    if (argv.stdin) {
+      result = await standard.lintText(stdinText, lintOpts)
+    } else {
+      result = await standard.lintFiles(argv._, lintOpts)
     }
-
-    if (!result.errorCount && !result.warningCount) {
-      process.exitCode = 0
-      return
-    }
-
-    console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
-
-    // Are any warnings present?
-    const isSomeWarnings = result.results.some(function (result) {
-      return result.messages.some(function (message) {
-        return message.severity === 1
-      })
-    })
-
-    if (isSomeWarnings) {
-      const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
-      console.error(
-        '%s: %s',
-        opts.cmd,
-        `Some warnings are present which will be errors in the next version${homepage}`
-      )
-    }
-
-    // Are any fixable rules present?
-    const isSomeFixable = result.results.some(function (result) {
-      return result.messages.some(function (message) {
-        return !!message.fix
-      })
-    })
-
-    if (isSomeFixable) {
-      console.error(
-        '%s: %s',
-        opts.cmd,
-        'Run `' + opts.cmd + ' --fix` to automatically fix some problems.'
-      )
-    }
-
-    result.results.forEach(function (result) {
-      result.messages.forEach(function (message) {
-        log(
-          '  %s:%d:%d: %s%s%s',
-          result.filePath,
-          message.line || 0,
-          message.column || 0,
-          message.message,
-          ' (' + message.ruleId + ')',
-          message.severity === 1 ? ' (warning)' : ''
-        )
-      })
-    })
-
-    process.exitCode = result.errorCount ? 1 : 0
-  }
-
-  /** @param {Error|unknown} err */
-  function onError (err) {
+  } catch (err) {
     console.error(opts.cmd + ': Unexpected linter output:\n')
     if (err instanceof Error) {
       console.error(err.stack || err.message)
@@ -195,22 +141,66 @@ Flags (advanced):
       opts.bugs
     )
     process.exitCode = 1
+    return
   }
 
-  /**
-   * Print lint errors to stdout -- this is expected output from `standard-engine`.
-   * Note: When fixing code from stdin (`standard --stdin --fix`), the transformed
-   * code is printed to stdout, so print lint errors to stderr in this case.
-   * @type {typeof console.log}
-   */
-  function log (...args) {
-    if (argv.stdin && argv.fix) {
-      args[0] = opts.cmd + ': ' + args[0]
-      console.error.apply(console, args)
+  if (!result) throw new Error('expected a result')
+
+  if (outputFixed) {
+    if (result.results[0] && result.results[0].output) {
+      // Code contained fixable errors, so print the fixed code
+      process.stdout.write(result.results[0].output)
     } else {
-      console.log.apply(console, args)
+      // Code did not contain fixable errors, so print original code
+      process.stdout.write(stdinText)
     }
   }
+
+  if (!result.errorCount && !result.warningCount) {
+    process.exitCode = 0
+    return
+  }
+
+  console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
+
+  // Are any warnings present?
+  const isSomeWarnings = result.results.some(item => item.messages.some(message => message.severity === 1))
+
+  if (isSomeWarnings) {
+    const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
+    console.error(
+      '%s: %s',
+      opts.cmd,
+      `Some warnings are present which will be errors in the next version${homepage}`
+    )
+  }
+
+  // Are any fixable rules present?
+  const isSomeFixable = result.results.some(item => item.messages.some(message => !!message.fix))
+
+  if (isSomeFixable) {
+    console.error(
+      '%s: %s',
+      opts.cmd,
+      'Run `' + opts.cmd + ' --fix` to automatically fix some problems.'
+    )
+  }
+
+  for (const item of result.results) {
+    for (const message of item.messages) {
+      log(
+        '  %s:%d:%d: %s%s%s',
+        item.filePath,
+        message.line || 0,
+        message.column || 0,
+        message.message,
+        ' (' + message.ruleId + ')',
+        message.severity === 1 ? ' (warning)' : ''
+      )
+    }
+  }
+
+  process.exitCode = result.errorCount ? 1 : 0
 }
 
 module.exports = cli

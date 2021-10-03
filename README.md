@@ -299,7 +299,7 @@ Modify and return `eslintConfig`, or return a new object with the eslint config 
 
 ## API Usage
 
-### `engine.lintText(text, [opts], callback)`
+### `engine.lintText(text, [opts])`
 
 Lint the provided source `text` to enforce your defined style. An `opts` object may
 be provided:
@@ -326,7 +326,7 @@ All options are optional, though some ESLint plugins require the `filename` opti
 
 Additional options may be loaded from a `package.json` if it's found for the current working directory. See below for further details.
 
-The `callback` will be called with an `Error` and `results` object.
+Returns a `Promise` resolving to the `results` or rejected with an `Error`.
 
 The `results` object will contain the following properties:
 
@@ -379,7 +379,7 @@ Additional options may be loaded from a `package.json` if it's found for the cur
 
 Both `ignore` and `files` patterns are resolved relative to the current working directory.
 
-The `callback` will be called with an `Error` and `results` object (same as above).
+Returns a `Promise` resolving to the `results` or rejected with an `Error` (same as above).
 
 **NOTE: There is no synchronous version of `engine.lintFiles()`.**
 
