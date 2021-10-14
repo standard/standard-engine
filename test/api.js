@@ -4,55 +4,51 @@ const test = require('tape')
 
 const { Linter } = require('../')
 
-function getStandard () {
+async function getStandard () {
   return new Linter({
     cmd: 'pocketlint',
     version: '0.0.0',
     eslint,
-    eslintConfig: require('../tmp/standard/options').eslintConfig
+    eslintConfig: (await import('../tmp/standard/options.js')).default.eslintConfig
   })
 }
 
-test('api: lintFiles', function (t) {
-  t.plan(3)
-  const standard = getStandard()
-  standard.lintFiles([], { cwd: path.join(__dirname, '../bin') }, function (err, result) {
-    t.error(err, 'no error while linting')
-    t.equal(typeof result, 'object', 'result is an object')
-    t.equal(result.errorCount, 0)
-  })
-})
-
-test('api: lintText', function (t) {
-  t.plan(3)
-  const standard = getStandard()
-  standard.lintText('console.log("hi there")\n', function (err, result) {
-    t.error(err, 'no error while linting')
-    t.equal(typeof result, 'object', 'result is an object')
-    t.equal(result.errorCount, 1, 'should have used single quotes')
-  })
-})
-
-test('api: lintTextSync', function (t) {
+test('api: lintFiles', async function (t) {
   t.plan(2)
-  const standard = getStandard()
+  const standard = await getStandard()
+  const result = await standard.lintFiles([], { cwd: path.join(__dirname, '../bin') })
+  t.equal(typeof result, 'object', 'result is an object')
+  t.equal(result.errorCount, 0)
+})
+
+test('api: lintText', async function (t) {
+  t.plan(2)
+  const standard = await getStandard()
+  const result = await standard.lintText('console.log("hi there")\n')
+  t.equal(typeof result, 'object', 'result is an object')
+  t.equal(result.errorCount, 1, 'should have used single quotes')
+})
+
+test('api: lintTextSync', async function (t) {
+  t.plan(2)
+  const standard = await getStandard()
   const result = standard.lintTextSync('console.log("hi there")\n')
   t.equal(typeof result, 'object', 'result is an object')
   t.equal(result.errorCount, 1, 'should have used single quotes')
 })
 
-test('api: resolveEslintConfig -- avoid this.eslintConfig parser mutation', function (t) {
+test('api: resolveEslintConfig -- avoid this.eslintConfig parser mutation', async function (t) {
   t.plan(2)
-  const standard = getStandard()
-  const opts = standard.resolveEslintConfig({ parser: 'blah' })
+  const standard = await getStandard()
+  const opts = await standard.resolveEslintConfig({ parser: 'blah' })
   t.equal(opts.parser, 'blah')
   t.equal(standard.eslintConfig.parser, undefined)
 })
 
-test('api: resolveEslintConfig -- avoid this.eslintConfig global mutation', function (t) {
+test('api: resolveEslintConfig -- avoid this.eslintConfig global mutation', async function (t) {
   t.plan(2)
-  const standard = getStandard()
-  const opts = standard.resolveEslintConfig({ globals: ['what'] })
+  const standard = await getStandard()
+  const opts = await standard.resolveEslintConfig({ globals: ['what'] })
   t.deepEqual(opts.globals, ['what'])
   t.deepEqual(standard.eslintConfig.globals, [])
 })
