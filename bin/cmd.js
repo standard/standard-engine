@@ -14,9 +14,9 @@ const getStdin = require('get-stdin')
 
 /**
  * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
- * @returns {Promise<void>}
+ * @returns {void}
  */
-async function cli (rawOpts) {
+function cli (rawOpts) {
   const opts = {
     cmd: 'standard-engine',
     tagline: 'JavaScript Custom Style',
@@ -117,90 +117,89 @@ Flags (advanced):
     }
   }
 
-  /** @type {string} */
-  const stdinText = argv.stdin ? await getStdin() : ''
-  /** @type {import('eslint').CLIEngine.LintReport} */
-  let result
+  Promise.resolve(argv.stdin ? getStdin() : '').then(async stdinText => {
+    /** @type {import('eslint').CLIEngine.LintReport} */
+    let result
 
-  try {
-    if (argv.stdin) {
-      result = await standard.lintText(stdinText, lintOpts)
-    } else {
-      result = await standard.lintFiles(argv._, lintOpts)
+    try {
+      result = argv.stdin
+        ? await standard.lintText(stdinText, lintOpts)
+        : await standard.lintFiles(argv._, lintOpts)
+    } catch (err) {
+      console.error(opts.cmd + ': Unexpected linter output:\n')
+      if (err instanceof Error) {
+        console.error(err.stack || err.message)
+      } else {
+        console.error(err)
+      }
+      console.error(
+        '\nIf you think this is a bug in `%s`, open an issue: %s',
+        opts.cmd,
+        opts.bugs
+      )
+      process.exitCode = 1
+      return
     }
-  } catch (err) {
-    console.error(opts.cmd + ': Unexpected linter output:\n')
-    if (err instanceof Error) {
-      console.error(err.stack || err.message)
-    } else {
-      console.error(err)
+
+    if (!result) throw new Error('expected a result')
+
+    if (outputFixed) {
+      if (result.results[0] && result.results[0].output) {
+        // Code contained fixable errors, so print the fixed code
+        process.stdout.write(result.results[0].output)
+      } else {
+        // Code did not contain fixable errors, so print original code
+        process.stdout.write(stdinText)
+      }
     }
-    console.error(
-      '\nIf you think this is a bug in `%s`, open an issue: %s',
-      opts.cmd,
-      opts.bugs
-    )
-    process.exitCode = 1
-    return
-  }
 
-  if (!result) throw new Error('expected a result')
-
-  if (outputFixed) {
-    if (result.results[0] && result.results[0].output) {
-      // Code contained fixable errors, so print the fixed code
-      process.stdout.write(result.results[0].output)
-    } else {
-      // Code did not contain fixable errors, so print original code
-      process.stdout.write(stdinText)
+    if (!result.errorCount && !result.warningCount) {
+      process.exitCode = 0
+      return
     }
-  }
 
-  if (!result.errorCount && !result.warningCount) {
-    process.exitCode = 0
-    return
-  }
+    console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
-  console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
+    // Are any warnings present?
+    const isSomeWarnings = result.results.some(item => item.messages.some(message => message.severity === 1))
 
-  // Are any warnings present?
-  const isSomeWarnings = result.results.some(item => item.messages.some(message => message.severity === 1))
-
-  if (isSomeWarnings) {
-    const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
-    console.error(
-      '%s: %s',
-      opts.cmd,
-      `Some warnings are present which will be errors in the next version${homepage}`
-    )
-  }
-
-  // Are any fixable rules present?
-  const isSomeFixable = result.results.some(item => item.messages.some(message => !!message.fix))
-
-  if (isSomeFixable) {
-    console.error(
-      '%s: %s',
-      opts.cmd,
-      'Run `' + opts.cmd + ' --fix` to automatically fix some problems.'
-    )
-  }
-
-  for (const item of result.results) {
-    for (const message of item.messages) {
-      log(
-        '  %s:%d:%d: %s%s%s',
-        item.filePath,
-        message.line || 0,
-        message.column || 0,
-        message.message,
-        ' (' + message.ruleId + ')',
-        message.severity === 1 ? ' (warning)' : ''
+    if (isSomeWarnings) {
+      const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
+      console.error(
+        '%s: %s',
+        opts.cmd,
+        `Some warnings are present which will be errors in the next version${homepage}`
       )
     }
-  }
 
-  process.exitCode = result.errorCount ? 1 : 0
+    // Are any fixable rules present?
+    const isSomeFixable = result.results.some(item => item.messages.some(message => !!message.fix))
+
+    if (isSomeFixable) {
+      console.error(
+        '%s: %s',
+        opts.cmd,
+        'Run `' + opts.cmd + ' --fix` to automatically fix some problems.'
+      )
+    }
+
+    for (const item of result.results) {
+      for (const message of item.messages) {
+        log(
+          '  %s:%d:%d: %s%s%s',
+          item.filePath,
+          message.line || 0,
+          message.column || 0,
+          message.message,
+          ' (' + message.ruleId + ')',
+          message.severity === 1 ? ' (warning)' : ''
+        )
+      }
+    }
+
+    process.exitCode = result.errorCount ? 1 : 0
+  })
+    .catch(err => process.nextTick(() => { throw err }))
 }
 
 module.exports = cli
