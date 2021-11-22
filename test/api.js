@@ -6,6 +6,7 @@ const { Linter } = require('../')
 
 async function getStandard () {
   /** @type {string} */
+  // @ts-ignore
   const configFile = (await import('../tmp/standard/options.js')).default.eslintConfig.configFile
   return new Linter({
     cmd: 'pocketlint',

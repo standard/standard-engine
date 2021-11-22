@@ -35,7 +35,7 @@
     "url": "https://feross.org"
   },
   "scripts": {
-    "check:dependency-check": "dependency-check *.js 'bin/**/*.js' 'lib/**/*.js' 'test/**/*.js' --no-dev",
+    "check:dependency-check": "dependency-check *.js 'bin/**/*.js' 'lib/**/*.js' --no-dev",
     "check:installed-check": "installed-check",
     "check:standard": "standard",
     "check:tsc": "tsc",
