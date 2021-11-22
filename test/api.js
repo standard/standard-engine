@@ -21,7 +21,7 @@ test('api: lintFiles', async function (t) {
   const standard = await getStandard()
   const result = await standard.lintFiles([], { cwd: path.join(__dirname, '../bin') })
   t.ok(Array.isArray(result), 'result is an array')
-  t.equal(result[0]?.errorCount, 0)
+  t.equal((result[0] || {}).errorCount, 0)
 })
 
 test('api: lintText', async function (t) {
@@ -29,21 +29,21 @@ test('api: lintText', async function (t) {
   const standard = await getStandard()
   const result = await standard.lintText('console.log("hi there")\n')
   t.ok(Array.isArray(result), 'result is an array')
-  t.equal(result[0]?.errorCount, 1, 'should have used single quotes')
+  t.equal((result[0] || {}).errorCount, 1, 'should have used single quotes')
 })
 
 test('api: resolveEslintConfig -- avoid this.eslintConfig parser mutation', async function (t) {
   t.plan(2)
   const standard = await getStandard()
   const opts = await standard.resolveEslintConfig({ parser: 'blah' })
-  t.equal(opts.baseConfig?.parser, 'blah')
-  t.equal(standard.eslintConfig.baseConfig?.parser, undefined)
+  t.equal((opts.baseConfig || {}).parser, 'blah')
+  t.equal((standard.eslintConfig.baseConfig || {}).parser, undefined)
 })
 
 test('api: resolveEslintConfig -- avoid this.eslintConfig global mutation', async function (t) {
   t.plan(2)
   const standard = await getStandard()
   const opts = await standard.resolveEslintConfig({ globals: ['what'] })
-  t.deepEqual(opts.baseConfig?.globals, { what: true })
-  t.strictEqual(standard.eslintConfig.baseConfig?.globals, undefined)
+  t.deepEqual((opts.baseConfig || {}).globals, { what: true })
+  t.strictEqual((standard.eslintConfig.baseConfig || {}).globals, undefined)
 })
