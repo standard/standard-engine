@@ -7,8 +7,7 @@ const opts = {
   version: '0.0.0',
   eslint,
   eslintConfig: {
-    configFile: path.join(__dirname, 'standard.json'),
-    useEslintrc: false
+    overrideConfigFile: path.join(__dirname, 'standard.json')
   }
 }
 

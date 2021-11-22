@@ -118,7 +118,7 @@ Flags (advanced):
   }
 
   Promise.resolve(argv.stdin ? getStdin() : '').then(async stdinText => {
-    /** @type {import('eslint').CLIEngine.LintReport} */
+    /** @type {import('eslint').ESLint.LintResult[]} */
     let result
 
     try {
@@ -144,16 +144,16 @@ Flags (advanced):
     if (!result) throw new Error('expected a result')
 
     if (outputFixed) {
-      if (result.results[0] && result.results[0].output) {
+      if (result[0] && result[0].output) {
         // Code contained fixable errors, so print the fixed code
-        process.stdout.write(result.results[0].output)
+        process.stdout.write(result[0].output)
       } else {
         // Code did not contain fixable errors, so print original code
         process.stdout.write(stdinText)
       }
     }
 
-    if (!result.errorCount && !result.warningCount) {
+    if (result.some(result => result.errorCount || result.warningCount) === false) {
       process.exitCode = 0
       return
     }
@@ -161,7 +161,7 @@ Flags (advanced):
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
     // Are any warnings present?
-    const isSomeWarnings = result.results.some(item => item.messages.some(message => message.severity === 1))
+    const isSomeWarnings = result.some(item => item.messages.some(message => message.severity === 1))
 
     if (isSomeWarnings) {
       const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
@@ -173,7 +173,7 @@ Flags (advanced):
     }
 
     // Are any fixable rules present?
-    const isSomeFixable = result.results.some(item => item.messages.some(message => !!message.fix))
+    const isSomeFixable = result.some(item => item.messages.some(message => !!message.fix))
 
     if (isSomeFixable) {
       console.error(
@@ -183,7 +183,7 @@ Flags (advanced):
       )
     }
 
-    for (const item of result.results) {
+    for (const item of result) {
       for (const message of item.messages) {
         log(
           '  %s:%d:%d: %s%s%s',
@@ -197,7 +197,7 @@ Flags (advanced):
       }
     }
 
-    process.exitCode = result.errorCount ? 1 : 0
+    process.exitCode = result.some(result => result.errorCount) ? 1 : 0
   })
     .catch(err => process.nextTick(() => { throw err }))
 }

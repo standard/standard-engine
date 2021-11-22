@@ -4,6 +4,7 @@ const crossSpawn = require('cross-spawn')
 const fs = require('fs')
 const path = require('path')
 const test = require('tape')
+const { R_OK, W_OK } = fs.constants
 
 const GIT = 'git'
 const STANDARD = path.join(__dirname, 'lib', 'standard-cmd.js')
@@ -22,37 +23,40 @@ test('test `standard` repo', function (t) {
   const name = pkg.name
   const url = pkg.repo + '.git'
   const folder = path.join(TMP, name)
-  fs.access(path.join(TMP, name), fs.R_OK | fs.W_OK, function (err) {
+  fs.access(path.join(TMP, name), R_OK | W_OK, function (err) {
     downloadPackage(function (err) {
       if (err) throw err
       runStandard()
     })
 
+    /** @param {(err?: Error|null) => void} cb */
     function downloadPackage (cb) {
       if (err) gitClone(cb)
       else gitPull(cb)
     }
 
+    /** @param {(err?: Error|null) => void} cb */
     function gitClone (cb) {
-      const args = ['clone', '--depth', 1, url, path.join(TMP, name)]
-      spawn(GIT, args, { stdio: 'ignore' }, function (err) {
+      const args = ['clone', '--depth', '1', url, path.join(TMP, name)]
+      spawn(GIT, args, { stdio: 'ignore' }, err => {
         if (err) err.message += ' (git clone) (' + name + ')'
         cb(err)
       })
     }
 
+    /** @param {(err?: Error|null) => void} cb */
     function gitPull (cb) {
       const args = ['pull']
-      spawn(GIT, args, { cwd: folder, stdio: 'ignore' }, function (err) {
+      spawn(GIT, args, { cwd: folder, stdio: 'ignore' }, err => {
         if (err) err.message += ' (git pull) (' + name + ')'
         cb(err)
       })
     }
 
     function runStandard () {
+      /** @type {string[]} */
       const args = []
-      if (pkg.args) args.push.apply(args, pkg.args)
-      spawn(STANDARD, args, { cwd: folder }, function (err) {
+      spawn(STANDARD, args, { cwd: folder }, err => {
         const str = name + ' (' + pkg.repo + ')'
         if (err) { t.fail(str) } else { t.pass(str) }
       })
@@ -60,6 +64,13 @@ test('test `standard` repo', function (t) {
   })
 })
 
+/**
+ * @param {string} command
+ * @param {string[]} args
+ * @param {import('child_process').SpawnOptions} opts
+ * @param {(err?: Error|null) => void} cb
+ * @returns
+ */
 function spawn (command, args, opts, cb) {
   if (!opts.stdio) opts.stdio = 'inherit'
 
