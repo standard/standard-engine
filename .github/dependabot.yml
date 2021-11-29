@@ -1,13 +1,21 @@
-# For more information see: https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'daily'
+      interval: "daily"
+    labels:
+      - "dependency"
+    # Always increase the version requirement to match the new version.
+    versioning-strategy: increase
 
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    ignore:
+      - dependency-name: "actions/*"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
     schedule:
-      interval: 'daily'
+      interval: "daily"
+    labels:
+      - "github-actions"
