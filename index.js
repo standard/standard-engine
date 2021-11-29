@@ -7,8 +7,6 @@ const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
 const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 
-// TODO: Remove
-/** @typedef {ConstructorParameters<typeof import('eslint').CLIEngine>[0]} FooTemp */
 /** @typedef {import('eslint').ESLint.Options} EslintOptions */
 /** @typedef {Omit<import('./lib/resolve-eslint-config').ResolveOptions, 'cmd'|'cwd'>} BaseLintOptions */
 
@@ -88,7 +86,6 @@ class Linter {
     if (files.length === 0) files = ['.']
 
     const eslintInstance = new this.eslint.ESLint(eslintConfig)
-    // const result = new this.eslint.CLIEngine(eslintConfig).executeOnFiles(files)
     const result = await eslintInstance.lintFiles(files)
 
     if (eslintConfig.fix) {
