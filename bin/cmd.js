@@ -119,10 +119,10 @@ Flags (advanced):
 
   Promise.resolve(argv.stdin ? getStdin() : '').then(async stdinText => {
     /** @type {import('eslint').ESLint.LintResult[]} */
-    let result
+    let results
 
     try {
-      result = argv.stdin
+      results = argv.stdin
         ? await standard.lintText(stdinText, lintOpts)
         : await standard.lintFiles(argv._, lintOpts)
     } catch (err) {
@@ -141,19 +141,19 @@ Flags (advanced):
       return
     }
 
-    if (!result) throw new Error('expected a result')
+    if (!results) throw new Error('expected a results')
 
     if (outputFixed) {
-      if (result[0] && result[0].output) {
+      if (results[0] && results[0].output) {
         // Code contained fixable errors, so print the fixed code
-        process.stdout.write(result[0].output)
+        process.stdout.write(results[0].output)
       } else {
         // Code did not contain fixable errors, so print original code
         process.stdout.write(stdinText)
       }
     }
 
-    if (result.some(result => result.errorCount || result.warningCount) === false) {
+    if (results.some(item => item.errorCount || item.warningCount) === false) {
       process.exitCode = 0
       return
     }
@@ -161,7 +161,7 @@ Flags (advanced):
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
     // Are any warnings present?
-    const isSomeWarnings = result.some(item => item.messages.some(message => message.severity === 1))
+    const isSomeWarnings = results.some(item => item.messages.some(message => message.severity === 1))
 
     if (isSomeWarnings) {
       const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
@@ -173,7 +173,7 @@ Flags (advanced):
     }
 
     // Are any fixable rules present?
-    const isSomeFixable = result.some(item => item.messages.some(message => !!message.fix))
+    const isSomeFixable = results.some(item => item.messages.some(message => !!message.fix))
 
     if (isSomeFixable) {
       console.error(
@@ -183,7 +183,7 @@ Flags (advanced):
       )
     }
 
-    for (const item of result) {
+    for (const item of results) {
       for (const message of item.messages) {
         log(
           '  %s:%d:%d: %s%s%s',
@@ -197,7 +197,7 @@ Flags (advanced):
       }
     }
 
-    process.exitCode = result.some(result => result.errorCount) ? 1 : 0
+    process.exitCode = results.some(item => item.errorCount) ? 1 : 0
   })
     .catch(err => process.nextTick(() => { throw err }))
 }
