@@ -11,7 +11,7 @@ const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 /** @typedef {Omit<import('./lib/resolve-eslint-config').ResolveOptions, 'cmd'|'cwd'>} BaseLintOptions */
 
 /**
- * @typedef LinterOptions
+ * @typedef StandardEngineOptions
  * @property {string} cmd
  * @property {import('eslint')} eslint
  * @property {string} [cwd]
@@ -20,9 +20,9 @@ const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
  * @property {string} [version]
  */
 
-class Linter {
+class StandardEngine {
   /**
-   * @param {LinterOptions} opts
+   * @param {StandardEngineOptions} opts
    */
   constructor (opts) {
     if (!opts || !opts.cmd) throw new Error('opts.cmd option is required')
@@ -115,5 +115,4 @@ class Linter {
 }
 
 module.exports.cli = require('./bin/cmd')
-// FIXME: Rename to avoid confusion with ESLint provided "Linter"
-module.exports.Linter = Linter
+module.exports.StandardEngine = StandardEngine

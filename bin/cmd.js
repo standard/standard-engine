@@ -5,7 +5,7 @@ const getStdin = require('get-stdin')
 
 /**
  * @typedef StandardCliOptions
- * @property {import('../').Linter} [linter]
+ * @property {import('../').StandardEngine} [standardEngine]
  * @property {string} [cmd]
  * @property {string} [tagline]
  * @property {string} [homepage]
@@ -13,7 +13,7 @@ const getStdin = require('get-stdin')
  */
 
 /**
- * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
+ * @param {Omit<import('../').StandardEngineOptions, 'cmd'> & StandardCliOptions} rawOpts
  * @returns {void}
  */
 function cli (rawOpts) {
@@ -24,7 +24,7 @@ function cli (rawOpts) {
     ...rawOpts
   }
 
-  const standard = rawOpts.linter || new (require('../').Linter)(opts)
+  const standard = rawOpts.standardEngine || new (require('../').StandardEngine)(opts)
 
   const argv = minimist(process.argv.slice(2), {
     alias: {

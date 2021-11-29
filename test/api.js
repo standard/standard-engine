@@ -2,12 +2,12 @@ const eslint = require('eslint')
 const path = require('path')
 const test = require('tape')
 
-const { Linter } = require('../')
+const { StandardEngine } = require('../')
 
 async function getStandard () {
   /** @type {string} */
   const configFile = (await import('../tmp/standard/options.js')).default.eslintConfig.configFile
-  return new Linter({
+  return new StandardEngine({
     cmd: 'pocketlint',
     version: '0.0.0',
     eslint,
