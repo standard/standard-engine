@@ -5,11 +5,10 @@
   ],
   "include": [
     "bin/**/*.js",
-    "lib/**/*.js",
-    "test/**/*.js"
+    "lib/**/*.js"
   ],
   "exclude": [
-    "tmp/**/*.js"
+    "tmp/**/*.js",
   ],
   "compilerOptions": {
     /* Configures it for targeting javascript */
