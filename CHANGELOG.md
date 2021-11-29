@@ -2,6 +2,67 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 15.0.0 YYYY-MM-DD
+
+- **BREAKING CHANGE:** To avoid confusion with ESLint exports and types, our `Linter` class has been renamed to `StandardEngine` and `cli()` now takes a `standardEngine` key instead of a `linter` key if a custom engine wants to be provided. #275
+- **BREAKING CHANGE:** Removed use of ESLint's deprecated `CLIEngine` API. This affects the `eslintConfig` option to our `StandardEngine` (formerly called `Linter`) constructor. #275
+- **BREAKING CHANGE:**  Print additional label on warnings (to separate them from errors) b7c1e17
+- **BREAKING CHANGE:** Drop support for Node 10.x. Now require ESM-compatible Node.js versions: `^12.20.0 || ^14.13.1 || >=16.0.0` #252
+- **BREAKING CHANGE:** the `parseOpts` option to the `StandardEngine` (formerly called `Linter`) constructor has been replaced with a new `resolveEslintConfig` one
+- Change: make `--verbose` the default #232
+
+
+## 14.0.1 2020-08-31
+
+- _Missing release notes_
+
+## 14.0.0 2020-08-29
+
+- _Missing release notes_
+
+## 13.0.0 2020-08-27
+
+- _Missing release notes_
+
+## 12.1.1 2020-05-21
+
+- Enhancement: Allow passing in a custom linter to `cli`
+
+## 12.0.1 2020-04-30
+
+- Enhancements: Add ts-standard to README linters list
+- Fixes: Bump deglob & minimist dependencies
+
+## 12.0.0 2019-08-19
+
+- **BREAKING CHANGE:** Remove `bundle.js` from the list of default ignored files
+- **BREAKING CHANGE:** Ignore patterns from `.git/info/exclude` in addition to `.gitignore`
+- Enhancement: Update deglob to 4.x
+
+## 11.0.1 2019-07-12
+
+- _Missing release notes_
+
+## 11.0.0 2019-07-11
+
+- _Missing release notes_
+
+## 10.0.0 2018-08-30
+
+- _Missing release notes_
+
+## 9.0.0 2018-05-15
+
+- _Missing release notes_
+
+## 8.0.1 2018-03-02
+
+- _Missing release notes_
+
+## 8.0.0 2018-02-18
+
+- _Missing release notes_
+
 ## 7.2.0 2017-11-07
 
 - New Feature: `noDefaultIgnore` option to can now be used to turn off default ignores.

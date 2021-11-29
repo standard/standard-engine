@@ -42,9 +42,9 @@ Create the files below and fill in your own values for `options.js`.
 
 ```js
 // programmatic usage
-const { Linter } = require('standard-engine')
+const { StandardEngine } = require('standard-engine')
 const opts = require('./options.js')
-module.exports = new Linter(opts)
+module.exports = new StandardEngine(opts)
 ```
 
 ### `cli.js`
@@ -64,6 +64,7 @@ const eslint = require('eslint')
 const path = require('path')
 const pkg = require('./package.json')
 
+/** @type {import('standard-engine').StandardEngineOptions} **/
 module.exports = {
   // homepage, version and bugs pulled from package.json
   version: pkg.version,
@@ -73,7 +74,7 @@ module.exports = {
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    overrideConfigFile: path.join(__dirname, 'eslintrc.json')
   },
   cwd: '' // current working directory, passed to eslint
 }
@@ -293,13 +294,13 @@ module.exports = {
 }
 ```
 
-This function is called with the current ESLint config (the options passed to [ESLint's `CLIEngine`](http://eslint.org/docs/developer-guide/nodejs-api#cliengine)), the options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
+This function is called with the current ESLint config (the options passed to the [`ESLint`](https://eslint.org/docs/developer-guide/nodejs-api#-new-eslintoptions) constructor), the options object (`opts`), any options extracted from the project's `package.json` (`packageOpts`), and the directory that contained that `package.json` file (`rootDir`, equivalent to `opts.cwd` if no file was found).
 
 Modify and return `eslintConfig`, or return a new object with the eslint config to be used.
 
 ## API Usage
 
-### `engine.lintText(text, [opts])`
+### `async engine.lintText(text, [opts])`
 
 Lint the provided source `text` to enforce your defined style. An `opts` object may
 be provided:
@@ -348,12 +349,7 @@ const results = {
 }
 ```
 
-### `results = engine.lintTextSync(text, [opts])`
-
-Synchronous version of `engine.lintText()`. If an error occurs, an exception is
-thrown. Otherwise, a `results` object is returned.
-
-### `engine.lintFiles(files, [opts], callback)`
+### `async engine.lintFiles(files, [opts])`
 
 Lint the provided `files` globs. An `opts` object may be provided:
 
