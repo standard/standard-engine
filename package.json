@@ -41,7 +41,7 @@
     "check:tsc": "tsc",
     "check": "run-p check:*",
     "test-ci": "run-s test:*",
-    "test:tape": "c8 --reporter=lcov --reporter=text tape test/clone.js test/api.js",
+    "test:tape": "c8 --reporter=lcov --reporter=text tape test/*.js",
     "test": "run-s check test:*"
   },
   "dependencies": {
