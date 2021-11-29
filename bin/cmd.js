@@ -153,17 +153,17 @@ Flags (advanced):
       }
     }
 
-    if (results.some(item => item.errorCount || item.warningCount) === false) {
+    const hasErrors = results.some(item => item.errorCount !== 0)
+    const hasWarnings = results.some(item => item.warningCount !== 0)
+
+    if (!hasErrors && !hasWarnings) {
       process.exitCode = 0
       return
     }
 
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
-    // Are any warnings present?
-    const isSomeWarnings = results.some(item => item.messages.some(message => message.severity === 1))
-
-    if (isSomeWarnings) {
+    if (hasWarnings) {
       const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
       console.error(
         '%s: %s',
@@ -173,9 +173,9 @@ Flags (advanced):
     }
 
     // Are any fixable rules present?
-    const isSomeFixable = results.some(item => item.messages.some(message => !!message.fix))
+    const hasFixable = results.some(item => item.messages.some(message => !!message.fix))
 
-    if (isSomeFixable) {
+    if (hasFixable) {
       console.error(
         '%s: %s',
         opts.cmd,
@@ -197,7 +197,7 @@ Flags (advanced):
       }
     }
 
-    process.exitCode = results.some(item => item.errorCount) ? 1 : 0
+    process.exitCode = hasErrors ? 1 : 0
   })
     .catch(err => process.nextTick(() => { throw err }))
 }
