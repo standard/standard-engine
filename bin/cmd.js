@@ -5,7 +5,7 @@ const getStdin = require('get-stdin')
 
 /**
  * @typedef StandardCliOptions
- * @property {import('../').Linter} [linter]
+ * @property {import('../').StandardEngine} [standardEngine]
  * @property {string} [cmd]
  * @property {string} [tagline]
  * @property {string} [homepage]
@@ -13,7 +13,7 @@ const getStdin = require('get-stdin')
  */
 
 /**
- * @param {Omit<import('../').LinterOptions, 'cmd'> & StandardCliOptions} rawOpts
+ * @param {Omit<import('../').StandardEngineOptions, 'cmd'> & StandardCliOptions} rawOpts
  * @returns {void}
  */
 function cli (rawOpts) {
@@ -24,7 +24,7 @@ function cli (rawOpts) {
     ...rawOpts
   }
 
-  const standard = rawOpts.linter || new (require('../').Linter)(opts)
+  const standard = rawOpts.standardEngine || new (require('../').StandardEngine)(opts)
 
   const argv = minimist(process.argv.slice(2), {
     alias: {
@@ -118,11 +118,11 @@ Flags (advanced):
   }
 
   Promise.resolve(argv.stdin ? getStdin() : '').then(async stdinText => {
-    /** @type {import('eslint').CLIEngine.LintReport} */
-    let result
+    /** @type {import('eslint').ESLint.LintResult[]} */
+    let results
 
     try {
-      result = argv.stdin
+      results = argv.stdin
         ? await standard.lintText(stdinText, lintOpts)
         : await standard.lintFiles(argv._, lintOpts)
     } catch (err) {
@@ -141,29 +141,29 @@ Flags (advanced):
       return
     }
 
-    if (!result) throw new Error('expected a result')
+    if (!results) throw new Error('expected a results')
 
     if (outputFixed) {
-      if (result.results[0] && result.results[0].output) {
+      if (results[0] && results[0].output) {
         // Code contained fixable errors, so print the fixed code
-        process.stdout.write(result.results[0].output)
+        process.stdout.write(results[0].output)
       } else {
         // Code did not contain fixable errors, so print original code
         process.stdout.write(stdinText)
       }
     }
 
-    if (!result.errorCount && !result.warningCount) {
+    const hasErrors = results.some(item => item.errorCount !== 0)
+    const hasWarnings = results.some(item => item.warningCount !== 0)
+
+    if (!hasErrors && !hasWarnings) {
       process.exitCode = 0
       return
     }
 
     console.error('%s: %s (%s)', opts.cmd, opts.tagline, opts.homepage)
 
-    // Are any warnings present?
-    const isSomeWarnings = result.results.some(item => item.messages.some(message => message.severity === 1))
-
-    if (isSomeWarnings) {
+    if (hasWarnings) {
       const homepage = opts.homepage != null ? ` (${opts.homepage})` : ''
       console.error(
         '%s: %s',
@@ -173,9 +173,9 @@ Flags (advanced):
     }
 
     // Are any fixable rules present?
-    const isSomeFixable = result.results.some(item => item.messages.some(message => !!message.fix))
+    const hasFixable = results.some(item => item.messages.some(message => !!message.fix))
 
-    if (isSomeFixable) {
+    if (hasFixable) {
       console.error(
         '%s: %s',
         opts.cmd,
@@ -183,7 +183,7 @@ Flags (advanced):
       )
     }
 
-    for (const item of result.results) {
+    for (const item of results) {
       for (const message of item.messages) {
         log(
           '  %s:%d:%d: %s%s%s',
@@ -197,7 +197,7 @@ Flags (advanced):
       }
     }
 
-    process.exitCode = result.errorCount ? 1 : 0
+    process.exitCode = hasErrors ? 1 : 0
   })
     .catch(err => process.nextTick(() => { throw err }))
 }

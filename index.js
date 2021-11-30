@@ -7,22 +7,22 @@ const CACHE_HOME = require('xdg-basedir').cache || os.tmpdir()
 
 const { resolveEslintConfig } = require('./lib/resolve-eslint-config')
 
-/** @typedef {ConstructorParameters<typeof import('eslint').CLIEngine>[0]} CLIEngineOptions */
+/** @typedef {import('eslint').ESLint.Options} EslintOptions */
 /** @typedef {Omit<import('./lib/resolve-eslint-config').ResolveOptions, 'cmd'|'cwd'>} BaseLintOptions */
 
 /**
- * @typedef LinterOptions
+ * @typedef StandardEngineOptions
  * @property {string} cmd
  * @property {import('eslint')} eslint
  * @property {string} [cwd]
- * @property {CLIEngineOptions} [eslintConfig]
+ * @property {EslintOptions} [eslintConfig]
  * @property {import('./lib/resolve-eslint-config').CustomEslintConfigResolver} [resolveEslintConfig]
  * @property {string} [version]
  */
 
-class Linter {
+class StandardEngine {
   /**
-   * @param {LinterOptions} opts
+   * @param {StandardEngineOptions} opts
    */
   constructor (opts) {
     if (!opts || !opts.cmd) throw new Error('opts.cmd option is required')
@@ -42,23 +42,19 @@ class Linter {
     // Example cache location: ~/.cache/standard/v12/
     const cacheLocation = path.join(CACHE_HOME, this.cmd, `v${majorVersion}/`)
 
-    /** @type {CLIEngineOptions} */
+    /** @type {EslintOptions} */
     this.eslintConfig = {
       cache: true,
       cacheLocation,
-      envs: [],
       fix: false,
-      globals: [],
-      plugins: [],
-      ignorePattern: [],
       extensions: [],
       useEslintrc: false,
       ...(opts.eslintConfig || {})
     }
 
-    if (this.eslintConfig.configFile != null) {
+    if (this.eslintConfig.overrideConfigFile != null) {
       this.eslintConfig.resolvePluginsRelativeTo = path.dirname(
-        this.eslintConfig.configFile
+        this.eslintConfig.overrideConfigFile
       )
     }
   }
@@ -68,23 +64,12 @@ class Linter {
    *
    * @param {string} text file text to lint
    * @param {Omit<BaseLintOptions, 'ignore'|'noDefaultIgnore'> & { filename?: string }} [opts] base options + path of file containing the text being linted
-   * @returns {import('eslint').CLIEngine.LintReport}
+   * @returns {Promise<import('eslint').ESLint.LintResult[]>}
    */
-  lintTextSync (text, opts) {
+  async lintText (text, { filename: filePath, ...opts } = {}) {
     const eslintConfig = this.resolveEslintConfig(opts)
-    const engine = new this.eslint.CLIEngine(eslintConfig)
-    return engine.executeOnText(text, (opts || {}).filename)
-  }
-
-  /**
-   * Lint text to enforce JavaScript Style.
-   *
-   * @param {string} text file text to lint
-   * @param {Omit<BaseLintOptions, 'ignore'|'noDefaultIgnore'> & { filename?: string }} [opts] base options + path of file containing the text being linted
-   * @returns {Promise<import('eslint').CLIEngine.LintReport>}
-   */
-  async lintText (text, opts) {
-    return this.lintTextSync(text, opts)
+    const engine = new this.eslint.ESLint(eslintConfig)
+    return engine.lintText(text, { filePath })
   }
 
   /**
@@ -92,7 +77,7 @@ class Linter {
    *
    * @param {Array<string>} files file globs to lint
    * @param {BaseLintOptions & { cwd?: string }} [opts] base options + file globs to ignore (has sane defaults) + current working directory (default: process.cwd())
-   * @returns {Promise<import('eslint').CLIEngine.LintReport>}
+   * @returns {Promise<import('eslint').ESLint.LintResult[]>}
    */
   async lintFiles (files, opts) {
     const eslintConfig = this.resolveEslintConfig(opts)
@@ -100,10 +85,11 @@ class Linter {
     if (typeof files === 'string') files = [files]
     if (files.length === 0) files = ['.']
 
-    const result = new this.eslint.CLIEngine(eslintConfig).executeOnFiles(files)
+    const eslintInstance = new this.eslint.ESLint(eslintConfig)
+    const result = await eslintInstance.lintFiles(files)
 
     if (eslintConfig.fix) {
-      this.eslint.CLIEngine.outputFixes(result)
+      this.eslint.ESLint.outputFixes(result)
     }
 
     return result
@@ -111,7 +97,7 @@ class Linter {
 
   /**
    * @param {BaseLintOptions & { cwd?: string }} [opts]
-   * @returns {CLIEngineOptions}
+   * @returns {EslintOptions}
    */
   resolveEslintConfig (opts) {
     const eslintConfig = resolveEslintConfig(
@@ -129,4 +115,4 @@ class Linter {
 }
 
 module.exports.cli = require('./bin/cmd')
-module.exports.Linter = Linter
+module.exports.StandardEngine = StandardEngine

@@ -1,4 +1,4 @@
-name: 'tests'
+name: 'linting'
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  lint:
     runs-on: 'ubuntu-latest'
 
     strategy:
       matrix:
-        node-version: ['12.20.0', '14.13.1', '16.0.0', 'lts/*']
+        node-version: ['lts/*']
       fail-fast: false
 
     steps:
@@ -38,4 +38,4 @@ jobs:
         run: 'npm install'
 
       - name: 'Run Tests'
-        run: 'npm run test-ci'
+        run: 'npm run check'
