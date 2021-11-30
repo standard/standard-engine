@@ -1,3 +1,5 @@
-.travis.yml
+.github/
 test/
 tmp/
+.editorconfig
+tsconfig.json
