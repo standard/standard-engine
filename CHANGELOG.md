@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - **BREAKING CHANGE:** To avoid confusion with ESLint exports and types, our `Linter` class has been renamed to `StandardEngine` and `cli()` now takes a `standardEngine` key instead of a `linter` key if a custom engine wants to be provided. #275
 - **BREAKING CHANGE:** Removed use of ESLint's deprecated `CLIEngine` API. This affects the `eslintConfig` option to our `StandardEngine` (formerly called `Linter`) constructor. #275
-- **BREAKING CHANGE:**  Print additional label on warnings (to separate them from errors) b7c1e17
+- **BREAKING CHANGE:** Print additional label on warnings (to separate them from errors) b7c1e17
 - **BREAKING CHANGE:** Drop support for Node 10.x. Now require ESM-compatible Node.js versions: `^12.20.0 || ^14.13.1 || >=16.0.0` #252
 - **BREAKING CHANGE:** the `parseOpts` option to the `StandardEngine` (formerly called `Linter`) constructor has been replaced with a new `resolveEslintConfig` one
 - Change: make `--verbose` the default #232
