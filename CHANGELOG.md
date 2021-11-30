@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 15.0.0 YYYY-MM-DD
+## 15.0.0-0 2021-11-30
 
 - **BREAKING CHANGE:** To avoid confusion with ESLint exports and types, our `Linter` class has been renamed to `StandardEngine` and `cli()` now takes a `standardEngine` key instead of a `linter` key if a custom engine wants to be provided. #275
 - **BREAKING CHANGE:** Removed use of ESLint's deprecated `CLIEngine` API. This affects the `eslintConfig` option to our `StandardEngine` (formerly called `Linter`) constructor. #275
