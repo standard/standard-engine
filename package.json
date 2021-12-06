@@ -53,7 +53,7 @@
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",
     "@types/cross-spawn": "^6.0.2",
-    "@types/eslint": "^7.28.0",
+    "@types/eslint": "^8.2.1",
     "@types/minimist": "^1.2.2",
     "@types/node": "~12.20.0",
     "@types/tape": "^4.13.2",
