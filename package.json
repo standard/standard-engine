@@ -55,7 +55,7 @@
     "get-stdin": "^8.0.0",
     "minimist": "^1.2.6",
     "pkg-conf": "^3.1.0",
-    "xdg-basedir": "^4.0.0"
+    "xdg-basedir": "^5.1.0"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.9",
