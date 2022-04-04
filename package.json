@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "get-stdin": "^8.0.0",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "pkg-conf": "^3.1.0",
     "xdg-basedir": "^4.0.0"
   },
@@ -62,7 +62,7 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/eslint": "^8.4.1",
     "@types/minimist": "^1.2.2",
-    "@types/node": "~12.20.0",
+    "@types/node": "~17.0.23",
     "@types/tape": "^4.13.2",
     "c8": "^7.10.0",
     "cross-spawn": "^7.0.3",
@@ -77,7 +77,7 @@
     "installed-check": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "standard": "^17.0.0-2",
-    "tape": "^5.0.1",
+    "tape": "^5.5.2",
     "type-coverage": "^2.21.0",
     "typescript": "~4.6.2"
   },
