@@ -30,7 +30,7 @@ Here is a list of packages using `standard-engine`. Dive into them for ideas!
 - [doublestandard](https://github.com/flet/doublestandard) - Require TWO semicolons at the end of every line!
 - [strict-standard](https://github.com/denis-sokolov/strict-standard) - Standard Style with strict error checking.
 - [standard-own](https://github.com/o2team/standard-own) - Standard configurable.
-- [ts-standard](https://github.com/toddbluhm/ts-standard) - Typescript Standard Style.
+- [ts-standard](https://github.com/standard/ts-standard) - TypeScript Standard Style.
 
 Did you make your own? Create a pull request and we will add it to the README!
 
@@ -52,7 +52,7 @@ module.exports = new StandardEngine(opts)
 ```js
 #!/usr/bin/env node
 
-const opts = require('../options.js')
+const opts = require('./options.js')
 
 require('standard-engine').cli(opts)
 ```
@@ -70,13 +70,12 @@ module.exports = {
   version: pkg.version,
   homepage: pkg.homepage,
   bugs: pkg.bugs.url,
-  eslint: eslint, // pass any version of eslint >= 1.0.0
+  eslint, // pass any version of eslint >= 7.0.0
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
     overrideConfigFile: path.join(__dirname, 'eslintrc.json')
-  },
-  cwd: '' // current working directory, passed to eslint
+  }
 }
 ```
 
@@ -281,11 +280,11 @@ module.exports = {
   version: pkg.version,
   homepage: pkg.homepage,
   bugs: pkg.bugs.url,
-  eslint: eslint, // pass any version of eslint >= 1.0.0
+  eslint, // pass any version of eslint >= 7.0.0
   cmd: 'pocketlint', // should match the "bin" key in your package.json
   tagline: 'Live by your own standards!', // displayed in output --help
   eslintConfig: {
-    configFile: path.join(__dirname, 'eslintrc.json')
+    overrideConfigFile: path.join(__dirname, 'eslintrc.json')
   },
   resolveEslintConfig: function (eslintConfig, opts, packageOpts, rootDir) {
     // provide implementation here, then return the eslintConfig object (or a new one)
