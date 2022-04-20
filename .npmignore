@@ -1,6 +1,10 @@
-.github/
-test/
-tmp/
-.editorconfig
-tsconfig.json
-coverage
+*
+!bin/**/*.js
+!bin/**/*.d.ts
+!bin/**/*.d.ts.map
+!lib/**/*.js
+!lib/**/*.d.ts
+!lib/**/*.d.ts.map
+!index.js
+!index.d.ts
+!index.d.ts.map
