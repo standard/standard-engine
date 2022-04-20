@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12.20.0', '14.13.1', '16.0.0', 'lts/*']
+        node-version: ['12.20.0', '14.13.1', '16.0.0', '18.0.0', 'lts/*']
       fail-fast: false
 
     steps:
