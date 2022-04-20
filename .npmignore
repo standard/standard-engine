@@ -1,7 +1,8 @@
-.github/
-test/
-tmp/
-.editorconfig
-declaration.tsconfig.json
-tsconfig.json
-coverage
+*
+!bin/**/*.js
+!bin/**/*.d.ts
+!bin/**/*.d.ts.map
+!lib/**/*.js
+!lib/**/*.d.td
+!index.js
+!index.d.ts
