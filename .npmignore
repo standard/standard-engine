@@ -2,5 +2,6 @@
 test/
 tmp/
 .editorconfig
+declaration.tsconfig.json
 tsconfig.json
 coverage
