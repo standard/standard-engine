@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 15.0.0 2022-04-20
+
+- In addition to breaking changes and other in `15.0.0-0`, only some dependency updates
 ## 15.0.0-0 2021-11-30
 
 - **BREAKING CHANGE:** To avoid confusion with ESLint exports and types, our `Linter` class has been renamed to `StandardEngine` and `cli()` now takes a `standardEngine` key instead of a `linter` key if a custom engine wants to be provided. #275
@@ -10,7 +13,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - **BREAKING CHANGE:** Drop support for Node 10.x. Now require ESM-compatible Node.js versions: `^12.20.0 || ^14.13.1 || >=16.0.0` #252
 - **BREAKING CHANGE:** the `parseOpts` option to the `StandardEngine` (formerly called `Linter`) constructor has been replaced with a new `resolveEslintConfig` one
 - Change: make `--verbose` the default #232
-
 
 ## 14.0.1 2020-08-31
 
