@@ -41,6 +41,7 @@ function cli (rawOpts) {
     ],
     string: [
       'ext',
+      'ignore',
       'global',
       'plugin',
       'parser',
@@ -76,6 +77,7 @@ Flags:
 Flags (advanced):
         --stdin     Read file text from stdin
         --ext       Specify JavaScript file extensions
+        --ignore    Specify files to ignore
         --global    Declare global variable
         --plugin    Use custom eslint plugin
         --env       Use custom eslint environment
@@ -94,6 +96,7 @@ Flags (advanced):
   const lintOpts = {
     fix: argv.fix,
     extensions: argv.ext,
+    ignore: argv.ignore,
     globals: argv.global,
     plugins: argv.plugin,
     envs: argv.env,

@@ -6,7 +6,7 @@ const { StandardEngine } = require('../')
 
 async function getStandard () {
   /** @type {string} */
-  const configFile = (await import('../tmp/standard/options.js')).default.eslintConfig.overrideConfigFile
+  const configFile = (await import('../tmp/standard/lib/options.js')).default.eslintConfig.overrideConfigFile
   return new StandardEngine({
     cmd: 'pocketlint',
     version: '0.0.0',
