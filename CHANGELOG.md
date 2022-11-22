@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 15.1.0 2022-11-23
+- Enhancement: Added `--ignore` option support
+
 ## 15.0.0 2022-04-20
 
 - In addition to breaking changes and other in `15.0.0-0`, only some dependency updates
