@@ -1,6 +1,6 @@
 {
   "name": "standard-engine",
-  "version": "15.0.0",
+  "version": "15.1.0",
   "description": "Wrap your standards in a tortilla and cover it in special sauce.",
   "keywords": [
     "JavaScript Standard Style",
@@ -39,7 +39,7 @@
     "build:1-declaration": "tsc -p declaration.tsconfig.json",
     "build": "run-s build:*",
     "check:dependency-check": "dependency-check *.js 'bin/**/*.js' 'lib/**/*.js' --no-dev",
-    "check:installed-check": "installed-check",
+    "check:installed-check": "installed-check --engine-ignore dependency-check",
     "check:standard": "standard",
     "check:tsc": "tsc",
     "check:type-coverage": "type-coverage --detail --strict --at-least 95 --ignore-files 'test/*'",
@@ -79,7 +79,8 @@
     "standard": "^17.0.0-2",
     "tape": "^5.5.2",
     "type-coverage": "^2.21.0",
-    "typescript": "~4.6.3"
+    "typescript": "~4.6.3",
+    "version-guard": "^1.1.0"
   },
   "engines": {
     "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
