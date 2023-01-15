@@ -89,7 +89,7 @@ class StandardEngine {
     const result = await eslintInstance.lintFiles(files)
 
     if (eslintConfig.fix) {
-      this.eslint.ESLint.outputFixes(result)
+      await this.eslint.ESLint.outputFixes(result)
     }
 
     return result
