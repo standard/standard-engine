@@ -46,9 +46,8 @@
     "check": "run-s clean && run-p check:*",
     "clean:declarations": "rm -rf $(find . -maxdepth 2 -type f -name '*.d.ts')",
     "clean": "run-p clean:*",
-    "test-ci": "run-s test:*",
-    "test:tape": "c8 --reporter=lcov --reporter=text tape test/clone.js test/*.js",
-    "test": "run-s check test:*",
+    "test-ci": "c8 --reporter=lcov --reporter=text tape test/clone.js test/*.js",
+    "test": "run-s check test-ci",
     "prepublishOnly": "run-s build"
   },
   "dependencies": {
