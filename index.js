@@ -32,8 +32,8 @@ class StandardEngine {
     this.cmd = opts.cmd
     /** @type {import('eslint')} */
     this.eslint = opts.eslint
-    /** @type {string} */
-    this.cwd = opts.cwd || process.cwd()
+    /** @type {string|undefined} */
+    this.cwd = opts.cwd
     this.customEslintConfigResolver = opts.resolveEslintConfig
 
     const m = opts.version && opts.version.match(/^(\d+)\./)
@@ -102,7 +102,7 @@ class StandardEngine {
   resolveEslintConfig (opts) {
     const eslintConfig = resolveEslintConfig(
       {
-        cwd: this.cwd,
+        cwd: this.cwd || process.cwd(),
         ...opts,
         cmd: this.cmd
       },
