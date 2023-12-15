@@ -310,7 +310,7 @@ be provided:
   filename: '',         // path of file containing the text being linted
 
   // common to lintText and lintFiles
-  cwd: '',              // current working directory (default: process.cwd())
+  cwd: '',              // current working directory (default: process.cwd() at engine constructor call time)
   fix: false,           // automatically fix problems
   extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
@@ -358,7 +358,7 @@ Lint the provided `files` globs. An `opts` object may be provided:
   ignore: [],           // file globs to ignore (has sane defaults)
 
   // common to lintText and lintFiles
-  cwd: '',              // current working directory (default: process.cwd())
+  cwd: '',              // current working directory (default: process.cwd() at engine constructor call time)
   fix: false,           // automatically fix problems
   extensions: [],       // file extensions to lint (has sane defaults)
   globals: [],          // custom global variables to declare
@@ -385,7 +385,7 @@ This is the full set of options accepted by the above APIs. Not all options make
 ```js
 {
   ignore: [],   // file patterns to ignore (has sane defaults)
-  cwd: '',      // current working directory (default: process.cwd())
+  cwd: '',      // current working directory (default: process.cwd() at engine constructor call time)
   filename: '', // path of the file containing the text being linted (optional)
   fix: false,   // automatically fix problems
   globals: [],  // custom global variables to declare
